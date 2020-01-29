@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use App\Traits\HasLanguage;
 
 class BibleVersion extends Model
 {
 	use SoftDeletes;
+	use HasLanguage;
 
 	protected $fillable = ['index', 'name', 'alias', 'slug', 'public'];
 
@@ -21,12 +23,6 @@ class BibleVersion extends Model
 	public function book()
 	{
 		return $this->hasOne(\App\Book::class);
-	}
-
-	public function language()
-	{
-		return $this->hasOneThrough(\App\Language::class, \App\ModelHasLanguage::class, 'model_id', 'id')
-			->where('model_type', __CLASS__);
 	}
 
 	public static function fetch(array $args)

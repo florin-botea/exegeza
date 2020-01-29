@@ -1,5 +1,5 @@
 @php
-    $bible = $bible ?? ['id'=>null, 'index'=>null, 'name'=>null, 'alias'=>null, 'lang'=>null, 'public'=>false];
+    $bible = $bible ?? ['id'=>null, 'index'=>null, 'name'=>null, 'alias'=>null, 'language'=>['value'=>null], 'public'=>false];
     $next_index = $next_index ?? 1;
 @endphp
 <div class="modal fade show" id="bible-version-form-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -9,7 +9,7 @@
                 <h3>{{ $bible['id'] ? 'Edit version' : 'Add version' }}</h3>
             </div>
             <div class="modal-body">
-                @form(['action'=>$bible['id'] ? route('bible-versions.edit', $bible->id) : route('bible-versions.store')])
+                @form(['action'=>$bible['id'] ? route('bible-versions.update', $bible->id) : route('bible-versions.store')])
                     <input name="_form" value="bible" hidden>
                     @number(['name'=>"index", 'placeholder'=>'index', 
                         'value'=> old('_form') === 'bible' ? old('index') : $bible['index'] ?? $next_index,
@@ -23,9 +23,9 @@
                         'value'=> old('_form') === 'bible' ? old('alias') : $bible['alias'],
                         'error'=> old('_form') === 'bible' ? $errors->first('alias') : null
                     ])
-                    @text(['name'=>"lang", 'placeholder'=>'language', 'inputClass'=>'autocomplete-input', 'data'=>['endpoint'=>'/api/languages'],
-                        'value'=> old('_form') === 'bible' ? old('lang') : $bible['lang'],
-                        'error'=> old('_form') === 'bible' ? $errors->first('lang') : null
+                    @text(['name'=>"language", 'placeholder'=>'language', 'inputClass'=>'autocomplete-input', 'data'=>['endpoint'=>'/api/languages'],
+                        'value'=> old('_form') === 'bible' ? old('language') : $bible['language']['value'],
+                        'error'=> old('_form') === 'bible' ? $errors->first('language') : null
                     ])
                     @checkbox(['name'=>"public", 'label'=>'public',
                         'checked'=> old('_form') === 'bible' ? old('public') : $bible['public'],

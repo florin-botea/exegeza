@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class ArticleObserver
 {
-
+/*
     public function created(Article $article)
     {
         $tags = request()->tags;
@@ -69,5 +69,5 @@ class ArticleObserver
         $article->langRelationship()->updateOrCreate([
             'model_type' => get_class($article),
         ], ['language_id' => $language->id]);
-    }
+    }*/
 }

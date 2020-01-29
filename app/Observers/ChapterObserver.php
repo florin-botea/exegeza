@@ -14,27 +14,27 @@ class ChapterObserver
      * @param  \App\Chapter  $chapter
      * @return void
      */
-    public function created(Chapter $chapter)
+    /*public function created(Chapter $chapter)
     {
 				if (!request()->add_verses || $chapter->index < 0) {
 						return;
 				}
         $this->addVerses(request(), $chapter);
-    }
+    }*/
 
     /**
      * Handle the chapter "updated" event.
      *
      * @param  \App\Chapter  $chapter
      * @return void
-     */
+     *//*
     public function updated(Chapter $chapter)
     {
 				if (!request()->add_verses || $chapter->index < 0) {
 						return;
 				}
         $this->addVerses(request(), $chapter);
-    }
+    }*/
 
     /**
      * Handle the chapter "deleted" event.
@@ -70,7 +70,7 @@ class ChapterObserver
     }
 		
 		private function addVerses ($request, $chapter)
-		{	
+		{	/*
 				$bible = $request->bible_version;
 				$book = $request->book;
 				
@@ -93,6 +93,6 @@ class ChapterObserver
 						];
 				}
 				DB::table($table_name)->where(['book_id' => $bible->book->id, 'chapter_id' => $bible->book->chapter->id])->delete();
-				DB::table($table_name)->insert($stack);
+				DB::table($table_name)->insert($stack);*/
 		}
 }

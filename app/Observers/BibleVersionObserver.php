@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Schema\Blueprint;
 
 class BibleVersionObserver
-{
+{/*
     /**
      * Handle the bible version "created" event.
      *
@@ -16,7 +16,7 @@ class BibleVersionObserver
      * @return void
      */
     public function created(BibleVersion $bibleVersion)
-    {
+    {/*
 				$this->updateLanguages($bibleVersion, request()->lang);
 				
 				$table_name = 'v_' . $bibleVersion->id . '_verses';
@@ -28,7 +28,7 @@ class BibleVersionObserver
 						$table->integer('index')->unsigned();
 						$table->string('text')->length(900);
 					});
-				}
+				}*/
     }
 
     /**
@@ -39,7 +39,7 @@ class BibleVersionObserver
      */
     public function updated(BibleVersion $bibleVersion)
     {
-				$this->updateLanguages($bibleVersion, request()->lang);
+				//$this->updateLanguages($bibleVersion, request()->lang);
     }
 
     /**
@@ -74,12 +74,12 @@ class BibleVersionObserver
     {
         //
     }
-		
+		/*
 		private function updateLanguages($bibleVersion, $language) 
 		{
 				$lang = \App\Language::firstOrCreate(['language'=>$language]);
 				\App\ModelHasLanguage::updateOrCreate([
 						'model_type' => get_class($bibleVersion), 'model_id' => $bibleVersion->id
 				], ['language_id' => $lang->id]);
-		}
+        }*/
 }

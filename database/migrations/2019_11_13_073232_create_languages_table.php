@@ -15,7 +15,18 @@ class CreateLanguagesTable extends Migration
     {
         Schema::create('languages', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('language');
+            $table->string('value');
+            $table->timestamps();
+        });
+
+        Schema::create('model_has_languages', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('model_type');
+            $table->bigInteger('model_id')->unsigned();
+                $table->bigInteger('language_id')->unsigned();
+                $table->foreign('language_id')
+                    ->references('id')
+                    ->on('languages');
             $table->timestamps();
         });
     }
@@ -27,6 +38,7 @@ class CreateLanguagesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('model_has_languages');
         Schema::dropIfExists('languages');
     }
 }

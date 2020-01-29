@@ -20,14 +20,12 @@ class BibleVersionsController extends Controller
 
 	public function create()
 	{
-		$bibleVersions = \App\BibleVersion::with('language')->get();
-
-		return view('manage-bible-versions')->with('bibleVersions', $bibleVersions);
+		abort(404);
 	}
 
 	public function show(string $bible_slug)
 	{
-		$bible = \App\BibleVersion::with('books')->where('slug', $bible_slug)->first();
+		$bible = \App\BibleVersion::with('books', 'language')->where('slug', $bible_slug)->first();
 		$books = $bible->books->groupBy('type');
 		unset($bible->books);
 		$bible->setAttribute('books', $books);
@@ -38,6 +36,7 @@ class BibleVersionsController extends Controller
 	public function store(ValidBibleVersion $request)
 	{
 		$bible = \App\BibleVersion::create($request->all());
+		$bible->setLanguage($request->input('language'));
 
 		return back();
 	}
@@ -45,19 +44,16 @@ class BibleVersionsController extends Controller
 	public function update(ValidBibleVersion $request, $id)
 	{
 		\App\BibleVersion::findOrFail($id)->update($request->all());
+		$bible = \App\BibleVersion::findOrFail($id);
 		\App\BibleVersion::findOrFail($id)->touch();
 
-		return back();
+		return redirect( route('bible-versions.show', $bible->slug) );
 	}
 
 	public function destroy($id)
 	{
-		$bibleVersion = \App\BibleVersion::find($id);
-		$bibleVersion->index = -1;
-		$bibleVersion->alias = 'del-' . $bibleVersion->alias;
-		$bibleVersion->save();
 		\App\BibleVersion::where('id', $id)->delete();
 
-		return back();
+		return redirect("/");
 	}
 }
