@@ -20,11 +20,8 @@ use Illuminate\Support\Facades\Storage;
 Route::auth();
 
 Route::get('/', function () {
-    file_get_contents("Main.class");
-    dd( shell_exec("java -version 2>&1") );
-    #$bibleVersions = \App\BibleVersion::all();
-    #return view('homepage')->with('bibleVersions', $bibleVersions);
-    //dd($output);
+    $bibleVersions = \App\BibleVersion::all();
+    return view('homepage')->with('bibleVersions', $bibleVersions);
 });
 
 Route::resource('bible-versions', 'BibleVersionsController');
