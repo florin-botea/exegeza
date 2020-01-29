@@ -1,0 +1,53 @@
+window._ = require('lodash');
+window.axios = require('axios');
+// window.$ = window.jquery = require('jquery');
+// window.popper = require('popper.js');
+// require('bootstrap');
+
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+import debounce from 'lodash/debounce';
+window.Tagify = require('@yaireo/tagify');
+import autoComplete from 'js-autocomplete/auto-complete';
+// import Echo from 'laravel-echo';
+
+// window.Pusher = require('pusher-js');
+
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: process.env.MIX_PUSHER_APP_KEY,
+//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+//     encrypted: true
+// });
+$('.tagify-input').each(function (i, el) {
+    var endpoint = el.dataset.endpoint || '';
+    var isUrlEndpoint = !endpoint.includes(',');
+    var pattern = el.dataset.pattern ? new RegExp(el.dataset.pattern) : null;
+    // in cazul in care e url, debounce, altfel debounce cat mai mic
+    var debounce_time = el.dataset.debounce || (isUrlEndpoint ? 400 : 100);
+    var whitelist = isUrlEndpoint ? [] : (endpoint.split(',').map(tag => tag.trim()));
+    var tagify = (new Tagify(el, { whitelist, pattern }))
+        .on('input', debounce(function (e) {
+            if (!endpoint || !isUrlEndpoint) return;
+            let val = e.detail.value;
+            if (val.length < 2) return;
+            axios.get(endpoint + '?q=' + val)
+                .then(function (res) {
+                    tagify.settings.whitelist = res.data;
+                    tagify.dropdown.show.call(tagify, val); // render the suggestions dropdown
+                })
+        }, debounce_time));
+});
+
+$('.autocomplete-input').each(function (i, el) {
+    var endpoint = el.dataset.endpoint || '';
+    new autoComplete({
+        selector: el,
+        minChars: 1,
+        source: function (term, suggest) {
+            try { axios.abort(); } catch (e) { }
+            axios.get(endpoint + '?q=' + term).then(res => {
+                suggest(res.data)
+            });
+        }
+    });
+});

@@ -1,0 +1,7 @@
+.checked\:next-hidden-show:checked ~ .hidden {
+	display:initial !important;
+}
+
+.hidden {
+	display: none;
+}

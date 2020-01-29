@@ -1,0 +1,15 @@
+button {
+	.spinner {
+		display: none;
+	}
+}
+
+.single-submit-btn.submitting {
+	.spinner {
+		display: inline-block;
+	}
+}
+
+.single-submit-btn * {
+	pointer-events: none;
+}
