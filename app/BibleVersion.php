@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HasLanguage;
 
@@ -75,5 +76,21 @@ class BibleVersion extends Model
 		} else {
 			return null;
 		}
+	}
+
+	public function setVersesTable()
+	{
+		$table_name = 'v_' . $this->id . '_verses';
+		if (! Schema::hasTable($table_name)) {
+			Schema::create($table_name, function (Blueprint $table) {
+				$table->increments('id');
+				$table->integer('book_id')->unsigned();
+				$table->integer('chapter_id')->unsigned();
+				$table->integer('index')->unsigned();
+				$table->string('text')->length(900);
+			});
+		}
+
+		return $table_name;
 	}
 }

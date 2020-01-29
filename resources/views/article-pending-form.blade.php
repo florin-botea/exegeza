@@ -2,7 +2,7 @@
 
 @php
     $scripts = ['ckeditor-classic.js'];
-    $m = $article ?? [];
+    $m = $article ?? ['language'=>['value'=>'user language']];
 @endphp
 
 @section('content')
@@ -22,6 +22,10 @@
                         @if ($bible->book->chapter)
                             <input type="text" name="chapter_index" value="{{$bible->book->chapter->index}}">
                         @endif
+                        @text(['name'=>'language', 'label'=>'Language:',
+                            'value' => old('language') ?? $m['language']['value'] ?? '',
+                            'error' => $errors->first('language')
+                        ])
                         @text(['name'=>'title', 'label'=>'Title', 'value'=>old('title')??$m['title']??'', 'error'=>$errors->first('title')])
                         <div class="form-group">
                             <textarea class="ckeditor-classic" name="content" hidden>{{old('content') ?? $m['content'] ?? ''}}</textarea>

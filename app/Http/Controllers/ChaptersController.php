@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Chapter as ValidChapter;
-use Illuminate\Database\Schema\Blueprint;
+use App\Http\Requests\ValidChapter;
 
 class ChaptersController extends Controller
 {
@@ -26,21 +25,17 @@ class ChaptersController extends Controller
 			'chapter_index' => $chapter_index
 		]);
 		$articles = \App\Article::where([
-			'book_index'=>$bible->book->index, 
-			'chapter_index'=>$bible->book->chapter->index
+			'book_index' => $bible->book->index,
+			'chapter_index' => $bible->book->chapter->index
 		])->whereNotNull('published_by')
-		->filtered($bible)->get();
+			->filtered($bible)->get();
 
 		return view('chapter')->with(compact('bible', 'articles'));
 	}
 
 	public function create(string $bibleVersion, string $book)
 	{
-		$bible = \App\BibleVersion::with(['book' => function ($query) use ($book) {
-			return $query->where('slug', $book)->with('chapters');
-		}])->where('slug', $bibleVersion)->firstOrFail();
-
-		return view('manage-chapters')->with('bible', $bible);
+		abort(404);
 	}
 
 	public function store(ValidChapter $request, int $bibleVersion, int $book)
@@ -48,7 +43,11 @@ class ChaptersController extends Controller
 		$bible = \App\BibleVersion::with(['book' => function ($query) use ($book) {
 			return $query->where('id', $book);
 		}])->findOrFail($bibleVersion);
-		$bible->book->chapters()->create($request->all());
+		$chapter = $bible->book->chapters()->create($request->all());
+		if ($request->input('add_verses')) {
+			$verses = preg_split($request->regex, $request->verses);
+			$chapter->addVerses($verses);
+		}
 
 		return back(); //return back in add_verses after middleware
 	}
@@ -56,18 +55,20 @@ class ChaptersController extends Controller
 	public function update(ValidChapter $request, int $bibleVersion, int $book, int $id)
 	{
 		\App\Chapter::findOrFail($id)->update($request->all());
-		\App\Chapter::findOrFail($id)->touch();
+		if ($request->input('add_verses')) {
+			$verses = preg_split($request->regex, $request->verses);
+			\App\Chapter::findOrFail($id)->addVerses($verses);
+		}
 
 		return back(); //return back add_verses in after middleware
 	}
 
 	public function destroy(int $bible, int $book, int $id)
 	{
-		$chapter = \App\Chapter::findOrFail($id);
-		$chapter->index = -1;
-		$chapter->save();
 		\App\Chapter::where('id', $id)->delete();
+		$bible = \App\BibleVersion::findOrFail($bible);
+		$book = \App\Book::findOrFail($book);
 
-		return back();
+		return redirect( route('bible-versions.books.show', [$bible->slug, $book->slug]));
 	}
 }

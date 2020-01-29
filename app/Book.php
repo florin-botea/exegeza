@@ -10,7 +10,12 @@ class Book extends Model
 	use SoftDeletes;
 		 
 	protected $fillable = ['index', 'name', 'alias', 'slug', 'type'];
-		
+
+	public function bible ()
+	{
+		return $this->belongsTo(\App\BibleVersion::class, 'bible_version_id');
+	}
+
 	public function chapters ()
 	{
 		return $this->hasMany(\App\Chapter::class);

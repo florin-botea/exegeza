@@ -16,6 +16,10 @@ class CreateTagsTable extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('value');
+            $table->bigInteger('language_id')->unsigned();
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('languages');
             $table->timestamps();
         });
 

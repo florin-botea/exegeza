@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\PendingArticle as ValidPendingArticle;
+use App\Http\Requests\ValidPendingArticle;
 use \App\Article;
 
 class PendingArticlesController extends Controller
@@ -52,6 +52,8 @@ class PendingArticlesController extends Controller
         $data = $request->all();
         $data['user_id'] = 1;
         $article = Article::create($data);
+        $article->setLanguage($request->input('language'));
+        $article->addTags(json_decode($request->tags, true));
         //redirect user posts
         return redirect(route('pending-articles.show', $article->id));
     }
@@ -82,7 +84,7 @@ class PendingArticlesController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $article = Article::with('tags')->find($id);
+        $article = Article::with('tags', 'language')->find($id);
         $bible = \App\BibleVersion::fetch([
             'bible_version_id' => $article->bible_version_id,
             'book_index' => $article->book_index,
@@ -99,7 +101,7 @@ class PendingArticlesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ValidPendingArticle $request, $id)
     {
         Article::findOrFail($id)->update([
             'title' => $request->title,
@@ -107,6 +109,8 @@ class PendingArticlesController extends Controller
             'public' => false
         ]);
         $article = Article::findOrFail($id);
+        $article->setLanguage($request->input('language'));
+        $article->addTags(json_decode($request->tags, true));
         
         return redirect( route('pending-articles.show', $article->id) );
     }

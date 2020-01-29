@@ -4,15 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Traits\HasLanguage;
+use App\Traits\HasTags;
 
 class Article extends Model
 {
-	protected $fillable = ['bible_version_id', 'book_index', 'chapter_index', 'user_id', 'meta', 'title', 'slug', 'sample', 'content', 'translation_of', 'published_by'];
+	use HasLanguage;
+	use HasTags;
 
-	public function original()
-	{
-		return $this->hasOne(\App\Article::class, 'translation_of');
-	}
+	protected $fillable = ['bible_version_id', 'book_index', 'chapter_index', 'user_id', 'meta', 'title', 'slug', 'sample', 'content', 'published_by'];
 
 	public function author()
 	{
@@ -21,29 +21,12 @@ class Article extends Model
 
 	public function bible()
 	{
-		return $this->belongsTo(\App\BibleVersion::class, 'bible_version_id')->with(['book' => function($q) {
-			return $q->where('index', DB::raw('article.book_index'));
-		}]);
-	}
-
-	public function tags()
-	{
-		return $this->hasManyThrough(\App\Tag::class, \App\ModelHasTag::class, 'model_id', 'id', 'id', 'tag_id')->where('model_type', __CLASS__);
-	}
-
-	public function lang()
-	{
-		return $this->hasOneThrough(\App\Language::class, \App\ModelHasLanguage::class, 'model_id', 'id', 'id', 'language_id')->where('model_type', __CLASS__);
-	}
-
-	public function tagsRelationship()
-	{
-		return $this->hasMany(\App\ModelHasTag::class, 'model_id')->where('model_type', __CLASS__);
-	}
-
-	public function langRelationship()
-	{
-		return $this->hasOne(\App\ModelHasLanguage::class, 'model_id')->where('model_type', __CLASS__);
+		return $this->belongsTo(\App\BibleVersion::class, 'bible_version_id')
+			->with(['book' => function($q) {
+				return $q->with(['chapter' => function($query) {
+					return $query->where('index', DB::raw('article.chapter_index'));
+				}])->where('index', DB::raw('article.book_index'));
+			}]);
 	}
 
 	public function publisher()

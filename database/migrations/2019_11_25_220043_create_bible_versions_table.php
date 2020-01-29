@@ -13,22 +13,22 @@ class CreateBibleVersionsTable extends Migration
      */
     public function up()
     {
-				if (!Schema::hasTable('bible_versions')) {
-						Schema::create('bible_versions', function (Blueprint $table) {
-								$table->bigIncrements('id')->unsigned();
-								$table->integer('index');
-								$table->string('name')->length(61);
-								$table->string('alias')->length(61);
-								$table->string('slug')->length(61);
-								$table->boolean('public')->default(false);
-								$table->bigInteger('language_id')->unsigned()->nullable();
-								$table->foreign('language_id')
-									->references('id')
-									->on('languages');
-								$table->timestamps();
-								$table->softDeletes();
-						});
-				}
+        if (!Schema::hasTable('bible_versions')) {
+            Schema::create('bible_versions', function (Blueprint $table) {
+                $table->bigIncrements('id')->unsigned();
+                $table->integer('index');
+                $table->string('name')->length(61);
+                $table->string('alias')->length(61);
+                $table->string('slug')->length(61);
+                $table->boolean('public')->default(false);
+                $table->bigInteger('language_id')->unsigned()->nullable();
+                $table->foreign('language_id')
+                    ->references('id')
+                    ->on('languages');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
     }
 
     /**

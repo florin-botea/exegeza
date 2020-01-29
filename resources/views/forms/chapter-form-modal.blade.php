@@ -9,7 +9,7 @@
                 <h3>{{ $chapter['id'] ? 'Edit chapter' : 'Add chapter' }}</h3>
             </div>
             <div class="modal-body">
-                @form(['action'=>$chapter['id'] ? route('bible-versions.books.chapters.edit', [$bible->id, $bible->book->id, $chapter->id]) : route('bible-versions.books.chapters.store', [$bible->id, $bible->book->id] )])
+                @form(['action'=>$chapter['id'] ? route('bible-versions.books.chapters.update', [$bible->id, $bible->book->id, $chapter->id]) : route('bible-versions.books.chapters.store', [$bible->id, $bible->book->id] )])
                     <input name="_form" value="chapter" hidden>
                     @number(['name'=>'index', 'placeholder'=>'index',
                         'value'=> old('_form') === 'chapter' ? old('index') : ($chapter['index'] ?? $next_index),

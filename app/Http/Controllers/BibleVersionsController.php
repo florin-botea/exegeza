@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\BibleVersion as ValidBibleVersion;
+use App\Http\Requests\ValidBibleVersion;
 
 class BibleVersionsController extends Controller
 {
@@ -37,6 +37,7 @@ class BibleVersionsController extends Controller
 	{
 		$bible = \App\BibleVersion::create($request->all());
 		$bible->setLanguage($request->input('language'));
+		$bible->setVersesTable();
 
 		return back();
 	}
@@ -45,7 +46,7 @@ class BibleVersionsController extends Controller
 	{
 		\App\BibleVersion::findOrFail($id)->update($request->all());
 		$bible = \App\BibleVersion::findOrFail($id);
-		\App\BibleVersion::findOrFail($id)->touch();
+		\App\BibleVersion::findOrFail($id)->setVersesTable();
 
 		return redirect( route('bible-versions.show', $bible->slug) );
 	}

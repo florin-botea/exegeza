@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PendingArticle extends FormRequest
+class ValidPendingArticle extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,9 +16,9 @@ class PendingArticle extends FormRequest
         return true;
         //erorare
         if (strtolower(request()->_method) === 'put') {
-            return auth()->user()->can('update', \App\Article::firstOrFail( request()->id ));
+            return auth()->user() && auth()->user()->can('update', \App\Article::firstOrFail( request()->id ));
         } else {
-            return auth()->user()->can('create', \App\Article::class);
+            return auth()->user() && auth()->user()->can('create', \App\Article::class);
         }
     }
 
@@ -32,6 +32,7 @@ class PendingArticle extends FormRequest
         return [
             'bible_version_id' => 'required',
             'book_index' => 'required',
+            'language' => 'required|between:3,15',
             'title' => 'required',
             'content' => 'required',
             'tags' => 'required'

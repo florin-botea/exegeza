@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
-class BibleVersion extends FormRequest
+class ValidBibleVersion extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -17,7 +17,7 @@ class BibleVersion extends FormRequest
 	{
 		return true;
 	}
-	
+	/*
 	protected function getValidatorInstance ()
 	{
 		if (!$this->public) {
@@ -27,17 +27,17 @@ class BibleVersion extends FormRequest
 		}
 		
 		return parent::getValidatorInstance();
-	}
+	}*/
 
 	public function withValidator($validator)
 	{
 		$validator->after(function ($validator) {
 			$duplicateIndex = \App\BibleVersion::where('index', request()->input('index'))->first();
 			$duplicateAlias = \App\BibleVersion::where('alias', request()->input('alias'))->first();
-			if ($duplicateIndex) {
+			if ($duplicateIndex && !request()->isMethod('put')) {
 				$validator->errors()->add('index', 'Index already taken');
 			}
-			if ($duplicateAlias) {
+			if ($duplicateAlias && !request()->isMethod('put')) {
 				$validator->errors()->add('alias', 'Alias already taken');
 			}
 		});

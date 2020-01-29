@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
-    protected $fillable = ['value'];
+    protected $fillable = ['value', 'language_id'];
 }

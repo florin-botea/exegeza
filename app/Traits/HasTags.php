@@ -1,15 +1,22 @@
-namespace App/Traits;
+<?php
+
+namespace App\Traits;
+
+use Illuminate\Support\Arr;
 
 /**
-    dependinte: table model_has_tags si tags
+ * dependinte: table model_has_tags si tags
  */
 
-trait HasLanguage
+trait HasTags
 {
     public function addTags(array $tags)
     {
+        \App\ModelHasTag::where(["model_type" => get_class($this), "model_id" => $this->id])->delete();
+
         foreach ($tags as $tag) {
-            $this->addTag($tag);
+            $value = is_array($tag) ? $tag['value'] : $tag;
+            $this->addTag($value);
         }
     }
 
@@ -17,12 +24,13 @@ trait HasLanguage
     {
         $tag = \App\Tag::firstOrCreate([
             "value" => $tag,
-            "language" => $this->language
+            "language_id" => $this->language->id
         ]);
-        \App\ModelHasTag::firstOrCreate([
+        \App\ModelHasTag::create([
             "model_type" => get_class($this),
             "model_id" => $this->id,
-            "tag_id" => $tag->id
+            "tag_id" => $tag->id,
+            'user_id' => 1
         ]);
     }
 
