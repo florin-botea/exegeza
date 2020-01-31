@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class ValidBibleVersion extends FormRequest
 {
@@ -32,13 +33,18 @@ class ValidBibleVersion extends FormRequest
 	public function withValidator($validator)
 	{
 		$validator->after(function ($validator) {
-			$duplicateIndex = \App\BibleVersion::where('index', request()->input('index'))->first();
-			$duplicateAlias = \App\BibleVersion::where('alias', request()->input('alias'))->first();
+			$duplicateIndex = \App\BibleVersion::where('index', Input::get('index'))->first();
+			$duplicateAlias = \App\BibleVersion::where('alias', Input::get('alias'))->first();
 			if ($duplicateIndex && !request()->isMethod('put')) {
 				$validator->errors()->add('index', 'Index already taken');
 			}
 			if ($duplicateAlias && !request()->isMethod('put')) {
 				$validator->errors()->add('alias', 'Alias already taken');
+			}
+			
+			if ($validator->errors()->any() && Input::has('form_id')) {
+				return back()
+					->withErrors($validator, Input::get('form_id'));
 			}
 		});
 	}

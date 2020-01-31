@@ -67,8 +67,10 @@
                     </button>
                 @endcan
             </div>
-            <section id="vue-verses-section">
-                <!-- -->
+            <section class="verses-section">
+                @foreach($bible->book->chapter->verses as $verse)
+                    <p class="">{{ $verse->index.' '.$verse->text }}</p>
+                @endforeach
             </section>
             @endif
         </section>

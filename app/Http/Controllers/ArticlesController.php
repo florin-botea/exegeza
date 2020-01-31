@@ -70,7 +70,7 @@ class ArticlesController extends Controller
      */
     public function edit($id)
     {
-        $article = Article::with('tags', 'lang')->findOrFail($id);
+        $article = Article::with('tags', 'language')->findOrFail($id);
         if ($article->public) { //nu are un h1 in start
             $article->content = "<h1>$article->title</h1>".$article->content;
         }

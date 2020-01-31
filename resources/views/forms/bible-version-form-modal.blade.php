@@ -1,6 +1,8 @@
 @php
-    $bible = $bible ?? ['id'=>null, 'index'=>null, 'name'=>null, 'alias'=>null, 'language'=>['value'=>null], 'public'=>false];
-    $next_index = $next_index ?? 1;
+    $bible = $bible ?? new \App\BibleVersion();
+    $bible->index = $bible->index ?? $next_index ?? 1;
+    $form = new \App\Helpers\Form('bible', $bible);
+    $language = $bible->language ? $bible->language->value : null;
 @endphp
 <div class="modal fade show" id="bible-version-form-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -10,25 +12,25 @@
             </div>
             <div class="modal-body">
                 @form(['action'=>$bible['id'] ? route('bible-versions.update', $bible->id) : route('bible-versions.store')])
-                    <input name="_form" value="bible" hidden>
+                    <input name="form_id" value="bible" hidden>
                     @number(['name'=>"index", 'placeholder'=>'index', 
-                        'value'=> old('_form') === 'bible' ? old('index') : $bible['index'] ?? $next_index,
-                        'error'=> old('_form') === 'bible' ? $errors->first('index') : null
+                        'value'=> $form->value('index'),
+                        'error'=> $errors->bible->first('index')
                     ])
                     @text(['name'=>"name", 'placeholder'=>'name',
-                        'value'=> old('_form') === 'bible' ? old('name') : $bible['name'],
-                        'error'=> old('_form') === 'bible' ? $errors->first('name') : null
+                        'value'=> $form->value('name'),
+                        'error'=> $errors->bible->first('name')
                     ])
                     @text(['name'=>"alias", 'placeholder'=>'alias',
-                        'value'=> old('_form') === 'bible' ? old('alias') : $bible['alias'],
-                        'error'=> old('_form') === 'bible' ? $errors->first('alias') : null
+                        'value'=> $form->value('alias'),
+                        'error'=> $errors->bible->first('alias')
                     ])
                     @text(['name'=>"language", 'placeholder'=>'language', 'inputClass'=>'autocomplete-input', 'data'=>['endpoint'=>'/api/languages'],
-                        'value'=> old('_form') === 'bible' ? old('language') : $bible['language']['value'],
-                        'error'=> old('_form') === 'bible' ? $errors->first('language') : null
+                        'value'=> $form->value('language', $language),
+                        'error'=> $errors->bible->first('language')
                     ])
                     @checkbox(['name'=>"public", 'label'=>'public',
-                        'checked'=> old('_form') === 'bible' ? old('public') : $bible['public'],
+                        'checked'=> $form->value('public'),
                     ])
                     <div class="d-flex justify-content-end">
                     @if($bible['id']??false)
