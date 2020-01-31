@@ -11,7 +11,7 @@ class ArticlesController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('slugify', ['only' => ['update']]);
+		$this->middleware('slugify', ['only' => ['store', 'update']]);
 	}
     /**
      * Display a listing of the resource.
@@ -39,9 +39,16 @@ class ArticlesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ValidArticle $request)
     {
-        abort(404);
+        $data = $request->all();
+        $data['user_id'] = 1;
+        $data['published_by'] = 1;
+        $article = Article::create($data);
+        $article->setLanguage($request->input('language'));
+        $article->addTags(json_decode($request->tags, true));
+
+        return redirect( route('articles.show', $request->slug) );
     }
 
     /**
@@ -52,8 +59,13 @@ class ArticlesController extends Controller
      */
     public function show($slug)
     {
-        $article = Article::where('slug', $slug)->firstOrFail();
-		$bible = \App\BibleVersion::fetch([
+        $article = Article::with('tags', 'language', 'author')->where('slug', $slug)->firstOrFail();
+        $tag_ids = $article->tags->pluck('id');
+        $related = \App\Article::whereHas('tags', function($query) use ($tag_ids){
+            $query->whereIn('tags.id', $tag_ids);
+        })->get();
+        $article->related = $related;
+        $bible = \App\BibleVersion::fetch([
             'bible_version_id' => $article->bible_version_id,
             'book_index' => $article->book_index,
             'chapter_index' => $article->chapter_index
@@ -80,7 +92,7 @@ class ArticlesController extends Controller
             'chapter_index' => $article->chapter_index
         ]);
 
-        return view('article-publish-form')->with(compact('article', 'bible'));
+        return view('article-form')->with(compact('article', 'bible'));
     }
 
     /**
@@ -92,15 +104,17 @@ class ArticlesController extends Controller
      */
     public function update(ValidArticle $request, $id)
     {
-        $content = preg_replace ('/^<h1>.*<\/h1>/', '', $request->content, 1);
         Article::findOrFail($id)->update([
             'meta' => $request->meta,
             'title' => $request->title,
             'slug' => $request->slug,
             'sample' => $request->sample,
-            'content' => $content,
+            'content' => $request->content,
             'published_by' => 1
         ]);
+        $article = Article::findOrFail($id);
+        $article->setLanguage($request->input('language'));
+        $article->addTags(json_decode($request->tags, true));
 
         return redirect( route('articles.show', $request->slug) );
     }

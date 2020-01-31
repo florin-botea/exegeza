@@ -36,11 +36,8 @@
                         </section>
                     </footer>
                     <div class="d-flex justify-content-end">
-                        @if(auth()->user() && auth()->user()->can('publish articles') && $article)
-                        <a class="btn btn-primary mr-2" href="{{ route('articles.edit', $article->id) }}">{{ $article->published_by ? 'Edit published' : 'Publish this article' }}</a>
-                        @endif
-                        @can('update', $article)
-                        <a class="btn btn-success" href="{{ route('pending-articles.edit', $article->id) }}"> Edit </a>
+                        @canany(['update','delete','publish','unpublish'], $article)
+                        <a class="btn btn-success" href="{{ route('pending-articles.edit', $article->id) }}"> Gestioneaza articol </a>
                         @endcan
                     </div>
                     <hr class="my-4">

@@ -21,4 +21,14 @@ class ArticlePolicy
     {
         return $user->hasAnyPermission('delete articles') || $article->user_id === $user->id;
     }
+
+    public function publish(User $user, Article $article = null)
+    {
+        return $user->hasAnyPermission('publish articles');
+    }
+
+    public function unpublish(User $user, Article $article = null)
+    {
+        return $user->hasAnyPermission('unpublish articles');
+    }
 }

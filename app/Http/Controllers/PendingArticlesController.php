@@ -38,7 +38,7 @@ class PendingArticlesController extends Controller
             'chapter_index' => $chapter_index
         ]) ?? abort(404);
 
-        return view('article-pending-form')->with(compact('bible'));
+        return view('article-form')->with(compact('bible'));
     }
 
     /**
@@ -91,7 +91,7 @@ class PendingArticlesController extends Controller
             'chapter_index' => $article->chapter_index
         ]);
 
-        return view('article-pending-form')->with(compact('bible', 'article'));
+        return view('article-form')->with(compact('bible', 'article'));
     }
 
     /**
