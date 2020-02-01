@@ -1,7 +1,7 @@
 require('./bootstrap');
 
 import Vue from 'vue';
-import VersesList from './vue-components/VersesList';
+import ArticlesList from './vue-components/ArticlesList.vue';
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
@@ -21,7 +21,7 @@ $(".single-submit-btn").on("click", function(e){
 });
 
 /**
- * Auth
+ * AUTENTIFICARE
  * ========================================================================== 
  */
 window.loginModal = function(){
@@ -42,10 +42,7 @@ $('#registerBtn').on('click', function(){
 	registerModal();
 })
 
-/**
- * endAuth
- * =========================================================================
- */
+/* endAUTENTIFICARE */
 
 /**
  * Manage Bibles
@@ -71,7 +68,6 @@ $('#js-preview-verses-action').on('click', function(){
  * ========================================================================
  */
 
-const verses = new Vue({
-    el: '#vue-verses-section',
-    components: {VersesList},
-});
+const app = new Vue({
+    components: {ArticlesList},
+}).$mount('#vue-app-layer');

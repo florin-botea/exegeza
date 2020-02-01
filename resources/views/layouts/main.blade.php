@@ -27,7 +27,7 @@
 		{{-- @include('sections.admin-navbar') --}}
 		@include('sections.navbar')
 	</header>
-	<main class="container my-5">
+	<main class="container my-5" id="vue-app-layer">
 		@yield('content')
 	</main>
 	@include('auth.login-modal')

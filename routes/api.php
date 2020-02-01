@@ -34,3 +34,5 @@ Route::get('/languages', function () {
 Route::post('/verses-preview', function (Request $request) {
     return response()->json(preg_split($request->regex, $request->verses));
 });
+
+Route::get('/articles', 'ArticlesController@index');

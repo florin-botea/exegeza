@@ -5,6 +5,18 @@ window.axios = require('axios');
 // require('bootstrap');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+let token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+	console.log(token)
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    axios.defaults.headers.common['Accept'] = 'application/json, text/plain, */*'
+    //axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://exegeza-biblica.epizy.com';
+    //axios.defaults.headers.common['Origin'] = 'http://exegeza-biblica.epizy.com/public'
+} else {
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+
 import debounce from 'lodash/debounce';
 window.Tagify = require('@yaireo/tagify');
 import autoComplete from 'js-autocomplete/auto-complete';

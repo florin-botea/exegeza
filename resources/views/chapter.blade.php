@@ -82,6 +82,8 @@
                     <i class="far fa-plus-square"></i> New
                 </a>
             </div>
+
+{{--
             @include('components.articles-filter')
 
             @foreach ($articles??[] as $article)
@@ -90,6 +92,8 @@
                     'article_url' => route('articles.show', $article->slug)
                 ])
             @endforeach
+--}}
+<articles-list :bible="{{ $bible->id }}" :book="{{ $bible->book->index }}" :chapter="{{ $bible->book->chapter ? $bible->book->chapter->index : null }}"></articles-list>
         </section>
     </div>
 </div>

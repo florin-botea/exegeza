@@ -86,17 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/verses-section.js":
-/*!****************************************!*\
-  !*** ./resources/js/verses-section.js ***!
-  \****************************************/
-/*! no exports provided */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nError: ENOENT: no such file or directory, open 'C:\\Users\\florin.botea\\Desktop\\myStuffs\\exegeza-biblica\\resources\\js\\verses-section.js'");
-
-/***/ }),
-
 /***/ 2:
 /*!**********************************************!*\
   !*** multi ./resources/js/verses-section.js ***!
@@ -104,7 +93,7 @@ throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\florin.botea\Desktop\myStuffs\exegeza-biblica\resources\js\verses-section.js */"./resources/js/verses-section.js");
+!(function webpackMissingModule() { var e = new Error("Cannot find module 'C:\\Users\\user\\Desktop\\exegeza-biblica\\resources\\js\\verses-section.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 
 
 /***/ })
