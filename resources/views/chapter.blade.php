@@ -93,7 +93,7 @@
                 ])
             @endforeach
 --}}
-<articles-list :bible="{{ $bible->id }}" :book="{{ $bible->book->index }}" :chapter="{{ $bible->book->chapter ? $bible->book->chapter->index : null }}"></articles-list>
+<articles-list :bible="{{ $bible->id }}" :book="{{ $bible->book->index }}" :chapter="{{ $bible->book->chapter ? $bible->book->chapter->index : 0 }}" :languages="{{ json_encode($languages) }}"></articles-list>
         </section>
     </div>
 </div>

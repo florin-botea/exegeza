@@ -18,9 +18,21 @@ class ArticlesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $req)
     {
-        //
+        $query = \App\Article::with('author')->where(['book_index' => $req->query('book'), 'chapter_index' => $req->query('chapter')])->whereNotNull('published_by');
+        if (!$req->query('all-translations')) {
+            $query->where('bible_version_id', $req->query('bible'));
+        }
+        if (!$req->query('all-languages')) {
+
+        }
+        if (!$req->query('all-confessions')) {
+
+        }
+        $articles = $query->paginate(1)->appends($req->all());
+
+        return ( $req->expectsJson() ? response()->json($articles) : abort(404) );
     }
 
     /**

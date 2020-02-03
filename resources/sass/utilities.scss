@@ -5,3 +5,11 @@
 .hidden {
 	display: none;
 }
+
+input[type=checkbox].list-item:checked ~ label {
+	text-decoration: none;
+}
+
+input[type=checkbox].list-item ~ label {
+	text-decoration: red line-through;
+}

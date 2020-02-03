@@ -1,7 +1,13 @@
 require('./bootstrap');
 
 import Vue from 'vue';
+import vueDebounce from 'vue-debounce';
 import ArticlesList from './vue-components/ArticlesList.vue';
+
+Vue.use(vueDebounce, {
+	listenTo: ['input', 'keyup', 'change'],
+	defaultTime: '500ms'
+})
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()

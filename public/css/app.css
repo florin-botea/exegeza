@@ -506,6 +506,15 @@ button .spinner {
   display: none;
 }
 
+input[type=checkbox].list-item:checked ~ label {
+  text-decoration: none;
+}
+
+input[type=checkbox].list-item ~ label {
+  -webkit-text-decoration: red line-through;
+          text-decoration: red line-through;
+}
+
 :root {
   --ck-highlight-marker-blue: #72cdfd;
   --ck-highlight-marker-green: #63f963;

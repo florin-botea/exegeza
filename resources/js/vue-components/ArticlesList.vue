@@ -4,61 +4,84 @@
             <h5 class="btn btn-sm btn-outline-warning cursor-pointer" data-toggle="collapse" data-target="#filters">Filtre:</h5>
             <div class="form-row mb-3 collapse" id="filters">
                 <div class="form-group mx-1 col-md">
-                    <input class="form-control" placeholder="Cuvant cheie">
+                    <input class="form-control" placeholder="Cuvant cheie" v-debounce:600ms="setKeyWord">
                 </div>
                 <div class="form-group mx-1 col-md">
-                    <input class="form-control" placeholder="Autor">
+                    <input class="form-control" placeholder="User" v-debounce:600ms="setUser">
                 </div>
                 <div class="form-group mx-1 col-md">
-                    <input class="form-control" placeholder="Referinta">
+                    <input class="form-control" placeholder="Autor" v-debounce:600ms="setAuthor">
                 </div>
                 <div class="form-group mx-1 col-md">
-                    <select class="form-control">
-                        <option>Ordoneaza dupa:</option>
+                    <select class="form-control" v-debounce:600ms="setLanguage">
+                        <option value="default">language</option>
+                        <option value="all">---</option>
+                        <option v-for="language in languages" value="language">{{ language }}</option>
                     </select>
                 </div>
-                <div class="form-submit ml-2">
-                    <button class="btn btn-primary">Submit</button>
+                <div class="form-group mx-1 col-md">
+                    <select class="form-control" v-debounce:600ms="setLanguage">
+                        <option value="default">confession</option>
+                        <option value="all">---</option>
+                        <option v-for="confession in confessions" value="confession">{{ confession }}</option>
+                    </select>
+                </div>
+                <div class="form-group mx-1 col-md">
+                    <select class="form-control" v-debounce:600ms="setOrdering">
+                        <option value="date-asc">Data postarii - crescator:</option>
+                        <option value="date-desc">Data postarii - descrescator:</option>
+                    </select>
                 </div>
             </div>
         </div>
 
-        <ArticleSample v-for="article in articles" :key="article.id"/>
+        <ArticleSample v-for="article in articles" :article="article" :key="article.id"/>
+
+        <div class="display-flex justify-content-center">
+            <Loading v-show="loading" :error="error" class="mx-auto"/>
+        </div>
     </div>
 </template>
 
 <script>
 import ArticleSample from "./Article_sample.vue";
+import Loading from './Loading_engines.vue';
 
 export default {
-    components: {ArticleSample},
+    components: {ArticleSample,Loading},
 
     props: {
         bible: {type:Number, default:null},
         book: {type:Number, default:null},
-        chapter: {type:Number, default:null}
+        chapter: {type:Number, default:null},
+        languages: {type:Array, default:[]},
+        confessions: {type:Array, default:[]}
     },
     data: () => ({
         articles: [],
         nextPageUrl: '',
         filters: {
-            foo: null,
-            bar: null
+            keyWord: null,
+            user: null,
+            author: null,
+            ordering: null,
+            language: null
         },
-        spinner: false,
+        loading: false,
         error: false
     }),
     methods: {
         getArticles() {
-            if (this.spinner)
+            if (this.loading)
                 return;
-            this.spinner = true;
+            this.loading = true;
             axios.get(this.nextPageUrl).then(res => {
-                // set nextPage
-                this.spinner = false;
+                this.articles = this.articles.concat(res.data.data);
+                this.nextPageUrl = res.data.next_page_url;
+                this.loading = false;
             }).catch(err => {
                 this.nextPageUrl = null;
-                this.spinner = false;
+                this.loading = false;
                 this.error = true;
             })
         },
@@ -78,19 +101,37 @@ export default {
             }
             return params.join("&");
         },
+        setKeyWord(val) {
+            this.filters.keyWord = val;
+        },
+        setUser(val) {
+            this.filters.user = val;
+        },
+        setAuthor(val) {
+            this.filters.author = val;
+        },
+        setOrdering(val) {
+            this.filters.ordering = val;
+        },
+        setLanguage(val) {
+            this.filters.language = val;
+        }
     },
     watch: {
         nextPageUrl(newVal) {
-            console.log(newVal)
             if (!newVal) {
                 this.onScrolledAllArticles = function() { console.log('nothing to fetch'); }
             } else {
                 this.onScrolledAllArticles = this.getArticles;
             }
         },
-        filters() {
-            this.buildNextPageUrlFromFilters();
-            this.getArticles()
+        filters: {
+            deep: true,
+            handler() {
+                this.articles = [];
+                this.buildNextPageUrlFromFilters();
+                this.getArticles()
+            }
         }
     },
     mounted() {

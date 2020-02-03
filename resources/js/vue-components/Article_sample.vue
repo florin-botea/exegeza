@@ -16,17 +16,17 @@
 <script>
 export default {
     props: {
-        article: Object
+        article: {type:Object, required:true}
     },
     computed: {
         articleUrl(){
-            return null;
+            return '/articles/' + this.article.slug + '?author=' + this.article.author.name;
         },
         articleTarget(){
             return null;
         },
         articleSample(){
-            return null;
+            return this.article.sample;
         }
     }
 }
