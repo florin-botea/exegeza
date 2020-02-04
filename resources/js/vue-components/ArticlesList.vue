@@ -16,7 +16,7 @@
                     <select class="form-control" v-debounce:600ms="setLanguage">
                         <option value="default">language</option>
                         <option value="all">---</option>
-                        <option v-for="language in languages" value="language">{{ language }}</option>
+                        <option v-for="language in language.all" value="language">{{ language }}</option>
                     </select>
                 </div>
                 <div class="form-group mx-1 col-md">
@@ -51,10 +51,8 @@ export default {
     components: {ArticleSample,Loading},
 
     props: {
-        bible: {type:Number, default:null},
-        book: {type:Number, default:null},
-        chapter: {type:Number, default:null},
-        languages: {type:Array, default:[]},
+        bible: {type:Object, default:null},
+        languages: {type:Object, default:{all:[]}},
         confessions: {type:Array, default:[]}
     },
     data: () => ({

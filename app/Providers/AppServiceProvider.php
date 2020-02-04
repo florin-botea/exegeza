@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,7 +38,5 @@ class AppServiceProvider extends ServiceProvider
         Blade::include('components.formgroups.select', 'select');
         Blade::include('components.formgroups.submit', 'submit');
         Blade::include('components.formgroups.checkbox', 'checkbox');
-
-        View::share('languages', \App\Language::all()->pluck('value'));
     }
 }

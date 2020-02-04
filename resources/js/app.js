@@ -1,5 +1,7 @@
 require('./bootstrap');
 
+import {serialize} from "./helpers.js";
+/*
 import Vue from 'vue';
 import vueDebounce from 'vue-debounce';
 import ArticlesList from './vue-components/ArticlesList.vue';
@@ -8,7 +10,7 @@ Vue.use(vueDebounce, {
 	listenTo: ['input', 'keyup', 'change'],
 	defaultTime: '500ms'
 })
-
+*/
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
@@ -73,7 +75,28 @@ $('#js-preview-verses-action').on('click', function(){
  * end Manage Bibles
  * ========================================================================
  */
-
+/*
 const app = new Vue({
     components: {ArticlesList},
 }).$mount('#vue-app-layer');
+
+*/
+
+
+/**
+ * FILTRE ARTICOLE
+ * ========================================================================== 
+ */
+var articles_nextPageUrl = null;
+
+function getArticles() {
+	let queryObj = {};
+	$('.js-articleFilter').each(function(i, el) {
+		queryObj[el.name] = el.value;
+	});
+	let uri = "/api/articles?" + serialize(queryObj);
+}
+
+$('.js-articleFilter').on("input", function() {
+	getArticles();
+});

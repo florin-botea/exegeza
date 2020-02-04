@@ -83,17 +83,21 @@
                 </a>
             </div>
 
-{{--
-            @include('components.articles-filter')
-
             @foreach ($articles??[] as $article)
                 @include('components.article-sample', [
                     'article' => $article, 
                     'article_url' => route('articles.show', $article->slug)
                 ])
             @endforeach
---}}
-<articles-list :bible="{{ $bible->id }}" :book="{{ $bible->book->index }}" :chapter="{{ $bible->book->chapter ? $bible->book->chapter->index : 0 }}" :languages="{{ json_encode($languages) }}"></articles-list>
+{{--
+            @include('components.articles-filter')
+
+
+            
+
+            <articles-list :bible="{{ $bible }}" :languages="{{ json_encode($languages??[]) }}" v-once></articles-list>
+     --}}       
+            @include('components.articles-list')
         </section>
     </div>
 </div>
