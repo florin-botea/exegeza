@@ -82,14 +82,14 @@
                     <i class="far fa-plus-square"></i> New
                 </a>
             </div>
-
+{{--
             @foreach ($articles??[] as $article)
-                @include('components.article-sample', [
+                @include('components.articles-sample', [
                     'article' => $article, 
                     'article_url' => route('articles.show', $article->slug)
                 ])
             @endforeach
-{{--
+
             @include('components.articles-filter')
 
 

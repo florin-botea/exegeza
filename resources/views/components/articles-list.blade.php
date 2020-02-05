@@ -1,12 +1,12 @@
-<div>
-    <div class="filter">
+<div class="loading-list" data-baseurl="/api/articles?bible=1&book=1">
+    <div class="list-filters">
         <h5 class="btn btn-sm btn-outline-warning cursor-pointer" data-toggle="collapse" data-target="#filters">Filtre:</h5>
         <div class="form-row mb-3 collapse" id="filters">
             <div class="form-group mx-1 col-md">
-                <input name="keyword" class="js-articleFilter form-control" placeholder="Cuvant cheie">
+                <input name="keyword" class="list-filter form-control" placeholder="Cuvant cheie">
             </div>
             <div class="form-group mx-1 col-md">
-                <input name="user" class="js-articleFilter form-control" placeholder="User">
+                <input name="user" class="list-filter form-control" placeholder="User">
             </div>
             <div class="form-group mx-1 col-md">
                 <input name="author" class="js-articleFilter form-control" placeholder="Autor">
@@ -39,7 +39,9 @@
         </div>
     </div>
 
-    <ArticleSample v-for="article in articles" :article="article" :key="article.id"/>
+    <div class="list-content">
+
+    </div>
 
     <div class="display-flex justify-content-center">
         <Loading v-show="loading" :error="error" class="mx-auto"/>

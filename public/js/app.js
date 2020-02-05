@@ -20221,6 +20221,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var js_autocomplete_auto_complete__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-autocomplete/auto-complete */ "./node_modules/js-autocomplete/auto-complete.js");
 /* harmony import */ var js_autocomplete_auto_complete__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_autocomplete_auto_complete__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./jquery-extends/loading-list.js */ "./resources/js/jquery-extends/loading-list.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"); // window.$ = window.jquery = require('jquery');
 // window.popper = require('popper.js');
@@ -20288,6 +20289,9 @@ $('.autocomplete-input').each(function (i, el) {
   });
 });
 
+jQuery.fn.loadingList = _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_2__["default"];
+var fox = $('.loading-list').loadingList();
+
 /***/ }),
 
 /***/ "./resources/js/helpers.js":
@@ -20314,6 +20318,67 @@ var serialize = function serialize(obj) {
 
 /***/ }),
 
+/***/ "./resources/js/jquery-extends/loading-list.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/jquery-extends/loading-list.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../helpers.js */ "./resources/js/helpers.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var _this = this;
+
+  var el = $(this[0]);
+  var content = $(el.find(".list-content")[0]);
+  this.baseUrl = el.data("baseurl");
+  this.nextUrl = this.baseUrl;
+  this.prevUrl = this.baseUrl;
+
+  var next = function next() {
+    var clear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    var spinner = el.find('loading-next')[0];
+    if (spinner) spinner.classList.add("is-loading");
+    axios.get(_this.nextUrl).then(function (res) {
+      if (clear) content.empty();
+      if (spinner) spinner.classList.remove("is-loading");
+      content.append(res.data); //.show().fadeIn("slow");
+
+      _this.nextUrl = content.children(".load-next").last()[0].dataset.href;
+      console.log(_this.nextUrl);
+    })["catch"](function (err) {
+      if (spinner) spinner.classList.add("is-error");
+      console.log(_this.nextUrl);
+      console.log(err);
+    });
+  };
+
+  var prev = function prev() {};
+
+  this.next = next;
+  this.prev = prev;
+  var filters = el.find(".list-filters")[0];
+
+  if (filters) {
+    $(filters).find(".list-filter").on("input", function () {
+      var queryObj = {};
+      $(filters).find(".list-filter").each(function (i, el) {
+        queryObj[el.name] = el.value;
+      });
+      this.nextUrl = this.baseUrl + "?" + Object(_helpers_js__WEBPACK_IMPORTED_MODULE_0__["serialize"])(queryObj);
+      $(el.find(".list-content")[0]).empty();
+      next(true);
+    });
+  }
+
+  return this;
+});
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -20332,8 +20397,8 @@ var serialize = function serialize(obj) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\myStuffs\exegeza-biblica\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\myStuffs\exegeza-biblica\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\user\Desktop\exegeza-biblica\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\user\Desktop\exegeza-biblica\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

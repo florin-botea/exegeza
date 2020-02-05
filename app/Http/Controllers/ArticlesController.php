@@ -30,9 +30,10 @@ class ArticlesController extends Controller
         if (!$req->query('all-confessions')) {
 
         }
-        $articles = $query->paginate(1)->appends($req->all());
+        $articles = $query->get();
+        return view('components.articles-sample')->with('articles', $articles);
 
-        return ( $req->expectsJson() ? response()->json($articles) : abort(404) );
+        //return ( $req->expectsJson() ? response()->json($articles) : abort(404) );
     }
 
     /**
