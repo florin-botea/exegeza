@@ -20304,6 +20304,12 @@ var fox = $('.loading-list').loadingList();
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "serialize", function() { return serialize; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 var serialize = function serialize(obj) {
   var params = [];
 
@@ -20313,6 +20319,36 @@ var serialize = function serialize(obj) {
 
   return params.join("&");
 };
+
+var url = function url() {};
+
+var Url =
+/*#__PURE__*/
+function () {
+  function Url(base) {
+    var realBase = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    _classCallCheck(this, Url);
+  }
+
+  _createClass(Url, null, [{
+    key: "getBase",
+    value: function getBase(url) {
+      if (typeof url === "string") throw "Parameter is not a string!";
+      if (url.length > 0) throw "Parameter is not a string!";
+      return url.split('?')[0];
+    }
+  }, {
+    key: "getQuery",
+    value: function getQuery(url) {
+      if (typeof url === "string") throw "Parameter is not a string!";
+      if (url.length > 0) throw "Parameter is not a string!";
+      return url.split('?')[0];
+    }
+  }]);
+
+  return Url;
+}();
 
 
 
@@ -20335,18 +20371,19 @@ __webpack_require__.r(__webpack_exports__);
   var el = $(this[0]);
   var content = $(el.find(".list-content")[0]);
   this.baseUrl = el.data("baseurl");
-  this.nextUrl = this.baseUrl;
-  this.prevUrl = this.baseUrl;
 
   var next = function next() {
     var clear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     var spinner = el.find('loading-next')[0];
+    var lastItem = content.children(".list-item").last();
+    var lastId = lastItem ? lastItem.dataset.id : 0;
     if (spinner) spinner.classList.add("is-loading");
     axios.get(_this.nextUrl).then(function (res) {
       if (clear) content.empty();
       if (spinner) spinner.classList.remove("is-loading");
       content.append(res.data); //.show().fadeIn("slow");
 
+      var lastItem = content.children(".list-item").last();
       _this.nextUrl = content.children(".load-next").last()[0].dataset.href;
       console.log(_this.nextUrl);
     })["catch"](function (err) {
@@ -20360,6 +20397,8 @@ __webpack_require__.r(__webpack_exports__);
 
   this.next = next;
   this.prev = prev;
+  /* FEATURES */
+
   var filters = el.find(".list-filters")[0];
 
   if (filters) {
@@ -20373,6 +20412,8 @@ __webpack_require__.r(__webpack_exports__);
       next(true);
     });
   }
+  /* ENDFEATURES */
+
 
   return this;
 });
@@ -20397,8 +20438,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\user\Desktop\exegeza-biblica\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\exegeza-biblica\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! E:\myStuffs\exegeza-biblica\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\myStuffs\exegeza-biblica\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

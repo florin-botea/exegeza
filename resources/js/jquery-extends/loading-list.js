@@ -4,16 +4,19 @@ export default function() {
     let el = $(this[0]);
     let content = $(el.find(".list-content")[0]);
     this.baseUrl = el.data("baseurl");
-    this.nextUrl = this.baseUrl;
-    this.prevUrl = this.baseUrl;
 
     let next = (clear = false) => {
         let spinner = el.find('loading-next')[0];
+        let lastItem = content.children(".list-item").last();
+        let lastId = lastItem ? lastItem.dataset.id : 0;
+
         if (spinner) spinner.classList.add("is-loading");
         axios.get(this.nextUrl).then(res => {
             if (clear) content.empty();
             if (spinner) spinner.classList.remove("is-loading");
-            content.append(res.data);//.show().fadeIn("slow");
+            content.append(res.data); //.show().fadeIn("slow");
+            let lastItem = content.children(".list-item").last();
+
             this.nextUrl = content.children(".load-next").last()[0].dataset.href;
             console.log(this.nextUrl)
         }).catch(err => {
@@ -30,6 +33,8 @@ export default function() {
     this.next = next;
     this.prev = prev;
 
+    /* FEATURES */
+
     let filters = el.find(".list-filters")[0];
     if (filters) {
         $(filters).find(".list-filter").on("input", function() {
@@ -43,6 +48,8 @@ export default function() {
             next(true);
         });
     }
+
+    /* ENDFEATURES */
     
     return this;
 }
