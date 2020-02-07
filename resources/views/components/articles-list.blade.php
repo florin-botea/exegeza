@@ -1,4 +1,4 @@
-<div class="loading-list" data-baseurl="/api/articles?bible=1&book=1">
+<div class="loading-list" id="js_articlesList" data-baseurl="{{ $articles_list['base_url'] }}">
     <div class="list-filters">
         <h5 class="btn btn-sm btn-outline-warning cursor-pointer" data-toggle="collapse" data-target="#filters">Filtre:</h5>
         <div class="form-row mb-3 collapse" id="filters">
@@ -42,8 +42,9 @@
     <div class="list-content">
 
     </div>
-
-    <div class="display-flex justify-content-center">
-        <Loading v-show="loading" :error="error" class="mx-auto"/>
+    <div class="loading-next">
+        <div class="d-flex justify-content-center">
+            @include('misc.loading_engines')
+        </div>
     </div>
 </div>

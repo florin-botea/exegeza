@@ -84,19 +84,11 @@ const app = new Vue({
 
 
 /**
- * FILTRE ARTICOLE
+ * ARTICOLE
  * ========================================================================== 
  */
-var articles_nextPageUrl = null;
+import loadingList from './jquery-extends/loading-list.js';
+jQuery.fn.loadingList = loadingList;
 
-function getArticles() {
-	let queryObj = {};
-	$('.js-articleFilter').each(function(i, el) {
-		queryObj[el.name] = el.value;
-	});
-	let uri = "/api/articles?" + serialize(queryObj);
-}
-
-$('.js-articleFilter').on("input", function() {
-	getArticles();
-});
+var articlesList = $('#js_articlesList').loadingList();
+articlesList.next(true);

@@ -20104,6 +20104,7 @@ module.exports = function(module) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers.js */ "./resources/js/helpers.js");
+/* harmony import */ var _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./jquery-extends/loading-list.js */ "./resources/js/jquery-extends/loading-list.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -20188,23 +20189,14 @@ const app = new Vue({
 */
 
 /**
- * FILTRE ARTICOLE
+ * ARTICOLE
  * ========================================================================== 
  */
 
-var articles_nextPageUrl = null;
 
-function getArticles() {
-  var queryObj = {};
-  $('.js-articleFilter').each(function (i, el) {
-    queryObj[el.name] = el.value;
-  });
-  var uri = "/api/articles?" + Object(_helpers_js__WEBPACK_IMPORTED_MODULE_0__["serialize"])(queryObj);
-}
-
-$('.js-articleFilter').on("input", function () {
-  getArticles();
-});
+jQuery.fn.loadingList = _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_1__["default"];
+var articlesList = $('#js_articlesList').loadingList();
+articlesList.next(true);
 
 /***/ }),
 
@@ -20221,7 +20213,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var js_autocomplete_auto_complete__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-autocomplete/auto-complete */ "./node_modules/js-autocomplete/auto-complete.js");
 /* harmony import */ var js_autocomplete_auto_complete__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_autocomplete_auto_complete__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./jquery-extends/loading-list.js */ "./resources/js/jquery-extends/loading-list.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"); // window.$ = window.jquery = require('jquery');
 // window.popper = require('popper.js');
@@ -20289,21 +20280,21 @@ $('.autocomplete-input').each(function (i, el) {
   });
 });
 
-jQuery.fn.loadingList = _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_2__["default"];
-var fox = $('.loading-list').loadingList();
-
 /***/ }),
 
 /***/ "./resources/js/helpers.js":
 /*!*********************************!*\
   !*** ./resources/js/helpers.js ***!
   \*********************************/
-/*! exports provided: serialize */
+/*! exports provided: serialize, Url */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "serialize", function() { return serialize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Url", function() { return Url; });
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -20320,30 +20311,88 @@ var serialize = function serialize(obj) {
   return params.join("&");
 };
 
-var url = function url() {};
-
 var Url =
 /*#__PURE__*/
 function () {
-  function Url(base) {
+  function Url(url) {
     var realBase = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     _classCallCheck(this, Url);
+
+    if (typeof url !== "string") throw "Parameter 1 must be a string!";
+    if (url.length <= 0) throw "Parameter 1 must not be an empty string!";
+    this.base = url;
+    this.query = {};
+
+    if (!realBase) {
+      this.base = Url.Base(url);
+      this.query = Url.Query(url);
+    }
   }
 
-  _createClass(Url, null, [{
-    key: "getBase",
-    value: function getBase(url) {
-      if (typeof url === "string") throw "Parameter is not a string!";
-      if (url.length > 0) throw "Parameter is not a string!";
-      return url.split('?')[0];
+  _createClass(Url, [{
+    key: "toString",
+    value: function toString() {
+      var q = this.query.toString();
+
+      if (!q.length) {
+        return this.base;
+      }
+
+      return this.base + (this.base.includes("?") ? "&" : "?") + this.query.toString();
     }
   }, {
-    key: "getQuery",
-    value: function getQuery(url) {
-      if (typeof url === "string") throw "Parameter is not a string!";
-      if (url.length > 0) throw "Parameter is not a string!";
-      return url.split('?')[0];
+    key: "query",
+    set: function set(qobj) {
+      if (_typeof(qobj) !== "object") throw "Parameter 1 must be a key:value object";
+      Object.assign(qobj, {
+        toString: function toString() {
+          var params = [];
+
+          for (var p in this) {
+            this.hasOwnProperty(p) && typeof this[p] !== 'function' ? params.push(encodeURIComponent(p) + "=" + encodeURIComponent(this[p])) : false;
+          }
+
+          return params.join("&");
+        },
+        add: function add(obj) {
+          for (var p in obj) {
+            this.hasOwnProperty(p) ? this[p] = obj[p] : false;
+          }
+        }
+      });
+      this._query = qobj;
+    },
+    get: function get() {
+      return this._query;
+    }
+  }], [{
+    key: "Base",
+    value: function Base(url) {
+      var q = url.indexOf("?");
+
+      if (q > 0) {
+        return url.split("?")[0];
+      }
+
+      return url;
+    }
+  }, {
+    key: "Query",
+    value: function Query(url) {
+      var q = url.indexOf("?") + 1;
+
+      if (!q) {
+        return {};
+      }
+
+      var qs = url.slice(q);
+      var qo = {};
+      qs.split("&").forEach(function (el) {
+        var item = el.split("=");
+        if (item[0] != "undefined") qo[item[0]] = item[1];
+      });
+      return qo;
     }
   }]);
 
@@ -20370,25 +20419,27 @@ __webpack_require__.r(__webpack_exports__);
 
   var el = $(this[0]);
   var content = $(el.find(".list-content")[0]);
-  this.baseUrl = el.data("baseurl");
+  this.url = new _helpers_js__WEBPACK_IMPORTED_MODULE_0__["Url"](el.data("baseurl"), true);
 
   var next = function next() {
     var clear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var spinner = el.find('loading-next')[0];
+    var spinner = el.find('.loading-next')[0];
     var lastItem = content.children(".list-item").last();
-    var lastId = lastItem ? lastItem.dataset.id : 0;
+    console.log(lastItem);
+    var lastId = lastItem && !clear ? lastItem.dataset.id : 0;
+
+    _this.url.query.add({
+      next: "after",
+      id: lastId
+    });
+
     if (spinner) spinner.classList.add("is-loading");
-    axios.get(_this.nextUrl).then(function (res) {
+    axios.get(_this.url.toString()).then(function (res) {
       if (clear) content.empty();
       if (spinner) spinner.classList.remove("is-loading");
       content.append(res.data); //.show().fadeIn("slow");
-
-      var lastItem = content.children(".list-item").last();
-      _this.nextUrl = content.children(".load-next").last()[0].dataset.href;
-      console.log(_this.nextUrl);
     })["catch"](function (err) {
       if (spinner) spinner.classList.add("is-error");
-      console.log(_this.nextUrl);
       console.log(err);
     });
   };
@@ -20407,10 +20458,11 @@ __webpack_require__.r(__webpack_exports__);
       $(filters).find(".list-filter").each(function (i, el) {
         queryObj[el.name] = el.value;
       });
-      this.nextUrl = this.baseUrl + "?" + Object(_helpers_js__WEBPACK_IMPORTED_MODULE_0__["serialize"])(queryObj);
+      console.log(this.url);
+      this.url.query.add(queryObj);
       $(el.find(".list-content")[0]).empty();
       next(true);
-    });
+    }.bind(this));
   }
   /* ENDFEATURES */
 

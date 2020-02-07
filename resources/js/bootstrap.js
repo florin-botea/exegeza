@@ -63,9 +63,3 @@ $('.autocomplete-input').each(function (i, el) {
         }
     });
 });
-
-import loadingList from './jquery-extends/loading-list.js';
-
-jQuery.fn.loadingList = loadingList;
-
-var fox = $('.loading-list').loadingList();

@@ -12,6 +12,7 @@ class Url {
         if (url.length <= 0) throw "Parameter 1 must not be an empty string!";
 
         this.base = url;
+        this.query = {};
         if (!realBase) {
             this.base = Url.Base(url);
             this.query = Url.Query(url);
@@ -21,7 +22,7 @@ class Url {
     static Base(url) {
         let q = url.indexOf("?");
         if (q > 0) {
-            return url.slice(0, q);
+            return url.split("?")[0];
         }
         return url;
     }
@@ -31,7 +32,7 @@ class Url {
         if (!q) {
             return {};
         }
-        let qs = url.slice(q, -1);
+        let qs = url.slice(q);
         let qo = {};
         qs.split("&").forEach(function(el) {
             let item = el.split("=");
@@ -41,22 +42,30 @@ class Url {
     }
 
     toString() {
+        let q = this.query.toString();
+        if (! q.length) {
+            return this.base;
+        }
         return this.base + (this.base.includes("?") ? "&" : "?") + this.query.toString();
     }
 
     set query (qobj) {
         if (typeof qobj !== "object") throw "Parameter 1 must be a key:value object";
 
-        qobj.__proto__.toString = function() {
-            let params = [];
-            for (var p in this) {
-                this.hasOwnProperty(p) ? params.push(encodeURIComponent(p) + "=" + encodeURIComponent(this[p])) : false;
+        Object.assign(qobj, {
+            toString: function() {
+                let params = [];
+                for (let p in this) {
+                    this.hasOwnProperty(p) && typeof this[p] !== 'function' ? params.push(encodeURIComponent(p) + "=" + encodeURIComponent(this[p])) : false;
+                }
+                return params.join("&");
+            },
+            add: function(obj) {
+                for (let p in obj) {
+                    this.hasOwnProperty(p) ? this[p] = obj[p] : false;
+                }
             }
-            return params.join("&");
-        }
-        // add(obj) 
-        // for p in obj
-        // this[p] = obj.p
+        })
 
         this._query = qobj;
     }

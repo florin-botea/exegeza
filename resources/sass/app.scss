@@ -3,6 +3,7 @@
 @import "./_buttons";
 @import "./utilities";
 @import "./ck-editor";
+@import "./misc/loading_engines";
 
 body {
 	font-family: "Times New Roman", Times, serif;
@@ -53,4 +54,12 @@ article p {
 }
 tags.tagify-input.tagify-input-list {
 	display: block !important;
+}
+
+.loading-next {
+	display: none;
+}
+
+.loading-next.is-loading {
+	display: block;
 }

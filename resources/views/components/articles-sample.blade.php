@@ -15,4 +15,3 @@
         </div>
     </article>
 @endforeach
-<p class="load-next" data-href="123">
