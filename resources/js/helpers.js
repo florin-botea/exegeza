@@ -54,6 +54,9 @@ class Url {
             }
             return params.join("&");
         }
+        // add(obj) 
+        // for p in obj
+        // this[p] = obj.p
 
         this._query = qobj;
     }
