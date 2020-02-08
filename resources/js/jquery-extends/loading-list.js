@@ -19,7 +19,7 @@ export default function() {
         axios.get(this.url.toString()).then(res => {
             if (clear) content.empty();
             if (spinner) spinner.classList.remove("is-loading");
-            // if no data loaded.next true
+            // if no data loaded/moretoload.next/ true
             content.append(res.data); //.show().fadeIn("slow");
             // fetching false
             //loaddownbtnshow
