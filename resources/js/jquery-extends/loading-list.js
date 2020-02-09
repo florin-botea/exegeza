@@ -2,6 +2,7 @@ import {Url} from "./../helpers.js";
 
 export default function() {
     let el = $(this[0]);
+    if (! el) return;
     let content = $(el.find(".list-content")[0]);
     this.url = new Url(el.data("baseurl"), true);
     // loading top ' bottom true false

@@ -16,6 +16,7 @@ class CreatePermissionTables extends Migration
         $tableNames = config('permission.table_names');
         $columnNames = config('permission.column_names');
 
+        if (!Schema::hasTable($tableNames['permissions']))
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -23,6 +24,7 @@ class CreatePermissionTables extends Migration
             $table->timestamps();
         });
 
+        if (!Schema::hasTable($tableNames['roles']))
         Schema::create($tableNames['roles'], function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -30,6 +32,7 @@ class CreatePermissionTables extends Migration
             $table->timestamps();
         });
 
+        if (!Schema::hasTable($tableNames['model_has_permissions']))
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {
             $table->unsignedInteger('permission_id');
 
@@ -46,6 +49,7 @@ class CreatePermissionTables extends Migration
                     'model_has_permissions_permission_model_type_primary');
         });
 
+        if (!Schema::hasTable($tableNames['model_has_roles']))
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames) {
             $table->unsignedInteger('role_id');
 
@@ -62,6 +66,8 @@ class CreatePermissionTables extends Migration
                     'model_has_roles_role_model_type_primary');
         });
 
+        if (Schema::hasTable('role_has_permissions'))
+        return;
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
             $table->unsignedInteger('permission_id');
             $table->unsignedInteger('role_id');

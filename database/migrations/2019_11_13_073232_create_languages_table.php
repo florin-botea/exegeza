@@ -13,12 +13,14 @@ class CreateLanguagesTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('languages'))
         Schema::create('languages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('value');
             $table->timestamps();
         });
 
+        if (!Schema::hasTable('model_has_languages'))
         Schema::create('model_has_languages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('model_type');

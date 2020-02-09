@@ -83,6 +83,7 @@ class ArticlesController extends Controller
             'book_index' => $article->book_index,
             'chapter_index' => $article->chapter_index
         ]);
+        $article->makeViewLog();
 
         return view('article')->with(compact('article', 'bible'));
     }
