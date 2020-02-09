@@ -13,22 +13,19 @@ class CreateBooksTable extends Migration
      */
     public function up()
     {
-				if (!Schema::hasTable('books')) {
-						Schema::create('books', function (Blueprint $table) {
-								$table->bigIncrements('id')->unsigned();
-								$table->biginteger('bible_version_id')->unsigned();
-								$table->foreign('bible_version_id')
-									->references('id')
-									->on('bible_versions');
-								$table->integer('index');
-								$table->string('name')->length(61);
-								$table->string('alias')->length(61);
-								$table->string('slug')->length(61);
-								$table->string('type');
-								$table->timestamps();
-								$table->softDeletes();
-						});
-				}
+        if (!Schema::hasTable('books'))
+        Schema::create('books', function (Blueprint $table) {
+            $table->bigIncrements('id')->unsigned();
+            $table->biginteger('bible_version_id')->unsigned();
+            $table->foreign('bible_version_id')->references('id')->on('bible_versions');
+            $table->integer('index');
+            $table->string('name')->length(61);
+            $table->string('alias')->length(61);
+            $table->string('slug')->length(61);
+            $table->string('type');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**

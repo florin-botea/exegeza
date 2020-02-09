@@ -53,4 +53,10 @@
             </div>
         </div>
     </div>
+
+    <script>
+        setTimeout(function() {
+            console.log("view log created");
+        }, 20000);
+    </script>
 @endsection

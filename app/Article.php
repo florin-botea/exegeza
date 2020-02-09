@@ -34,6 +34,27 @@ class Article extends Model
 		return $this->hasOne(\App\User::class, 'id', 'published_by');
 	}
 
+	public function views()
+	{
+        return $this->hasMany(\App\ViewLog::class, 'article_id');
+	}
+	
+	public function makeViewLog()
+	{
+        if (!$this->deleted_at && $this->published_by) {
+            $this->views()->firstOrCreate([
+                'article_id' => $this->id,
+                'session_id' => \Request::getSession()->getId()
+            ], [
+                'slug' => $this->slug,
+                'url' => \Request::url(),
+                'user_id' => \Auth::id(),
+                'ip_address' => \Request::getClientIp(),
+                'user_agent' => \Request::header('User-Agent')
+            ]);
+        }
+	}
+
 	public function scopeFiltered($query, $bible)
 	{
 		if (!request()->query('all-versions')) {
