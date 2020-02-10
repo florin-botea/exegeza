@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HasLanguage;
+use Awobaz\Compoships\Compoships; // for multiple column relationship
 
 class BibleVersion extends Model
 {
 	use SoftDeletes;
 	use HasLanguage;
+	use Compoships;
 
 	protected $fillable = ['index', 'name', 'alias', 'slug', 'public'];
 

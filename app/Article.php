@@ -6,27 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HasLanguage;
 use App\Traits\HasTags;
+use Awobaz\Compoships\Compoships; // for multiple column relationship
 
 class Article extends Model
 {
 	use HasLanguage;
 	use HasTags;
+	use Compoships;
 
 	protected $fillable = ['bible_version_id', 'book_index', 'chapter_index', 'user_id', 'meta', 'title', 'slug', 'sample', 'content', 'published_by'];
 
 	public function author()
 	{
 		return $this->hasOne(\App\User::class, 'id', 'user_id');
-	}
-
-	public function bible()
-	{
-		return $this->belongsTo(\App\BibleVersion::class, 'bible_version_id')
-			->with(['book' => function($q) {
-				return $q->with(['chapter' => function($query) {
-					return $query->where('index', DB::raw('article.chapter_index'));
-				}])->where('index', DB::raw('article.book_index'));
-			}]);
 	}
 
 	public function publisher()

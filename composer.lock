@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32604deca67796484fc11974260d80fb",
+    "content-hash": "b8f830fc649cc08b9ecc799b0e0c0b4f",
     "packages": [
         {
             "name": "anahkiasen/underscore-php",
@@ -54,7 +54,72 @@
                 "laravel",
                 "toolkit"
             ],
+            "abandoned": true,
             "time": "2015-05-16T19:24:58+00:00"
+        },
+        {
+            "name": "awobaz/compoships",
+            "version": "1.1.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/topclaudy/compoships.git",
+                "reference": "0259ff07b9783373cb1c93d2eb24554c34acc207"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/topclaudy/compoships/zipball/0259ff07b9783373cb1c93d2eb24554c34acc207",
+                "reference": "0259ff07b9783373cb1c93d2eb24554c34acc207",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "~5.4|~6.0",
+                "illuminate/console": "~5.4|~6.0",
+                "illuminate/database": "~5.4|~6.0",
+                "illuminate/support": "~5.4|~6.0",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "^1.8",
+                "laravel/laravel": "~5.4|~6.0",
+                "phpunit/phpunit": "5.*"
+            },
+            "suggest": {
+                "awobaz/blade-active": "Blade directives for the Laravel 'Active' package",
+                "awobaz/eloquent-auto-append": "Automatically append accessors to model serialization",
+                "awobaz/eloquent-mutators": "Reusable mutators (getters/setters) for Laravel 5's Eloquent",
+                "awobaz/syntactic": "Syntactic sugar for named and indexed parameters call."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Awobaz\\Compoships\\ComposhipsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Awobaz\\Compoships\\": "src"
+                },
+                "files": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Claudin J. Daniel",
+                    "email": "cdaniel@awobaz.com"
+                }
+            ],
+            "description": "Laravel relationships with support for composite/multiple keys",
+            "keywords": [
+                "laravel",
+                "laravel composite keys",
+                "laravel relationships"
+            ],
+            "time": "2019-11-13T17:35:50+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

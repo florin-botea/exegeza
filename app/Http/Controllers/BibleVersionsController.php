@@ -29,6 +29,13 @@ class BibleVersionsController extends Controller
 		$books = $bible->books->groupBy('type');
 		unset($bible->books);
 		$bible->setAttribute('books', $books);
+		$articles = \App\Article::withCount('views')
+		->join('books', function($join) {
+			return $join->on('articles.bible_version_id', '=', 'books.bible_version_id')
+				->on('articles.book_index', '=', 'books.index');
+		})
+		->where('articles.bible_version_id', $bible->id)->get();
+		$this->inspect($articles);
 
 		return view('books')->with(compact('bible'));
 	}

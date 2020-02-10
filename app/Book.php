@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Awobaz\Compoships\Compoships; // for multiple column relationship
 
 class Book extends Model
 {
 	use SoftDeletes;
+	use Compoships;
 		 
 	protected $fillable = ['index', 'name', 'alias', 'slug', 'type'];
 
