@@ -5,22 +5,29 @@ export default function() {
     if (! el) return;
     let content = $(el.find(".list-content")[0]);
     this.url = new Url(el.data("baseurl"), true);
+    // loading top ' bottom true false
 
     let next = (clear = false) => {
+    	// if not loading.next or not loaded.next
         let spinner = el.find('.loading-next')[0];
         let lastItem = content.children(".list-item").last();
-        console.log(lastItem);
         let lastId = (lastItem && !clear ? lastItem.dataset.id : 0);
         this.url.query.add({next:"after", id:lastId});
 
         if (spinner) spinner.classList.add("is-loading");
+        // fetching true
+        // loaddownbtn hide
         axios.get(this.url.toString()).then(res => {
             if (clear) content.empty();
             if (spinner) spinner.classList.remove("is-loading");
+            // if no data loaded/moretoload.next/ true
             content.append(res.data); //.show().fadeIn("slow");
+            // fetching false
+            //loaddownbtnshow
         }).catch(err => {
             if (spinner) spinner.classList.add("is-error");
-            console.log(err);
+            console.log(err)
+            // fetchijg false
         });
     }
 
@@ -43,7 +50,7 @@ export default function() {
             console.log(this.url)
             this.url.query.add(queryObj)
             $(el.find(".list-content")[0]).empty();
-
+// reset loading and loaded
             next(true);
         }.bind(this));
     }
