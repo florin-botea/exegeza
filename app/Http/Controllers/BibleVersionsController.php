@@ -29,13 +29,8 @@ class BibleVersionsController extends Controller
 		$books = $bible->books->groupBy('type');
 		unset($bible->books);
 		$bible->setAttribute('books', $books);
-		$articles = \App\Article::withCount('views')
-		->join('books', function($join) {
-			return $join->on('articles.bible_version_id', '=', 'books.bible_version_id')
-				->on('articles.book_index', '=', 'books.index');
-		})
-		->where('articles.bible_version_id', $bible->id)->get();
-		$this->inspect($articles);
+		$last_articles = \App\Article::whereNotNull('published_by')->where('bible_version_id', $bible->id)->orderBy('created_at', 'desc')->limit(10)->get();
+		$popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
 
 		return view('books')->with(compact('bible'));
 	}

@@ -15,6 +15,7 @@
 			<hr>
 			<div class="">
                 @form(['action'=>''])
+                    <input name="form_id" value="article" hidden>
                     <input name="bible_version_id" value="{{ $article->bible_version_id ?? $bible->id }}" hidden>
                     <input name="book_index" value="{{ $article->book_index ?? $bible->book->index }}" hidden>
                     @if ($bible->book->chapter)
@@ -23,6 +24,11 @@
                     @text(['name'=>'language', 'label'=>'Language:',
                         'value' => $form->value('language', $language),
                         'error' => $errors->first('language')
+                    ])
+                    @text(['name'=>'mask', 'label'=>'Masca:',
+                        'value' => $form->value('mask'),
+                        'error' => $errors->first('mask'),
+                        'helpers' => ['Se completeaza doar in cazul in care articolul este un citat']
                     ])
                     <!-- IF CAN PUBLISH ARTICLE, ADD THIS TOO -->
                     @can('publish', $article??\App\Article::class)
@@ -45,7 +51,7 @@
                     </div>
                     <hr>
                     @text(['name'=>'tags', 'label'=>'Tags:', 'inputClass'=>'tagify-input', 'data'=>['endpoint'=>'/api/tags'],
-                        'value' => json_encode($form->value('tags')),
+                        'value' => $form->value('tags'),
                         'error' => $errors->first('tags')
                     ])
 

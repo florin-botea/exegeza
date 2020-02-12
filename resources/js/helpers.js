@@ -62,7 +62,7 @@ class Url {
             },
             add: function(obj) {
                 for (let p in obj) {
-                    this.hasOwnProperty(p) ? this[p] = obj[p] : false;
+                    obj.hasOwnProperty(p) && (typeof obj[p] == "string" || typeof obj[p] == "number") ? this[p] = obj[p] : false;
                 }
             }
         })

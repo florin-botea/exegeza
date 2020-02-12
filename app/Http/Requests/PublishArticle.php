@@ -29,6 +29,7 @@ class PublishArticle extends FormRequest
             'sample' => 'required',
             'content' => 'required',
             'tags' => 'required',
+            'mask' => 'sometimes|max:61'
         ];
     }
 }

@@ -5,9 +5,24 @@ namespace App\Observers;
 use App\Article;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use PHPHtmlParser\Dom;
 
 class ArticleObserver
 {
+    public function created(Article $article)
+    {
+        //$dom = new Dom;
+        //$dom->load($article->content);
+        //dd($dom->find('img'));
+    }
+
+    public function updated(Article $article)
+    {
+        //$dom = new Dom;
+        //$dom->load($article->content);
+        //dd($dom->find('img'));
+    }
+
 /*
     public function created(Article $article)
     {

@@ -1,5 +1,10 @@
 @extends('layouts.main')
 
+@php
+    $page_title = $article->title ?? 'no title';
+    $page_description = $article->meta ?? 'no meta';
+@endphp
+
 @section('content')
     <div class="row">
         <div class="col">

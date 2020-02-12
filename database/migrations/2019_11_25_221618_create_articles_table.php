@@ -17,6 +17,7 @@ class CreateArticlesTable extends Migration
 		Schema::create('articles', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->bigInteger('user_id')->unsigned();
+			$table->string('mask')->length(61)->nullable();
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->bigInteger('bible_version_id')->unsigned()->nullable();
 			$table->foreign('bible_version_id')->references('id')->on('bible_versions');

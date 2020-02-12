@@ -24,8 +24,8 @@ class ValidBook extends FormRequest
 	{
 		$validator->after(function ($validator) {
             $bible = \App\BibleVersion::findOrFail(request()->route('bible_version'));
-			$duplicateIndex = $bible->books()->where(['index' => request()->input('index'), 'type' => request()->input('type')])->first();
-			$duplicateAlias = $bible->books()->where(['alias' => request()->input('alias'), 'type' => request()->input('type')])->first();
+			$duplicateIndex = $bible->books()->where(['index' => request()->input('index')])->first();
+			$duplicateAlias = $bible->books()->where(['alias' => request()->input('alias')])->first();
 			if ($duplicateIndex && !request()->isMethod('put')) {
 				$validator->errors()->add('index', 'Index already taken');
 			}

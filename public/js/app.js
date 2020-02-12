@@ -20196,7 +20196,15 @@ const app = new Vue({
 
 jQuery.fn.loadingList = _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_1__["default"];
 var articlesList = $('#js_articlesList').loadingList();
-articlesList.next(true);
+articlesList.fetch();
+
+window.onscroll = function () {
+  var scrolledBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight;
+
+  if (scrolledBottom) {
+    articlesList.next();
+  }
+};
 
 /***/ }),
 
@@ -20357,7 +20365,7 @@ function () {
         },
         add: function add(obj) {
           for (var p in obj) {
-            this.hasOwnProperty(p) ? this[p] = obj[p] : false;
+            obj.hasOwnProperty(p) && (typeof obj[p] == "string" || typeof obj[p] == "number") ? this[p] = obj[p] : false;
           }
         }
       });
@@ -20413,56 +20421,99 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../helpers.js */ "./resources/js/helpers.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/debounce */ "./node_modules/lodash/debounce.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_1__);
+
 
 /* harmony default export */ __webpack_exports__["default"] = (function () {
   var _this = this;
 
   var el = $(this[0]);
+  if (!el) return;
   var content = $(el.find(".list-content")[0]);
+  this.list_item_ids = [];
   this.url = new _helpers_js__WEBPACK_IMPORTED_MODULE_0__["Url"](el.data("baseurl"), true);
+  this.isLoading = false; // loading top ' bottom true false
 
   var next = function next() {
     var clear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    if (_this.isLoading) return;
+    _this.isLoading = true;
     var spinner = el.find('.loading-next')[0];
-    var lastItem = content.children(".list-item").last();
-    console.log(lastItem);
-    var lastId = lastItem && !clear ? lastItem.dataset.id : 0;
+    if (spinner) spinner.classList.add("is-loading"); // loaddownbtn hide
 
-    _this.url.query.add({
-      next: "after",
-      id: lastId
-    });
-
-    if (spinner) spinner.classList.add("is-loading");
-    axios.get(_this.url.toString()).then(function (res) {
+    axios.get(_this.nextPageUrl).then(function (res) {
       if (clear) content.empty();
-      if (spinner) spinner.classList.remove("is-loading");
-      content.append(res.data); //.show().fadeIn("slow");
+      if (spinner) spinner.classList.remove("is-loading"); // build js
+
+      var list = $(res.data);
+      var _content = list.children('.list-content')[0];
+      console.log(_content);
+      $(_content).children().each(function (i, el) {
+        if (!this.list_item_ids.includes(el.id)) {
+          this.list_item_ids.push(el.id);
+          content.append(el);
+        }
+      }.bind(_this));
+      _this.isLoading = false; //loaddownbtnshow
     })["catch"](function (err) {
       if (spinner) spinner.classList.add("is-error");
+      if (spinner) spinner.classList.remove("is-loading");
+      _this.isLoading = false;
       console.log(err);
+      console.log(_this.list_item_ids);
     });
   };
 
   var prev = function prev() {};
 
+  var fetch = function fetch() {
+    if (_this.isLoading) return;
+    _this.isLoading = true;
+    var spinner = el.find('.loading-next')[0];
+    if (spinner) spinner.classList.add("is-loading"); // loaddownbtn hide
+
+    content.empty();
+    _this.list_item_ids = [];
+    axios.get(_this.url.toString()).then(function (res) {
+      if (spinner) spinner.classList.remove("is-loading"); // build js
+
+      var list = $(res.data);
+      var _content = list.children('.list-content')[0];
+      $(_content).children().each(function (i, el) {
+        this.list_item_ids.push(el.id);
+        content.append(el);
+      }.bind(_this));
+      _this.nextPageUrl = 123;
+      _this.isLoading = false; //loaddownbtnshow
+    })["catch"](function (err) {
+      if (spinner) spinner.classList.add("is-error");
+      if (spinner) spinner.classList.remove("is-loading");
+      _this.isLoading = false;
+      console.log(err);
+      console.log(_this.list_item_ids);
+    });
+  };
+
   this.next = next;
   this.prev = prev;
+  this.fetch = fetch;
   /* FEATURES */
 
   var filters = el.find(".list-filters")[0];
 
   if (filters) {
-    $(filters).find(".list-filter").on("input", function () {
+    $(filters).find(".list-filter").on("input", lodash_debounce__WEBPACK_IMPORTED_MODULE_1___default()(function () {
       var queryObj = {};
       $(filters).find(".list-filter").each(function (i, el) {
         queryObj[el.name] = el.value;
       });
-      console.log(this.url);
+      console.log(queryObj);
       this.url.query.add(queryObj);
+      console.log(this.url.query.toString());
       $(el.find(".list-content")[0]).empty();
-      next(true);
-    }.bind(this));
+      fetch(true);
+    }.bind(this), 600));
   }
   /* ENDFEATURES */
 

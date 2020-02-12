@@ -91,4 +91,10 @@ import loadingList from './jquery-extends/loading-list.js';
 jQuery.fn.loadingList = loadingList;
 
 var articlesList = $('#js_articlesList').loadingList();
-articlesList.next(true);
+articlesList.fetch();
+window.onscroll = function() {
+	let scrolledBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
+	if (scrolledBottom) {
+		articlesList.next();
+	}
+}
