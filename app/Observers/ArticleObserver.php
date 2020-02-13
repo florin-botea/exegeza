@@ -11,16 +11,12 @@ class ArticleObserver
 {
     public function created(Article $article)
     {
-        //$dom = new Dom;
-        //$dom->load($article->content);
-        //dd($dom->find('img'));
+        $this->updateArticlePhotosLog($article);
     }
 
     public function updated(Article $article)
     {
-        //$dom = new Dom;
-        //$dom->load($article->content);
-        //dd($dom->find('img'));
+        $this->updateArticlePhotosLog($article);
     }
 
 /*
@@ -85,4 +81,20 @@ class ArticleObserver
             'model_type' => get_class($article),
         ], ['language_id' => $language->id]);
     }*/
+    private function updateArticlePhotosLog(Article $article) {
+        $dom = new Dom;
+        $dom->load($article->content);
+        // delete old records for clear update
+        \App\ModelHasPhoto::where(['model_type' => get_class($article), 'model_id' => $article->id])->delete();
+        $stack = [];
+        foreach($dom->find('img') as $img) {
+            $stack[] = [
+                'model_type' => get_class($article),
+                'model_id' => $article->id,
+                'photo' => $img->getAttribute('src')
+            ];
+        }
+
+        \App\ModelHasPhoto::insert($stack);
+    }
 }

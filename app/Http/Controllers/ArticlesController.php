@@ -44,7 +44,7 @@ class ArticlesController extends Controller
             case 'date-desc': $query->orderBy('updated_at', 'desc'); break;
         }
 
-        $articles = $query->paginate(1);
+        $articles = $query->paginate(1)->appends($req->query());
 
         return view('components.articles-sample')->with('articles', $articles);
 

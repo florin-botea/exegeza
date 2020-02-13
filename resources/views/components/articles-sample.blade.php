@@ -21,6 +21,7 @@
         </article>
         @endforeach
     </div>
-    <a class="load-next" data-next_page_url="foo"></a>
+    <a id="prev-page-url" {{ $articles->previousPageUrl() ? 'href='.$articles->previousPageUrl() : '' }}></a>
+    <a id="next-page-url" {{ $articles->nextPageUrl() ? 'href='.$articles->nextPageUrl() : '' }}></a>
 </div>
 

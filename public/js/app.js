@@ -20196,13 +20196,13 @@ const app = new Vue({
 
 jQuery.fn.loadingList = _jquery_extends_loading_list_js__WEBPACK_IMPORTED_MODULE_1__["default"];
 var articlesList = $('#js_articlesList').loadingList();
-articlesList.fetch();
+articlesList.get();
 
 window.onscroll = function () {
   var scrolledBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight;
 
   if (scrolledBottom) {
-    articlesList.next();
+    articlesList.get();
   }
 };
 
@@ -20433,90 +20433,77 @@ __webpack_require__.r(__webpack_exports__);
   var content = $(el.find(".list-content")[0]);
   this.list_item_ids = [];
   this.url = new _helpers_js__WEBPACK_IMPORTED_MODULE_0__["Url"](el.data("baseurl"), true);
-  this.isLoading = false; // loading top ' bottom true false
+  this.isLoading = false;
+  this.pagesUrl = {
+    next: null,
+    prev: null
+  }; // loading top ' bottom true false
 
-  var next = function next() {
-    var clear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    if (_this.isLoading) return;
-    _this.isLoading = true;
-    var spinner = el.find('.loading-next')[0];
-    if (spinner) spinner.classList.add("is-loading"); // loaddownbtn hide
-
-    axios.get(_this.nextPageUrl).then(function (res) {
-      if (clear) content.empty();
-      if (spinner) spinner.classList.remove("is-loading"); // build js
-
-      var list = $(res.data);
-      var _content = list.children('.list-content')[0];
-      console.log(_content);
-      $(_content).children().each(function (i, el) {
-        if (!this.list_item_ids.includes(el.id)) {
-          this.list_item_ids.push(el.id);
-          content.append(el);
-        }
-      }.bind(_this));
-      _this.isLoading = false; //loaddownbtnshow
-    })["catch"](function (err) {
-      if (spinner) spinner.classList.add("is-error");
-      if (spinner) spinner.classList.remove("is-loading");
-      _this.isLoading = false;
-      console.log(err);
-      console.log(_this.list_item_ids);
-    });
-  };
-
-  var prev = function prev() {};
-
-  var fetch = function fetch() {
-    if (_this.isLoading) return;
-    _this.isLoading = true;
-    var spinner = el.find('.loading-next')[0];
-    if (spinner) spinner.classList.add("is-loading"); // loaddownbtn hide
-
-    content.empty();
-    _this.list_item_ids = [];
-    axios.get(_this.url.toString()).then(function (res) {
-      if (spinner) spinner.classList.remove("is-loading"); // build js
-
-      var list = $(res.data);
-      var _content = list.children('.list-content')[0];
-      $(_content).children().each(function (i, el) {
-        this.list_item_ids.push(el.id);
-        content.append(el);
-      }.bind(_this));
-      _this.nextPageUrl = 123;
-      _this.isLoading = false; //loaddownbtnshow
-    })["catch"](function (err) {
-      if (spinner) spinner.classList.add("is-error");
-      if (spinner) spinner.classList.remove("is-loading");
-      _this.isLoading = false;
-      console.log(err);
-      console.log(_this.list_item_ids);
-    });
-  };
-
-  this.next = next;
-  this.prev = prev;
-  this.fetch = fetch;
   /* FEATURES */
 
-  var filters = el.find(".list-filters")[0];
+  this.filters = el.find(".list-filters")[0];
 
-  if (filters) {
-    $(filters).find(".list-filter").on("input", lodash_debounce__WEBPACK_IMPORTED_MODULE_1___default()(function () {
-      var queryObj = {};
-      $(filters).find(".list-filter").each(function (i, el) {
-        queryObj[el.name] = el.value;
-      });
-      console.log(queryObj);
-      this.url.query.add(queryObj);
-      console.log(this.url.query.toString());
+  if (this.filters) {
+    $(this.filters).find(".list-filter").on("input", lodash_debounce__WEBPACK_IMPORTED_MODULE_1___default()(function () {
+      applyFilters();
+      this.list_item_ids = [];
       $(el.find(".list-content")[0]).empty();
-      fetch(true);
+      this.get();
     }.bind(this), 600));
   }
+
+  var applyFilters = function applyFilters() {
+    var queryObj = {};
+    $(_this.filters).find(".list-filter").each(function (i, el) {
+      queryObj[el.name] = el.value;
+    });
+
+    _this.url.query.add(queryObj);
+
+    _this.pagesUrl = {
+      next: _this.url.toString(),
+      prev: null
+    };
+  };
+
+  applyFilters();
   /* ENDFEATURES */
 
+  this.setLoading = function (_spinner, isLoading) {
+    var isError = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    _this.isLoading = isLoading;
+    var spinner = el.find(".loading-" + _spinner)[0];
+
+    if (spinner) {
+      isLoading ? spinner.classList.add("is-loading") : spinner.classList.remove("is-loading");
+      if (isError) spinner.classList.add("is-error");
+    }
+  };
+
+  this.get = function () {
+    var dirrection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "next";
+    if (!_this.pagesUrl[dirrection] || !_this.pagesUrl[dirrection].length || _this.isLoading) return;
+
+    _this.setLoading(dirrection, true);
+
+    axios.get(_this.pagesUrl[dirrection]).then(function (res) {
+      _this.setLoading(dirrection, false);
+
+      var list = $(res.data);
+      var _content = list.children('.list-content')[0];
+      $(_content).children().each(function (i, el) {
+        _this.list_item_ids.push(el.id);
+
+        content.append(el);
+      });
+      _this.pagesUrl[dirrection] = (list.children("#" + dirrection + "-page-url")[0] || {}).href; //loaddownbtnshow
+    })["catch"](function (err) {
+      _this.setLoading(dirrection, false, true);
+
+      _this.pagesUrl[dirrection] = null;
+      console.log(err);
+    });
+  };
 
   return this;
 });
