@@ -1,4 +1,4 @@
-window._ = require('lodash');
+// window._ = require('lodash');
 window.axios = require('axios');
 // window.$ = window.jquery = require('jquery');
 // window.popper = require('popper.js');

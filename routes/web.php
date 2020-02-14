@@ -40,6 +40,8 @@ Route::resource('articles', 'ArticlesController', ['publish' => 'articles.create
 
 Route::resource('pending-articles', 'PendingArticlesController');
 
+Route::resource('users', 'UsersController');
+
 Route::get('/artisan', function () {
     return view('artisan');
 });
@@ -58,7 +60,9 @@ Route::post('/artisan', function () {
 });
 
 Route::get('/migrate-patches', function () {
-    
+    Schema::table('user_details', function($table) {
+        $table->string('photo', 611)->nullable()->after('user_id');
+    });
 });
 
 Route::get('/dev', function(Request $request){

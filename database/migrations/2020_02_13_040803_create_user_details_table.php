@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserDescriptionsTable extends Migration
+class CreateUserDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateUserDescriptionsTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('user_descriptions'))
-        Schema::create('user_descriptions', function (Blueprint $table) {
+        if (!Schema::hasTable('user_details'))
+        Schema::create('user_details', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->biginteger('user_details_id')->unsigned();
-            $table->foreign('user_details_id')->references('id')->on('user_details');
-            $table->text('content')->nullable();
+            $table->biginteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('photo', 611);
+            $table->string('bio', 611);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateUserDescriptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_descriptions');
+        Schema::dropIfExists('user_details');
     }
 }

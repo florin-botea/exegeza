@@ -3,7 +3,7 @@ import debounce from 'lodash/debounce';
 
 export default function() {
     let el = $(this[0]);
-    if (! el) return;
+    if (! el || this.length == 0) return null;
     let content = $(el.find(".list-content")[0]);
     this.list_item_ids = [];
     this.url = new Url(el.data("baseurl"), true);

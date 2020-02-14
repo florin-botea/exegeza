@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserDescription extends Model
 {
-    //
+    protected $fillable = ['content'];
 }

@@ -84,17 +84,45 @@ const app = new Vue({
 
 
 /**
- * ARTICOLE
+ * ARTICOLE sample
  * ========================================================================== 
  */
 import loadingList from './jquery-extends/loading-list.js';
 jQuery.fn.loadingList = loadingList;
 
 var articlesList = $('#js_articlesList').loadingList();
-articlesList.get();
-window.onscroll = function() {
-	let scrolledBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
-	if (scrolledBottom) {
-		articlesList.get();
+if (articlesList) {
+	articlesList.get();
+	window.onscroll = function() {
+		let scrolledBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
+		if (scrolledBottom) {
+			articlesList.get();
+		}
 	}
 }
+
+/**
+ * end ARTICOLE sample
+ * ========================================================================
+ */
+
+/**
+ * Photo upload
+ * ========================================================================== 
+ */
+
+$(".upload-on-change").on("change", function() {
+	if (!this.dataset.url) throw("No url was set for uploading file");
+	let progressBar = this.dataset.progress_bar;
+	let preview = this.dataset.preview;
+	console.log(preview)
+	if (preview && this.files && this.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			$(preview).attr('src', e.target.result);
+		}
+		reader.readAsDataURL(this.files[0]);
+	}
+});
+
+/* end */
