@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -85,4 +86,34 @@ Route::post('/upload-photo', function(Request $request){
         $url = '/storage/'.$path;
         return ['url' => $url];
     }
+});
+
+Route::get('/sign', function (Request $req) {
+    return view('sign')->with('output', []);
+});
+
+Route::post('/sign', function (Request $req) {
+    $start = memory_get_usage();
+
+    $src = $req->file("document_confirmare")->getPathname();
+    $dest = getcwd();
+    $dest = str_replace('\\', '/', $dest) . '/';
+    $props = 'E:/myStuffs/exegeza-biblica/public/props.properties';
+    $output = shell_exec("java -jar sign.jar $src $dest $props 2>&1");
+    $output = json_decode($output, true);
+
+    $end = memory_get_usage();
+
+    $output['memory_used'] = $end-$start;
+
+    return view("sign")->with('output', $output);
+});
+
+Route::post('/download', function (Request $req) {
+    $pdfname = basename ($req->filename);
+
+    header('Content-Type: application/pdf');
+    header("Content-Transfer-Encoding: Binary");
+    header("Content-disposition: attachment; filename=".$pdfname);
+    readfile($req->filename);
 });
