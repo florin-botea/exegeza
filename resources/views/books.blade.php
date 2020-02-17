@@ -1,5 +1,11 @@
 @extends('layouts.explorable')
 
+@php
+    $articles_list = [
+        'base_url' => "/api/articles?bible=1&book=1",
+    ];
+@endphp
+
 @section('main')
 	<div class="d-flex">
 		<h1>{{ $bible->name }}</h1>
@@ -17,6 +23,7 @@
 			</button>
 		@endcan
 	</div>
+
 	<div class="row">
 		<div class="col-md">
 			<h4>Vechiul Testament</h4>
@@ -39,6 +46,13 @@
 			</ul>
 		</div>
 	</div>
+
+	@include('components.most-popular-articles', ['articles' => $popular_articles])
+	@include('components.recent-articles', ['articles' => $last_articles])
+
+	<h1>Arhiva</h1>
+	@include('components.articles-list', ['articles_list' => $articles_list])
+
 	@can('manage bibles')
 		@include('forms.book-form-modal', ['book'=>null])
 		@include('forms.bible-version-form-modal', ['bible'=>$bible])

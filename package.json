@@ -54,6 +54,7 @@
         "eslint": "^6.7.2",
         "font-awesome": "^4.7.0",
         "jquery": "^3.4.1",
+        "jquery-simple-upload": "^1.1.0",
         "js-autocomplete": "^1.0.4",
         "popper.js": "^1.16.0",
         "postcss-loader": "^3.0.0",

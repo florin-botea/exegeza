@@ -87,7 +87,9 @@ class BibleVersion extends Model
 			Schema::create($table_name, function (Blueprint $table) {
 				$table->increments('id');
 				$table->integer('book_id')->unsigned();
+				$table->integer('book_index')->unsigned();
 				$table->integer('chapter_id')->unsigned();
+				$table->integer('chapter_index')->unsigned();
 				$table->integer('index')->unsigned();
 				$table->string('text')->length(900);
 			});

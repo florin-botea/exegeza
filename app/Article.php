@@ -14,7 +14,7 @@ class Article extends Model
 	use HasTags;
 	use Compoships;
 
-	protected $fillable = ['bible_version_id', 'book_index', 'chapter_index', 'user_id', 'meta', 'title', 'slug', 'sample', 'content', 'published_by'];
+	protected $fillable = ['bible_version_id', 'book_index', 'chapter_index', 'user_id', 'mask', 'meta', 'title', 'slug', 'sample', 'content', 'published_by'];
 
 	public function author()
 	{

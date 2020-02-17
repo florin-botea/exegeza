@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,9 +21,11 @@ use Illuminate\Support\Facades\Storage;
 Route::auth();
 
 Route::get('/', function () {
-    $bibleVersions = \App\BibleVersion::all();
-    return view('homepage')->with('bibleVersions', $bibleVersions);
+    $bibles = \App\BibleVersion::all();
+    return view('homepage')->with('bibles', $bibles);
 });
+
+Route::get('/bible-versions/search', 'BibleSearchController');
 
 Route::resource('bible-versions', 'BibleVersionsController');
 
@@ -39,6 +42,8 @@ Route::resource('bible-versions.books.chapters.articles', 'PendingArticlesContro
 Route::resource('articles', 'ArticlesController', ['publish' => 'articles.create']);
 
 Route::resource('pending-articles', 'PendingArticlesController');
+
+Route::resource('users', 'UsersController');
 
 Route::get('/artisan', function () {
     return view('artisan');
@@ -58,7 +63,9 @@ Route::post('/artisan', function () {
 });
 
 Route::get('/migrate-patches', function () {
-    
+    Schema::table('user_details', function($table) {
+        $table->string('photo', 611)->nullable()->after('user_id');
+    });
 });
 
 Route::get('/dev', function(Request $request){

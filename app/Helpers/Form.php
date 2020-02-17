@@ -17,6 +17,6 @@ class Form
     public function value($name, $default = null)
     {
         $default = $default ?? $this->model[$name];
-        return ( old($this->cross_identifier) === $this->form_id ? old($name, $default) : $default );
+        return ( old($this->cross_identifier) == $this->form_id ? old($name, $default) : $default );
     }
 }

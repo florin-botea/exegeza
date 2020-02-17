@@ -21,16 +21,31 @@ class ArticlesController extends Controller
     public function index(Request $req)
     {
         $query = \App\Article::with('author')->where(['book_index' => $req->query('book'), 'chapter_index' => $req->query('chapter')])->whereNotNull('published_by');
-        if (!$req->query('all-translations')) {
-            $query->where('bible_version_id', $req->query('bible'));
+        if ($req->query('next') == 'before') $query->where('id', '<', $req->query('id', 0));
+        if ($req->query('next') == 'after') $query->where('id', '>', $req->query('id', 0));
+        if ($req->query('keyword')) {
+            $query->where(function($q) use ($req) {
+                $q->where('title', 'LIKE', '%'.$req->query('keyword').'%')
+                    ->orWhere('content', 'LIKE', '%'.$req->query('keyword').'%')
+                    ->orWhereHas('tags', function($tag) use ($req) { $tag->where('value', 'LIKE', '%'.$req->query('keyword').'%'); });
+            });
         }
-        if (!$req->query('all-languages')) {
+        if ($req->query('language') && $req->query('language') != 'default') {
+            $query->orWhereHas('language', function($q) use ($req) { $q->where('value', $req->query('language')); });
+        }
+        if ($req->query('author')) {
+            $query->orWhereHas('author', function($q) use ($req) { $q->where('name', 'LIKE', '%'.$req->query('author').'%'); });
+        }
+        if ($req->query('mask')) {
+        //    $query->orWhereHas('mask', function($q) use ($req) { $q->where('name', 'LIKE', '%'.$req->query('mask').'%'); });
+        }
+        switch($req->query('sort')) {
+            case 'date-asc': $query->orderBy('updated_at'); break;
+            case 'date-desc': $query->orderBy('updated_at', 'desc'); break;
+        }
 
-        }
-        if (!$req->query('all-confessions')) {
+        $articles = $query->paginate(1)->appends($req->query());
 
-        }
-        $articles = $query->get();
         return view('components.articles-sample')->with('articles', $articles);
 
         //return ( $req->expectsJson() ? response()->json($articles) : abort(404) );
@@ -78,6 +93,7 @@ class ArticlesController extends Controller
             $query->whereIn('tags.id', $tag_ids);
         })->get();
         $article->related = $related;
+        $popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
         $bible = \App\BibleVersion::fetch([
             'bible_version_id' => $article->bible_version_id,
             'book_index' => $article->book_index,
@@ -85,7 +101,7 @@ class ArticlesController extends Controller
         ]);
         $article->makeViewLog();
 
-        return view('article')->with(compact('article', 'bible'));
+        return view('article')->with(compact('article', 'bible', 'popular_articles'));
     }
 
     /**
