@@ -93,6 +93,7 @@ class ArticlesController extends Controller
             $query->whereIn('tags.id', $tag_ids);
         })->get();
         $article->related = $related;
+        $popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
         $bible = \App\BibleVersion::fetch([
             'bible_version_id' => $article->bible_version_id,
             'book_index' => $article->book_index,
@@ -100,7 +101,7 @@ class ArticlesController extends Controller
         ]);
         $article->makeViewLog();
 
-        return view('article')->with(compact('article', 'bible'));
+        return view('article')->with(compact('article', 'bible', 'popular_articles'));
     }
 
     /**

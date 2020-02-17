@@ -25,7 +25,9 @@ class Chapter extends Model
 		for ($i = 0; $i < count($verses); $i++) {
 			$stack[] = [
 				'book_id' => $this->book->id,
+				'book_index' => $this->book->index,
 				'chapter_id' => $this->id,
+				'chapter_id' => $this->index,
 				'index' => $i + 1,
 				'text' => $verses[$i]
 			];

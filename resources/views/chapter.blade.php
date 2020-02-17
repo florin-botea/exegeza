@@ -101,6 +101,7 @@
             <articles-list :bible="{{ $bible }}" :languages="{{ json_encode($languages??[]) }}" v-once></articles-list>
      --}}       
             @include('components.articles-list', ['articles_list'=>$articles_list])
+            scroll in jos si se vor incarca tot mai multe articole, dar cele mai populare sunt primele
         </section>
     </div>
 </div>

@@ -9,7 +9,7 @@
 			<p class="h2">Traduceri disponibile:</p>
 			<nav class="navbar navbar-expand px-0">
 				<ul class="navbar-nav d-flex flex-wrap">
-					@foreach ($bibleVersions as $bible)
+					@foreach ($bibles as $bible)
 						<li class="nav-item">
 							<a class="nav-link" href="{{ route('bible-versions.show', ['bible_version'=>$bible->slug]) }}">{{ $bible->alias }}</a>
 						</li>
@@ -32,7 +32,7 @@
 		</div>
 	</div>
 	@can('manage bibles')
-		@include('forms.bible-version-form-modal', ['bible'=>null, 'next_index'=>$bibleVersions->last() ? ($bibleVersions->last()->index + 1) : 1])
+		@include('forms.bible-version-form-modal', ['bible'=>null, 'next_index'=>$bibles->last() ? ($bibles->last()->index + 1) : 1])
 	@endcan
 	
 @endsection

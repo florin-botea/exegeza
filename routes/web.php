@@ -21,9 +21,11 @@ use Illuminate\Support\Facades\Storage;
 Route::auth();
 
 Route::get('/', function () {
-    $bibleVersions = \App\BibleVersion::all();
-    return view('homepage')->with('bibleVersions', $bibleVersions);
+    $bibles = \App\BibleVersion::all();
+    return view('homepage')->with('bibles', $bibles);
 });
+
+Route::get('/bible-versions/search', 'BibleSearchController');
 
 Route::resource('bible-versions', 'BibleVersionsController');
 

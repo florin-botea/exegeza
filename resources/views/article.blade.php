@@ -46,22 +46,21 @@
                         @endcan
                     </div>
                     <hr class="my-4">
-                    @if ($article->published_by)
+                </article>
+
+                @if ($article->published_by)
                     <section role="comments" class="">
                         <article class="">
                             <h2 class=""> Comments: </h2>
                             <div class="fb-comments" data-href="http://localhost:8080/articles/maecenas-vida-mi-in-nisi-faucibus-dignissim" width="100%" data-width="100%" data-numposts="5"></div>
                         </article>
                     </section>
-                    @endif
-                </article>
+
+                    @include('components.similar-articles', ['articles'=>$article->related])
+
+                    @include('components.most-popular-articles', ['articles'=>$popular_articles])
+                @endif
             </div>
         </div>
     </div>
-
-    <script>
-        setTimeout(function() {
-            console.log("view log created");
-        }, 20000);
-    </script>
 @endsection
