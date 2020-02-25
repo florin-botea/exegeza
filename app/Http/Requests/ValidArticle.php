@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidPendingArticle extends FormRequest
+class ValidArticle extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,6 +32,7 @@ class ValidPendingArticle extends FormRequest
         return [
             'bible_version_id' => 'required',
             'book_index' => 'required',
+            'book_id' => 'required',
             'language' => 'required|between:3,15',
             'title' => 'required',
             'content' => 'required',

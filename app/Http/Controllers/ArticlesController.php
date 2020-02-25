@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\PublishArticle as ValidArticle;
+use App\Http\Requests\ValidArticle;
 use Illuminate\Support\Facades\Input;
 use App\Article;
 
@@ -51,14 +51,15 @@ class ArticlesController extends Controller
         //return ( $req->expectsJson() ? response()->json($articles) : abort(404) );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
+    public function create(Request $request, string $version_slug, string $book_slug, int $chapter_index = 0)
     {
-        abort(404);
+        $bible = \App\BibleVersion::fetch([
+            'bible_version_slug' => $version_slug,
+            'book_slug' => $book_slug,
+            'chapter_index' => $chapter_index
+        ]) ?? abort(404);
+
+        return view('article-form')->with(compact('bible'));
     }
 
     /**
@@ -70,8 +71,8 @@ class ArticlesController extends Controller
     public function store(ValidArticle $request)
     {
         $data = $request->all();
-        $data['user_id'] = 1;
-        $data['published_by'] = 1;
+        $data['user_id'] = auth()->user()->id;
+        //$data['published_by'] = 1;
         $article = Article::create($data);
         $article->setLanguage($request->input('language'));
         $article->addTags(json_decode($request->tags, true));
@@ -79,37 +80,28 @@ class ArticlesController extends Controller
         return redirect( route('articles.show', $request->slug) );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $slug
-     * @return \Illuminate\Http\Response
-     */
     public function show($slug)
     {
         $article = Article::with('tags', 'language', 'author')->where('slug', $slug)->firstOrFail();
-        $tag_ids = $article->tags->pluck('id');
-        $related = \App\Article::whereHas('tags', function($query) use ($tag_ids){
-            $query->whereIn('tags.id', $tag_ids);
-        })->get();
-        $article->related = $related;
-        $popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
+        $popular_articles = null;
+        if ($article->published_by) {
+            $tag_ids = $article->tags->pluck('id');
+            $related = \App\Article::whereHas('tags', function($query) use ($tag_ids){
+                $query->whereIn('tags.id', $tag_ids);
+            })->get();
+            $article->related = $related;
+            $popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
+            $article->makeViewLog();
+        }
         $bible = \App\BibleVersion::fetch([
             'bible_version_id' => $article->bible_version_id,
             'book_index' => $article->book_index,
             'chapter_index' => $article->chapter_index
         ]);
-        $article->makeViewLog();
 
         return view('article')->with(compact('article', 'bible', 'popular_articles'));
     }
 
-    /**
-     * Show the form for publishing target pending article
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $article = Article::with('tags', 'language')->findOrFail($id);
@@ -125,13 +117,6 @@ class ArticlesController extends Controller
         return view('article-form')->with(compact('article', 'bible'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(ValidArticle $request, $id)
     {
         Article::findOrFail($id)->update([

@@ -26,20 +26,18 @@ Route::get('/', function () {
 });
 
 Route::get('/bible-versions/search', 'BibleSearchController');
-
 Route::resource('bible-versions', 'BibleVersionsController');
-
 Route::resource('bible-versions.books', 'BooksController');
-
 Route::resource('bible-versions.books.chapters', 'ChaptersController');
-
 Route::resource('bible-versions.books.chapters.verses', 'VersesController');
 
-Route::resource('bible-versions.books.articles', 'PendingArticlesController');
+Route::post('/articles/{article?}/publish', 'ArticlesController@publish')->name('publish-article');
+Route::post('/articles/{article}/unpublish', 'ArticlesController@unpublish')->name('unpublish-article');
+Route::resource('articles', 'ArticlesController');
+Route::resource('bible-versions.books.articles', 'ArticlesController');
+Route::resource('bible-versions.books.chapters.articles', 'ArticlesController');
 
-Route::resource('bible-versions.books.chapters.articles', 'PendingArticlesController');
-
-Route::resource('articles', 'ArticlesController', ['publish' => 'articles.create']);
+//Route::resource('articles', 'ArticlesController', ['publish' => 'articles.create']);
 
 Route::resource('pending-articles', 'PendingArticlesController');
 
