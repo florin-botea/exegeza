@@ -17,12 +17,12 @@ class CreateArticleCommentsTable extends Migration
         Schema::create('article_comments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
             $table->string('email');
-            $table->foreign('email')->references('email')->on('users');
             $table->text('value');
             $table->timestamps();
-            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('email')->references('email')->on('users');
         });
     }
 

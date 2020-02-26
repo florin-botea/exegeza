@@ -3,33 +3,36 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Article;
 
 class ValidArticle extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
-        return true;
-        //erorare
-        if (strtolower(request()->_method) === 'put') {
-            return auth()->user() && auth()->user()->can('update', \App\Article::firstOrFail( request()->id ));
-        } else {
-            return auth()->user() && auth()->user()->can('create', \App\Article::class);
+        if (!auth()->user()) return false;
+        switch ( $this->route()->getName() ) {
+            case 'articles.store': return auth()->user()->can('create', Article::class);
+            break;
+            case 'articles.update': return $this->canUpdateArticle(Article::findOrFail($this->article));
+            break;
         }
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+	protected function getValidatorInstance()
+	{
+        if ($this->isPosting() || ($this->isPosting() && $this->isPublishing())) {
+            $article = $this->all();
+            $article['user_id'] = auth()->user()->id;
+            $this->replace($article);
+        }
+		
+		return parent::getValidatorInstance();
+	}
+    
     public function rules()
     {
-        return [
+        $rules = [
             'bible_version_id' => 'required',
             'book_index' => 'required',
             'book_id' => 'required',
@@ -38,5 +41,42 @@ class ValidArticle extends FormRequest
             'content' => 'required',
             'tags' => 'required'
         ];
+        if ($this->isPublishing()) {
+            $rules = array_merge($rules, [
+                'meta' => 'required|between:70,155',
+                'sample' => 'required',
+                'cite_from' => 'sometimes|max:61'
+            ]);
+        }
+        return $rules;
+    }
+
+	public function withValidator($validator)
+	{
+		$validator->after(function ($validator) {
+            $duplicate_title = \App\Article::where([
+                'user_id' => auth()->user()->id, 
+                'slug' => $this->slug
+            ])->first();
+
+            if ($this->isPosting() && $duplicate_title) {
+                $validator->errors()->add('title', 'Title already taken');
+            }
+		});
+	}
+
+    private function isPublishing()
+    {
+        return $this->route()->getName() === 'articles.publish';
+    }
+
+    private function isPosting()
+    {
+        return $this->route()->getName() === 'articles.store' || !isset($this->article);
+    }
+
+    private function canUpdateArticle(Article $article)
+    {
+        return (auth()->user()->can('update', $article) || $article->user_id === auth()->user()->id);
     }
 }

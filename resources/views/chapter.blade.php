@@ -81,25 +81,10 @@
         <section role="articles-section">
             <div class="d-flex justify-content-between">
                 <h2 class="mb-4">Articole</h2>
-                <a class="btn btn-outline-success align-self-center" href="{{ $bible->book->chapter ? route('bible-versions.books.chapters.articles.create', ['bible_version'=>$bible->slug, 'book'=>$bible->book->slug, 'chapter'=>$bible->book->chapter->index]) : route('bible-versions.books.articles.create', ['bible_version'=>$bible->slug, 'book'=>$bible->book->slug]) }}">
+                <a class="btn btn-outline-success align-self-center" href="{{ route('articles.create', ['bible-version'=>$bible->slug, 'book'=>$bible->book->slug, 'chapter'=>($bible->book->chapter ? $bible->book->chapter->index : 0)]) }}">
                     <i class="far fa-plus-square"></i> New
                 </a>
-            </div>
-{{--
-            @foreach ($articles??[] as $article)
-                @include('components.articles-sample', [
-                    'article' => $article, 
-                    'article_url' => route('articles.show', $article->slug)
-                ])
-            @endforeach
-
-            @include('components.articles-filter')
-
-
-            
-
-            <articles-list :bible="{{ $bible }}" :languages="{{ json_encode($languages??[]) }}" v-once></articles-list>
-     --}}       
+            </div>    
             @include('components.articles-list', ['articles_list'=>$articles_list])
             scroll in jos si se vor incarca tot mai multe articole, dar cele mai populare sunt primele
         </section>

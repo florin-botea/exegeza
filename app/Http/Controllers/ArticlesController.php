@@ -11,7 +11,7 @@ class ArticlesController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('slugify', ['only' => ['store', 'update']]);
+		$this->middleware('slugify', ['only' => ['store', 'update', 'publish']]);
 	}
     /**
      * Display a listing of the resource.
@@ -51,33 +51,24 @@ class ArticlesController extends Controller
         //return ( $req->expectsJson() ? response()->json($articles) : abort(404) );
     }
 
-    public function create(Request $request, string $version_slug, string $book_slug, int $chapter_index = 0)
+    public function create(Request $request)
     {
         $bible = \App\BibleVersion::fetch([
-            'bible_version_slug' => $version_slug,
-            'book_slug' => $book_slug,
-            'chapter_index' => $chapter_index
+            'bible_version_slug' => $request->query('bible-version'),
+            'book_slug' => $request->query('book'),
+            'chapter_index' => $request->query('chapter')
         ]) ?? abort(404);
 
         return view('article-form')->with(compact('bible'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(ValidArticle $request)
     {
-        $data = $request->all();
-        $data['user_id'] = auth()->user()->id;
-        //$data['published_by'] = 1;
-        $article = Article::create($data);
+        $article = Article::create($request->all());
         $article->setLanguage($request->input('language'));
         $article->addTags(json_decode($request->tags, true));
 
-        return redirect( route('articles.show', $request->slug) );
+        return redirect( route('articles.show', ['article'=>$article->slug, 'user'=>$article->user_id]) );
     }
 
     public function show($slug)
@@ -120,28 +111,40 @@ class ArticlesController extends Controller
     public function update(ValidArticle $request, $id)
     {
         Article::findOrFail($id)->update([
-            'meta' => $request->meta,
             'title' => $request->title,
             'slug' => $request->slug,
-            'sample' => $request->sample,
             'content' => $request->content,
-            'published_by' => 1
         ]);
         $article = Article::findOrFail($id);
         $article->setLanguage($request->input('language'));
         $article->addTags(json_decode($request->tags, true));
 
-        return redirect( route('articles.show', $request->slug) );
+        return redirect( route('articles.show', $article->slug) );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
+    }
+
+    public function publish(ValidArticle $request, int $id = 0)
+    {
+        if ($id > 0) {
+            $article = \App\Article::findOrFail($id)->update([
+                'title' => $request->title,
+                'meta' => $request->meta,
+                'sample' => $request->sample,
+                'slug' => $request->slug,
+                'content' => $request->content,
+                'cite_from' => $request->cite_from,
+            ]);
+            $article = \App\Article::find($id);
+        } else {
+            $article = \App\Article::create($request->all());
+        }
+        $article->setLanguage($request->input('language'));
+        $article->addTags(json_decode($request->tags, true));
+
+        return redirect( route('articles.show', $article->slug) );
     }
 }

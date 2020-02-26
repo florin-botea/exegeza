@@ -31,11 +31,12 @@ Route::resource('bible-versions.books', 'BooksController');
 Route::resource('bible-versions.books.chapters', 'ChaptersController');
 Route::resource('bible-versions.books.chapters.verses', 'VersesController');
 
-Route::post('/articles/{article?}/publish', 'ArticlesController@publish')->name('publish-article');
-Route::post('/articles/{article}/unpublish', 'ArticlesController@unpublish')->name('unpublish-article');
+// articles
+Route::put('/articles/{article?}/publish', 'ArticlesController@publish')->name('articles.publish');
+Route::put('/articles/{article}/unpublish', 'ArticlesController@unpublish')->name('articles.unpublish');
 Route::resource('articles', 'ArticlesController');
-Route::resource('bible-versions.books.articles', 'ArticlesController');
-Route::resource('bible-versions.books.chapters.articles', 'ArticlesController');
+// Route::resource('bible-versions.books.articles', 'ArticlesController');
+// Route::resource('bible-versions.books.chapters.articles', 'ArticlesController');
 
 //Route::resource('articles', 'ArticlesController', ['publish' => 'articles.create']);
 
