@@ -42,15 +42,15 @@
                         'value' => $form->value('title'),
                         'error' => $errors->first('title')
                     ])
-                    <div class="form-group">
-                        <textarea class="ckeditor-classic" name="content" hidden>{{ $form->value('content') }}</textarea>
-                    </div>
-                    <hr>
                     @text(['name'=>'cite_from', 'label'=>'Citat din:',
                         'value' => $form->value('mask'),
                         'error' => $errors->first('mask'),
                         'helpers' => ['Se completeaza doar in cazul in care articolul este un citat']
                     ])
+                    <div class="form-group">
+                        <textarea class="ckeditor-classic" name="content" hidden>{{ $form->value('content') }}</textarea>
+                    </div>
+                    <hr>
                     @text(['name'=>'tags', 'label'=>'Tags:', 'inputClass'=>'tagify-input', 'data'=>['endpoint'=>'/api/tags'],
                         'value' => $form->value('tags'),
                         'error' => $errors->first('tags')

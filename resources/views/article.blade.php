@@ -42,7 +42,7 @@
                     </footer>
                     <div class="d-flex justify-content-end">
                         @canany(['update','delete','publish','unpublish'], $article)
-                        <a class="btn btn-success" href="{{ route('pending-articles.edit', $article->id) }}"> Gestioneaza articol </a>
+                        <a class="btn btn-success" href="{{ route('articles.edit', $article->id) }}"> Gestioneaza articol </a>
                         @endcan
                     </div>
                     <hr class="my-4">

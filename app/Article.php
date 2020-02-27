@@ -61,24 +61,57 @@ class Article extends Model
         }
 	}
 
-	public function scopeFiltered($query, $bible)
+	public function getBible()
 	{
-		if (!request()->query('all-versions')) {
-			$query->where('bible_version_id', $bible->id);
+        return \App\BibleVersion::fetch([
+            'bible_version_id' => $this->bible_version_id,
+            'book_id' => $this->book_id,
+            'chapter_id' => $this->chapter_id
+        ]);
+	}
+
+	public function getRelated()
+	{
+		$tag_ids = $this->tags->pluck('id');
+		return self::whereHas('tags', function($query) use ($tag_ids){
+			$query->whereIn('tags.id', $tag_ids);
+		})->whereNotNull('published_by')->get();
+	}
+
+	public function scopeFiltered($query, $args = [])
+	{
+		extract($args);
+
+		$target = [];
+		isset($book) ? $target['book_index'] = $book : false;
+		isset($chapter) ? $target['chapter_index'] = $chapter : false;
+		$query = $query->where($target);
+		if (isset($published)) $query = $query->whereNotNull('published_by');
+		if (isset($keyword)) {
+			$query = $query->where(function($q) use ($keyword) {
+				$q->where('title', 'LIKE', '%'.$keyword.'%')
+					->orWhere('content', 'LIKE', '%'.$keyword.'%')
+					->orWhereHas('tags', function($tag) use ($keyword) { $tag->where('value', 'LIKE', '%'.$keyword.'%'); });
+			});
 		}
-		// if ( request()->query('language') ) {
-		// $query->where('language_id', $bible->language->id);
-		// }
+		if (isset($language) && $language != 'default') {
+			$query = $query->orWhereHas('language', function($q) use ($language) {
+				$q->where('value', $language);
+			});
+		}
+		if (isset($author)) {
+			$query = $query->whereHas('author', function($q) use ($author) {
+				$q->where('name', 'LIKE', '%'.$author.'%');
+			});
+		}
+		switch($sort ?? 'date-desc') {
+			case 'date-asc': $query = $query->orderBy('updated_at');
+			break;
+			case 'date-desc': $query = $query->orderBy('updated_at', 'desc');
+			break;
+		}
+
 		return $query;
 	}
 }
 
-/*
-	$articles = \App\Article::where(['book_index'=>$bible->book->index, 'chapter_index'=>$bible->book->chapter->index??null]);
-	if ($strictVersion) {
-			$articles = $articles = $articles=->where('bible_version_id', $bible->id);
-	}
-	if ($strictLang) {
-			$articles = $articles = $articles=->where('language_id', $bible->language->id);
-	}
-*/

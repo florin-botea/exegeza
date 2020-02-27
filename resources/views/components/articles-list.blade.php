@@ -6,10 +6,10 @@
                 <input name="keyword" class="list-filter form-control" placeholder="Cuvant cheie">
             </div>
             <div class="form-group mx-1 col-md">
-                <input name="user" class="list-filter form-control" placeholder="User">
+                <input name="author" class="list-filter form-control" placeholder="User">
             </div>
             <div class="form-group mx-1 col-md">
-                <input name="author" class="list-filter form-control" placeholder="Autor">
+                <input name="cite" class="list-filter form-control" placeholder="Autor">
             </div>
             <div class="form-group mx-1 col-md">
                 <select name="language" class="list-filter form-control">

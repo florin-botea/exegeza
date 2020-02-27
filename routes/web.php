@@ -40,7 +40,7 @@ Route::resource('articles', 'ArticlesController');
 
 //Route::resource('articles', 'ArticlesController', ['publish' => 'articles.create']);
 
-Route::resource('pending-articles', 'PendingArticlesController');
+//Route::resource('pending-articles', 'PendingArticlesController');
 
 Route::resource('users', 'UsersController');
 

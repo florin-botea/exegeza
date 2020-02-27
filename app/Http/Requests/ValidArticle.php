@@ -21,12 +21,15 @@ class ValidArticle extends FormRequest
 
 	protected function getValidatorInstance()
 	{
-        if ($this->isPosting() || ($this->isPosting() && $this->isPublishing())) {
-            $article = $this->all();
+        $article = $this->all();
+        if ($this->isPosting() || ($this->isPosting() && $this->isPublishing()))
             $article['user_id'] = auth()->user()->id;
-            $this->replace($article);
+        if ($this->isPublishing()) {
+            $article['published_by'] = auth()->user()->id;
+        } elseif ($this->isUpdating()) {
+            $article['published_by'] = null;
         }
-		
+        $this->replace($article);
 		return parent::getValidatorInstance();
 	}
     
@@ -39,13 +42,13 @@ class ValidArticle extends FormRequest
             'language' => 'required|between:3,15',
             'title' => 'required',
             'content' => 'required',
-            'tags' => 'required'
+            'tags' => 'required',
+            'cite_from' => 'sometimes|max:61'
         ];
         if ($this->isPublishing()) {
             $rules = array_merge($rules, [
                 'meta' => 'required|between:70,155',
                 'sample' => 'required',
-                'cite_from' => 'sometimes|max:61'
             ]);
         }
         return $rules;
@@ -73,6 +76,11 @@ class ValidArticle extends FormRequest
     private function isPosting()
     {
         return $this->route()->getName() === 'articles.store' || !isset($this->article);
+    }
+
+    private function isUpdating()
+    {
+        return $this->route()->getName() === 'articles.update';
     }
 
     private function canUpdateArticle(Article $article)

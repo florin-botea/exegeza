@@ -2,7 +2,7 @@
 
 @php
     $articles_list = [
-        'base_url' => "/api/articles?bible=1&book=1",
+        'base_url' => "/api/articles?published=1&bible=1&book=1",
     ];
 @endphp
 

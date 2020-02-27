@@ -23,13 +23,8 @@ class BooksController extends Controller
 			'bible_version_slug' => $bible_slug,
 			'book_slug' => $book_slug,
 		]);
-		$articles = \App\Article::where([
-			'book_index'=>$bible->book->index, 
-			'chapter_index'=>null
-		])->whereNotNull('published_by')
-		->filtered($bible)->get();
 	
-		return view('chapter')->with(compact('bible', 'articles'));
+		return view('chapter')->with(compact('bible'));
 	}
 
 	public function create($bibleVersion)

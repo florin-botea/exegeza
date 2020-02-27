@@ -35,4 +35,10 @@ Route::post('/verses-preview', function (Request $request) {
     return response()->json(preg_split($request->regex, $request->verses));
 });
 
-Route::get('/articles', 'ArticlesController@index');
+Route::get('/articles', function(Request $request) {
+    $articles = \App\Article::filtered($request->all())
+        ->paginate(1)
+        ->appends($request->query());
+
+    return view('xmlhttp.articles-page')->with('articles', $articles);
+});
