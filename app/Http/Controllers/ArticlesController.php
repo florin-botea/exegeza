@@ -57,7 +57,7 @@ class ArticlesController extends Controller
             'bible_version_slug' => $request->query('bible-version'),
             'book_slug' => $request->query('book'),
             'chapter_index' => $request->query('chapter')
-        ]) ?? abort(404);
+        ]) ?? abort(404); // bb not fnd
 
         return view('article-form')->with(compact('bible'));
     }
@@ -79,7 +79,7 @@ class ArticlesController extends Controller
             $tag_ids = $article->tags->pluck('id');
             $related = \App\Article::whereHas('tags', function($query) use ($tag_ids){
                 $query->whereIn('tags.id', $tag_ids);
-            })->get();
+            })->get(); // move to model
             $article->related = $related;
             $popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
             $article->makeViewLog();
@@ -114,6 +114,7 @@ class ArticlesController extends Controller
             'title' => $request->title,
             'slug' => $request->slug,
             'content' => $request->content,
+            // public f
         ]);
         $article = Article::findOrFail($id);
         $article->setLanguage($request->input('language'));
