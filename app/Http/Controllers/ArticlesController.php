@@ -19,7 +19,7 @@ class ArticlesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $req)
-    {
+    {// scopeFiltered([]) query
         $query = \App\Article::with('author')->where(['book_index' => $req->query('book'), 'chapter_index' => $req->query('chapter')])->whereNotNull('published_by');
         if ($req->query('next') == 'before') $query->where('id', '<', $req->query('id', 0));
         if ($req->query('next') == 'after') $query->where('id', '>', $req->query('id', 0));
@@ -47,6 +47,7 @@ class ArticlesController extends Controller
         $articles = $query->paginate(1)->appends($req->query());
 
         return view('components.articles-sample')->with('articles', $articles);
+        // set it xmlhttp
 
         //return ( $req->expectsJson() ? response()->json($articles) : abort(404) );
     }
