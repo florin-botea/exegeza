@@ -52,7 +52,9 @@ $('.tagify-input').each(function (i, el) {
 
 $('.autocomplete-input').each(function (i, el) {
     var endpoint = el.dataset.endpoint || '';
+    if (!endpoint.length) return;
     new autoComplete({
+        delay: 500,
         selector: el,
         minChars: 1,
         source: function (term, suggest) {
@@ -61,5 +63,14 @@ $('.autocomplete-input').each(function (i, el) {
                 suggest(res.data)
             });
         }
+    });
+});
+
+$(".count-input").each(function (i, el) {
+    let formGroup = $(el);
+    let counter = formGroup.find(".input-char-count");
+    if (!counter.length) return;
+    formGroup.find("input").on("input", function(e){
+        counter.html(e.target.value.length);
     });
 });

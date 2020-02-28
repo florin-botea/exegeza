@@ -1,4 +1,3 @@
-@json($errors->all())
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -28,6 +27,7 @@
 		{{-- @include('sections.admin-navbar') --}}
 		@include('sections.navbar')
 	</header>
+	@json($errors->all())
 	<main class="container my-5" id="vue-app-layer">
 		@yield('content')
 	</main>

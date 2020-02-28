@@ -26,7 +26,7 @@ Route::get('/tags', function () {
 
 Route::get('/languages', function () {
     $q = request()->query('q');
-    $langs = \App\Language::where('language', 'LIKE', $q . '%')->pluck('language');
+    $langs = \App\Language::where('value', 'LIKE', $q . '%')->pluck('value');
 
     return response()->json($langs);
 });

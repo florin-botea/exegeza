@@ -24,11 +24,6 @@ class ChaptersController extends Controller
 			'book_slug' => $book_slug,
 			'chapter_index' => $chapter_index
 		]);
-		$articles = \App\Article::where([
-			'book_index' => $bible->book->index,
-			'chapter_index' => $bible->book->chapter->index
-		])->whereNotNull('published_by')
-			->filtered($bible)->get();
 
 		return view('chapter')->with(compact('bible', 'articles'));
 	}

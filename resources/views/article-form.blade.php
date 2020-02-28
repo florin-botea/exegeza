@@ -12,9 +12,11 @@
 	<div class="row">
 		<div class="col">
 			@include('components.faded-verses', ['bible'=>$bible])
-			<hr>
+            <hr>
 			<div class="">
                 @form(['action'=>''])
+                    <input type="text" name="language" id="language" style="height:0px;width:0px;padding:0px;border:0px;margin:0px;">
+                    
                     <input name="form_id" value="article" hidden>
                     <input name="bible_version_id" value="{{ $article->bible_version_id ?? $bible->id }}" hidden>
                     <input name="book_index" value="{{ $article->book_index ?? $bible->book->index }}" hidden>
@@ -24,12 +26,15 @@
                         <input name="chapter_id" value="{{ $article->chapter_id ?? $bible->book->chapter->id }}" hidden>
                     @endif
                     @text(['name'=>'language', 'label'=>'Language:',
+                        'inputClass'=>'autocomplete-input',
+                        'data'=>['endpoint'=>'/api/languages'],
                         'value' => $form->value('language', $language),
                         'error' => $errors->first('language')
                     ])
                     <!-- IF CAN PUBLISH ARTICLE, ADD THIS TOO -->
                     @can('publish', $article??\App\Article::class)
                         @text(['name'=>'meta', 'label'=>'Meta:',
+                            'count' => true,
                             'value' => $form->value('meta'),
                             'error' => $errors->first('meta')
                         ])
@@ -39,6 +44,7 @@
                         ])
                     @endcan
                     @text(['name'=>'title', 'label'=>'Title:',
+                        'count' => true,
                         'value' => $form->value('title'),
                         'error' => $errors->first('title')
                     ])

@@ -86,6 +86,9 @@ class Article extends Model
 		isset($book) ? $target['book_index'] = $book : false;
 		isset($chapter) ? $target['chapter_index'] = $chapter : false;
 		$query = $query->where($target);
+		if(isset($cite) && count($cite) > 0) {
+			$query = $query->where('cite_from', 'LIKE', $keyword.'%');
+		}
 		if (isset($published)) $query = $query->whereNotNull('published_by');
 		if (isset($keyword)) {
 			$query = $query->where(function($q) use ($keyword) {
@@ -95,7 +98,7 @@ class Article extends Model
 			});
 		}
 		if (isset($language) && $language != 'default') {
-			$query = $query->orWhereHas('language', function($q) use ($language) {
+			$query = $query->whereHas('language', function($q) use ($language) {
 				$q->where('value', $language);
 			});
 		}

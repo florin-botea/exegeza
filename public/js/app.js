@@ -3155,7 +3155,9 @@ $('.tagify-input').each(function (i, el) {
 });
 $('.autocomplete-input').each(function (i, el) {
   var endpoint = el.dataset.endpoint || '';
+  if (!endpoint.length) return;
   new js_autocomplete_auto_complete__WEBPACK_IMPORTED_MODULE_1___default.a({
+    delay: 500,
     selector: el,
     minChars: 1,
     source: function source(term, suggest) {
@@ -3167,6 +3169,14 @@ $('.autocomplete-input').each(function (i, el) {
         suggest(res.data);
       });
     }
+  });
+});
+$(".count-input").each(function (i, el) {
+  var formGroup = $(el);
+  var counter = formGroup.find(".input-char-count");
+  if (!counter.length) return;
+  formGroup.find("input").on("input", function (e) {
+    counter.html(e.target.value.length);
   });
 });
 

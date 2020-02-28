@@ -6,6 +6,8 @@
 @endphp
 
 @section('content')
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ro_RO/sdk.js#xfbml=1&version=v6.0"></script>
     <div class="row">
         <div class="col">
             @include('components.faded-verses', ['bible'=>$bible])
@@ -52,7 +54,7 @@
                     <section role="comments" class="">
                         <article class="">
                             <h2 class=""> Comments: </h2>
-                            <div class="fb-comments" data-href="http://localhost:8080/articles/maecenas-vida-mi-in-nisi-faucibus-dignissim" width="100%" data-width="100%" data-numposts="5"></div>
+                            <div class="fb-comments" data-href="http://localhost:8080/articles/proin-pretium-sem-at-condimentum-volutpat-nunc-interdum-felis-at-ipsum-fringilla-auctor-id-eu-dui" data-width="" data-numposts="10"></div>
                         </article>
                     </section>
 
