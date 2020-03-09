@@ -19,12 +19,14 @@ class BooksController extends Controller
 
 	public function show(string $bible_slug, string $book_slug)
 	{
+		$bibles = \App\BibleVersion::all();
+		
 		$bible = \App\BibleVersion::fetch([
 			'bible_version_slug' => $bible_slug,
 			'book_slug' => $book_slug,
 		]);
 	
-		return view('chapter')->with(compact('bible'));
+		return view('chapter')->with(compact('bible', 'bibles'));
 	}
 
 	public function create($bibleVersion)

@@ -32,7 +32,7 @@ Route::resource('bible-versions.books.chapters', 'ChaptersController');
 Route::resource('bible-versions.books.chapters.verses', 'VersesController');
 
 // articles
-Route::put('/articles/{article?}/publish', 'ArticlesController@publish')->name('articles.publish');
+Route::put('/articles/{article}/publish', 'ArticlesController@publish')->name('articles.publish');
 Route::put('/articles/{article}/unpublish', 'ArticlesController@unpublish')->name('articles.unpublish');
 Route::resource('articles', 'ArticlesController');
 // Route::resource('bible-versions.books.articles', 'ArticlesController');

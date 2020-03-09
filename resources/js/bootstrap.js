@@ -1,8 +1,13 @@
 // window._ = require('lodash');
+import modal from "jquery-modal";
+
 window.axios = require('axios');
-// window.$ = window.jquery = require('jquery');
+window.$ = window.jquery = require('jquery');
+import 'jquery-ui/ui/widgets/tabs.js';
+require("jquery-modal");
 // window.popper = require('popper.js');
 // require('bootstrap');
+
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
@@ -73,4 +78,8 @@ $(".count-input").each(function (i, el) {
     formGroup.find("input").on("input", function(e){
         counter.html(e.target.value.length);
     });
+});
+
+$( function() {
+    $(".js-hasTabs").tabs();
 });

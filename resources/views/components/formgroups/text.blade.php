@@ -4,11 +4,11 @@
 
 <div class="form-group {{ $class ?? '' }} {{$count ? 'count-input' : ''}}">
 	@isset($label)
-		<label for="{{ $id ?? $name ?? '' }}">{{ $label }}</label>
+		<label class="font-semibold" for="{{ $id ?? $name ?? '' }}">{{ $label }}</label>
 	@endisset
 	@if($count)
-		<div class="position-relative" style="height:0">
-			<div class="input-char-count badge position-absolute" style="right:0px;"></div>
+		<div class="relative" style="height:0">
+			<div class="input-char-count absolute text-sm" style="right:0px;"></div>
 		</div>
 	@endif
 	<input name="{{ $name ?? '' }}" type="text" value="{{ $value??null }}" class="form-control {{ $inputClass??'' }}" id="{{ $id ?? $name ?? '' }}"

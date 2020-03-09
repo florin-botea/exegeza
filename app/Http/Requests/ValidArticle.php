@@ -75,7 +75,7 @@ class ValidArticle extends FormRequest
 
     private function isPosting()
     {
-        return $this->route()->getName() === 'articles.store' || !isset($this->article);
+        return $this->route()->getName() === 'articles.store' || $this->article == 0;
     }
 
     private function isUpdating()

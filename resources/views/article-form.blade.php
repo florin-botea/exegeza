@@ -82,7 +82,7 @@
                                 @submit(['name'=>'_method', 'value'=>'post', 'class'=>'mr-2 btn-success', 'text'=>'Add', 'attrs'=>['formaction='.route('articles.store')] ]) 
                             @endcan
                             @can('publish', \App\Article::class)
-                                @submit(['name'=>'_method', 'value'=>'post', 'class'=>'mr-2 btn-primary', 'text'=>'Publish', 'attrs'=>['formaction='.route('articles.publish', $article->id)] ]) 
+                                @submit(['name'=>'_method', 'value'=>'put', 'class'=>'mr-2 btn-primary', 'text'=>'Publish', 'attrs'=>['formaction='.route('articles.publish', 0)] ]) 
                             @endcan
                         @endif
                     </div>

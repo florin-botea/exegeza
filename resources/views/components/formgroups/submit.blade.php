@@ -1,5 +1,5 @@
-<div class="form-group {{$formGroupClass??''}}">
-	<button class="single-submit-btn btn {{ $class ?? '' }}" name="{{$name??''}}" value="{{$value??''}}" type="submit"
+<div class="form-group {{$class??''}}">
+	<button class="single-submit-btn btn" name="{{$name??''}}" value="{{$value??''}}" type="submit"
 	@foreach ($attrs??[] as $key)
 		{{ $key }}
 	@endforeach

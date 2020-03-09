@@ -15,13 +15,13 @@ class Article extends Model
 	use Compoships;
 
 	protected $fillable = [
+		'user_id',
+		'cite_from',
 		'bible_version_id', 
 		'book_index',
 		'book_id',
 		'chapter_index',
 		'chapter_id',
-		'user_id',
-		'cite_from',
 		'meta',
 		'title',
 		'slug',

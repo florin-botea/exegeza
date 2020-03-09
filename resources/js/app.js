@@ -12,12 +12,7 @@ Vue.use(vueDebounce, {
 })
 */
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-
-$('.js-unblur-section').on('click', function(e){
-	$('.blured-section').removeClass('blured-section');
-	$(e.target).remove();
+  // $('[data-toggle="tooltip"]').tooltip()
 })
 
 $(".single-submit-btn").on("click", function(e){
@@ -33,19 +28,22 @@ $(".single-submit-btn").on("click", function(e){
  * ========================================================================== 
  */
 window.loginModal = function(){
-	$('#login-tab').tab('show')
-	$('#loginModal').modal();
+	$('#authModal').tabs("option", "active", 0);
+	$('#authModal').modal({
+		fadeDuration: 250
+	});
 }
 
 window.registerModal = function(){
-	$('#register-tab').tab('show')
-	$('#loginModal').modal();
+	$('#authModal').tabs("option", "active", 1);
+	$('#authModal').modal({
+		fadeDuration: 250
+	});
 }
 
 $('#loginBtn').on('click', function(){
 	loginModal();
 })
-
 $('#registerBtn').on('click', function(){
 	registerModal();
 })
@@ -75,18 +73,12 @@ $('#js-preview-verses-action').on('click', function(){
  * end Manage Bibles
  * ========================================================================
  */
-/*
-const app = new Vue({
-    components: {ArticlesList},
-}).$mount('#vue-app-layer');
-
-*/
-
 
 /**
  * ARTICOLE sample
  * ========================================================================== 
  */
+/*
 import loadingList from './jquery-extends/loading-list.js';
 jQuery.fn.loadingList = loadingList;
 
@@ -99,7 +91,7 @@ if (articlesList) {
 			articlesList.get();
 		}
 	}
-}
+}*/
 
 /**
  * end ARTICOLE sample

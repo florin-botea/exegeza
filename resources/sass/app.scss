@@ -1,5 +1,10 @@
 @import '@yaireo/tagify/src/tagify';
 @import 'js-autocomplete/auto-complete';
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 @import "./_buttons";
 @import "./utilities";
 @import "./ck-editor";
