@@ -66,4 +66,14 @@ class ChaptersController extends Controller
 
 		return redirect( route('bible-versions.books.show', [$bible->slug, $book->slug]));
 	}
+
+	public function manage(int $bible, int $book)
+	{
+		$bible = \App\BibleVersion::fetch([
+			'bible_version_id' => $bible,
+			'book_id' => $book,
+		]);
+
+		return view('dev.chapters')->with(compact('bible'));
+	}
 }

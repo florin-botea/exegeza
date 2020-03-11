@@ -90,3 +90,5 @@ Route::post('/upload-photo', function(Request $request){
 });
 
 Route::get('/dev/bible-versions', 'BibleVersionsController@manage');
+Route::get('/dev/bible-versions/{bible_version}/books', 'BooksController@manage');
+Route::get('/dev/bible-versions/{bible_version}/books/{book}/chapters', 'ChaptersController@manage');

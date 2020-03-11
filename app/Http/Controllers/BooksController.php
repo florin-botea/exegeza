@@ -9,7 +9,7 @@ class BooksController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('slugify', ['only' => ['store', 'update']]);
+		//$this->middleware('slugify', ['only' => ['store', 'update']]);
 	}
 
 	public function index($bibleVersion)
@@ -31,9 +31,7 @@ class BooksController extends Controller
 
 	public function create($bibleVersion)
 	{
-		$bibleBooks = \App\BibleVersion::with('books')->where('slug', $bibleVersion)->first();
-
-		return view('manage-books')->with('bible', $bibleBooks);
+		abort(404);
 	}
 
 	public function store(ValidBook $request, int $bibleVersion)
@@ -59,5 +57,12 @@ class BooksController extends Controller
 		\App\Book::where('id', $id)->delete();
 
 		return back();
+	}
+
+	public function manage($bible_id)
+	{
+		$bible = \App\BibleVersion::with('books')->findOrFail($bible_id);
+
+		return view('dev.books')->with(compact('bible'));
 	}
 }

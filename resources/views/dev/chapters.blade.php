@@ -1,6 +1,6 @@
 @extends('layouts.dev')
 
-@section('content')
+@section('content')de editat
     <div class="bg-gray-300 p-2">
         <h1 class="text-lg font-bold underline">bible-versions/</h1>
         <table>

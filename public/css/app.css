@@ -17128,7 +17128,7 @@ input[type=checkbox].list-item ~ label {
 
 /* auth */
 
-input {
+input, select {
   border-width: 1px;
   border-color: #718096;
   padding-left: 0.5rem;
@@ -17141,6 +17141,12 @@ button {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   background-color: buttonface;
+}
+
+.input-w-full {
+  min-width: 0px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .input-base {

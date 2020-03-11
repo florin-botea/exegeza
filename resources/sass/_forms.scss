@@ -1,13 +1,19 @@
 
 /* **************************FORMS*************************** */
 /* auth */
-input {
+input, select {
     @apply border border-gray-600 px-2;
 }
 
 button {
     @apply border border-gray-600 px-2;
     background-color: buttonface;
+}
+
+.input-w-full {
+    min-width:0px;
+    max-width:100%;
+    width:100%;
 }
 
 .input-base {

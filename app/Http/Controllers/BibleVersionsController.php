@@ -11,7 +11,7 @@ class BibleVersionsController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('slugify', ['only' => ['store', 'update']]);
+		//$this->middleware('slugify', ['only' => ['store', 'update']]);
 	}
 
 	public function index()
@@ -52,14 +52,14 @@ class BibleVersionsController extends Controller
 		$bible = \App\BibleVersion::findOrFail($id);
 		\App\BibleVersion::findOrFail($id)->setVersesTable();
 
-		return redirect( route('bible-versions.show', $bible->slug) );
+		return back();
 	}
 
 	public function destroy($id)
 	{
 		\App\BibleVersion::where('id', $id)->delete();
 
-		return redirect("/");
+		return back();
 	}
 
 	public function manage()
