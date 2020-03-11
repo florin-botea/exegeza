@@ -15,7 +15,7 @@ $(function () {
   // $('[data-toggle="tooltip"]').tooltip()
 })
 
-$(".single-submit-btn").on("click", function(e){
+$(".single-submit-btn").on("click", function(e) {
 	e.target.classList.add("submitting")
 	$(".single-submit-btn").off("click");
 	$(".single-submit-btn").on("click", function(){
@@ -54,6 +54,16 @@ $('#registerBtn').on('click', function(){
  * Manage Bibles
  * ========================================================================
  */
+$('.js-modal-controller').on('click', function(e) {
+	if (! e.target.dataset.target) {
+		return;
+	}
+	$(e.target.dataset.target).modal({
+		fadeDuration: 250
+	});
+});
+
+
 $('#js-preview-verses-action').on('click', function(){
 	let regex = $('#js-preview-verses_regex');
 	let verses = $('#js-preview-verses_verses');

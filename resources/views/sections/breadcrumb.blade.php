@@ -3,7 +3,7 @@
 		<ul role="breadcrumb-menuList" class="flex border-b-2 border-gray-900">
             @foreach ($bibles as $version)
                 <li class="px-2 py-1 rounded mx-2 my-1 shadow-inner bg-red-700 text-white font-bold">
-                    <a class="nav-link" href="#">{{ $version->alias }}</a>
+                    <a class="nav-link" href="{{ route('bible-versions.show', [$version->slug]) }}">{{ $version->alias }}</a>
                 </li>
             @endforeach
         </ul>
@@ -18,10 +18,10 @@
                 @endif
             </div>
             <div class="self-end w-full">
-                @form(['class'=>'flex justify-end'])
-                        <input type="text" placeholder="word" class="px-4 rounded-l shadow-md">
-                        <button type="submit" class="px-2 bg-green-800 text-yellow-300 rounded-r shadow-md"><i class="fas fa-search"></i></button>
-                @endform
+                <form class="prevent-multiple-submit flex justify-end">
+                    <input placeholder="word" class="px-4 rounded-l shadow-md">
+                    <button type="submit" class="px-2 py-0 bg-green-800 text-yellow-300 rounded-r shadow-md"><i class="fas fa-search"></i></button>
+                </form>
             </div>
         </div>
 	</div>

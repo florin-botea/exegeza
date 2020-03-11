@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const tailwindcss = require('tailwindcss');
 
 const path = require( 'path' );
 const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
@@ -71,7 +72,7 @@ mix.webpackConfig({
 
 mix.js('resources/js/app.js', 'public/js')
 	//.js('resources/js/ckeditor-classic.js', 'public/js')
-	//.sass('resources/sass/app.scss', 'public/css')
-	.postCss('resources/css/app.css', 'public/css', [
-		require('tailwindcss')
-	  ])
+	.sass('resources/sass/app.scss', 'public/css/app.css')
+    .options({
+        postCss: [ tailwindcss() ],
+    });

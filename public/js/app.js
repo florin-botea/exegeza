@@ -15709,17 +15709,6 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./resources/css/app.css":
-/*!*******************************!*\
-  !*** ./resources/css/app.css ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -15785,6 +15774,15 @@ $('#registerBtn').on('click', function () {
  * ========================================================================
  */
 
+$('.js-modal-controller').on('click', function (e) {
+  if (!e.target.dataset.target) {
+    return;
+  }
+
+  $(e.target.dataset.target).modal({
+    fadeDuration: 250
+  });
+});
 $('#js-preview-verses-action').on('click', function () {
   var regex = $('#js-preview-verses_regex');
   var verses = $('#js-preview-verses_verses');
@@ -16080,15 +16078,26 @@ function () {
 
 /***/ }),
 
+/***/ "./resources/sass/app.scss":
+/*!*********************************!*\
+  !*** ./resources/sass/app.scss ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ 0:
-/*!***********************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/css/app.css ***!
-  \***********************************************************/
+/*!*************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\user\Desktop\exegeza-biblica\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\exegeza-biblica\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! E:\myStuffs\exegeza-biblica\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\myStuffs\exegeza-biblica\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

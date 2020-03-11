@@ -1,3 +1,5 @@
+@import "~jquery-ui/themes/base/all.css";
+@import "~jquery-modal/jquery.modal.min.css";
 @import '@yaireo/tagify/src/tagify';
 @import 'js-autocomplete/auto-complete';
 
@@ -8,63 +10,22 @@
 @import "./_buttons";
 @import "./utilities";
 @import "./ck-editor";
-@import "./misc/loading_engines";
+@import "./_forms";
 
-body {
-	font-family: "Times New Roman", Times, serif;
-}
-
-article p {
-	font-size: x-large;
-}
-
-.cursor-pointer {
-	cursor: pointer;
-}
-
-.blured-section {
-	position: relative;
-	padding-top: 40%;
-	overflow: hidden;
-	&:before {
-		content: '';
-		z-index: 1;
-		display:block;
-		position:absolute;
-		top:0;
-		left:0;
-		right:0;
-		bottom:0;
-		box-shadow: 0px -100px 125px 10px white inset;
-	}
-	.blured-content {
-		position: absolute;
-	}
-}
-
-.tagify-input.tagify-input-list {
-	display: block !important;
-	height: auto !important;
-	span {
-		display: block !important;
-		position: relative !important;
-	}
-	tag {
-		display: flex !important;
-		position: relative !important;
-	}
-}
-.tagify-input.tagify-input-list {
-	display: none !important;
-}
-tags.tagify-input.tagify-input-list {
-	display: block !important;
-}
-
-.loading-next {
-	display: none;
-}
-
-.loading-next.is-loading {
-	display: block;
+@responsive {
+    .text-shadow {
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+  
+    .text-shadow-md {
+      text-shadow: 0 4px 8px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.7);
+    }
+  
+    .text-shadow-lg {
+      text-shadow: 0 15px 30px rgba(0,0,0,0.9), 0 5px 15px rgba(0,0,0,0.9);
+    }
+  
+    .text-shadow-none {
+      text-shadow: none;
+    }
 }

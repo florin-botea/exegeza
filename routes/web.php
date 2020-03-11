@@ -88,3 +88,5 @@ Route::post('/upload-photo', function(Request $request){
         return ['url' => $url];
     }
 });
+
+Route::get('/dev/bible-versions', 'BibleVersionsController@manage');

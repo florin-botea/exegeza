@@ -1,47 +1,51 @@
 @php
     $bible = $bible ?? new \App\BibleVersion();
     $bible->index = $bible->index ?? $next_index ?? 1;
+    $bible->language = $bible->language ? $bible->language->value : null;
     $form = new \App\Helpers\Form('bible', $bible);
-    $language = $bible->language ? $bible->language->value : null;
 @endphp
-<div class="modal fade show" id="bible-version-form-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>{{ $bible['id'] ? 'Edit version' : 'Add version' }}</h3>
-            </div>
-            <div class="modal-body">
-                @form(['action'=>$bible['id'] ? route('bible-versions.update', $bible->id) : route('bible-versions.store')])
-                    <input name="form_id" value="bible" hidden>
-                    @number(['name'=>"index", 'placeholder'=>'index', 
-                        'value'=> $form->value('index'),
-                        'error'=> $errors->bible->first('index')
-                    ])
-                    @text(['name'=>"name", 'placeholder'=>'name',
-                        'value'=> $form->value('name'),
-                        'error'=> $errors->bible->first('name')
-                    ])
-                    @text(['name'=>"alias", 'placeholder'=>'alias',
-                        'value'=> $form->value('alias'),
-                        'error'=> $errors->bible->first('alias')
-                    ])
-                    @text(['name'=>"language", 'placeholder'=>'language', 'inputClass'=>'autocomplete-input', 'data'=>['endpoint'=>'/api/languages'],
-                        'value'=> $form->value('language', $language),
-                        'error'=> $errors->bible->first('language')
-                    ])
-                    @checkbox(['name'=>"public", 'label'=>'public',
-                        'checked'=> $form->value('public'),
-                    ])
-                    <div class="d-flex justify-content-end">
-                    @if($bible['id']??false)
-                        @submit(['name'=>'_method', 'value'=>'delete', 'class'=>'btn-danger', 'text'=>'Delete' ])
-                        @submit(['name'=>'_method', 'value'=>'put', 'class'=>'ml-2 btn-success', 'text'=>'Update' ])
-                        @else
-                        @submit(['class'=>'ml-2 btn-primary', 'text'=>'Add'])
-                    @endif
-                    </div>
-                @endform
-            </div>
+<div class="modal" id="{{ $as }}" tabindex="-1">
+    <form method="POST">
+        @csrf
+        <p>{{ $bible['id'] ? 'Edit version' : 'Add version' }}</p>
+        <input name="form_id" value="bible" hidden>
+        
+        <div class="mb-2">
+            <label for="{{$as}}-index" class="block text-gray-600"> Index </label>
+            <input name="index" value="{{ $form->value('index') }}" id="{{$as}}-index" type="number">
+            <p class="text-error">{{ $errors->bible->first('index') }}</p>
         </div>
-    </div>
+
+        <div class="mb-2">
+            <label for="{{$as}}-name" class="block text-gray-600"> Name </label>
+            <input name="name" value="{{ $form->value('name') }}" id="{{$as}}-name" type="text">
+            <p class="text-error">{{ $errors->bible->first('name') }}</p>
+        </div>
+
+        <div class="mb-2">
+            <label for="{{$as}}-alias" class="block text-gray-600"> Alias </label>
+            <input name="alias" value="{{ $form->value('alias') }}" id="{{$as}}-alias" type="text">
+            <p class="text-error">{{ $errors->bible->first('alias') }}</p>
+        </div>
+
+        <div class="mb-2">
+            <label for="{{$as}}-language" class="block text-gray-600"> Language </label>
+            <input name="language" value="{{ $form->value('language') }}" id="{{$as}}-language" type="text">
+            <p class="text-error">{{ $errors->bible->first('language') }}</p>
+        </div>
+
+        <div class="mb-2 flex justify-end">
+            <input name="public" value="1" {{ $form->value('public') ? 'checked' : null }} id="{{$as}}-public" class="self-center" type="checkbox">
+            <label for="{{$as}}-public" class="text-gray-600"> Public </label>
+        </div>
+
+        <div class="flex justify-end">
+            @isset ($bible['id'])
+                <button name="_method" value="delete" formaction="{{ route('bible-versions.destroy', [$bible->id]) }}" type="submit"> Delete </button>
+                <button name="_method" value="put" formaction="{{ route('bible-versions.update', [$bible->id]) }}" type="submit"> Update </button>
+                @else
+                    <button name="_method" value="post" formaction="{{ route('bible-versions.store') }}" type="submit"> Add </button>
+            @endisset
+        </div>
+    </form>
 </div>

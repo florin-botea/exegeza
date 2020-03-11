@@ -13,7 +13,4 @@
 			</p>
 		</section>
 	</div>
-	@can('manage bibles')
-		@include('forms.bible-version-form-modal', ['bible'=>null, 'next_index'=>$bibles->last() ? ($bibles->last()->index + 1) : 1])
-	@endcan
 @endsection
