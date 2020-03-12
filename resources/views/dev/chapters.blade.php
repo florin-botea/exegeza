@@ -1,56 +1,81 @@
 @extends('layouts.dev')
 
-@section('content')de editat
+@php
+    use \App\Helpers\Form;
+@endphp
+
+@section('content')
     <div class="bg-gray-300 p-2">
         <h1 class="text-lg font-bold underline">bible-versions/</h1>
-        <table>
+        <table class="w-full">
             <thead>
                 <tr>
                     <th>id</th>
                     <th>index</th>
                     <th>name</th>
-                    <th>alias</th>
-                    <th>slug</th>
-                    <th>language</th>
-                    <th>public</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($bibles as $bible)
-                <form method="post">@csrf
-                <tr>
-                    <td>{{ $bible->id }}</td>
-                    <td><input type="number" name="index" value="{{ $bible->index }}" placeholder="index" class="w-16"></td>
-                    <td><input type="text" name="name" value="{{ $bible->name }}" placeholder="name" class="input-w-full"></td>
-                    <td><input type="text" name="alias" value="{{ $bible->alias }}" placeholder="alias" class="input-w-full"></td>
-                    <td><input type="text" name="slug" value="{{ $bible->slug }}" placeholder="slug" class="input-w-full"></td>
-                    <td><input type="text" name="language" value="{{ $bible->language->value }}" placeholder="language" class="input-w-full"></td>
-                    <td><input type="checkbox" name="public" value="1" class="mx-4" {{ $bible->public ? 'checked' : null }}></td>
-                    <td><button type="submit" name="_method" value="put" formaction="{{ route('bible-versions.update', [$bible->id]) }}"> Update </button></td>
-                    <td><button type="submit" name="_method" value="delete" formaction="{{ route('bible-versions.destroy', [$bible->id]) }}"> Delete </button></td>
-                    <td><a href="/dev/bible-versions/{{$bible->id}}/books" class="pl-2 text-blue-600 hover:text-blue-400 font-semibold"> __books/ </a></td>
-                </tr>
+                @foreach ($bible->book->chapters as $chapter)
+                <form method="post">
+                    @csrf
+                    <input name="form_id" value="{{ $chapter->id }}" hidden>
+                    <tr>
+                        <td>{{ $chapter->id }}</td>
+                        <td><input name="index" type="number" value="{{ Form::value($chapter->id,'index',$chapter->index) }}" placeholder="index" class="w-16"></td>
+                        <td><input name="name" type="text" value="{{ Form::value($chapter->id,'name',$chapter->name) }}" placeholder="name" class="input-w-full"></td>
+                        <td><button type="submit" name="_method" value="put" formaction="{{ route('bible-versions.books.chapters.update', [$bible->id, $bible->book->id, $chapter->id]) }}"> Update </button></td>
+                        <td><button type="submit" name="_method" value="delete" formaction="{{ route('bible-versions.books.chapters.destroy', [$bible->id, $bible->book->id, $chapter->id]) }}"> Delete </button></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="5">
+                            <input name="add_verses" {{ Form::checked($chapter->id,'add_verses') }} type="checkbox" class="checked:next-hidden-show"> add verses
+                            <div class="hidden">
+                                <input name="regex" value="{{ Form::value($chapter->id,'regex') }}" type="text" class="block input-w-full">
+                                <textarea name="verses" value="{{ Form::value($chapter->id,'verses') }}" class="mt-2 input-w-full"></textarea>
+                            </div>
+                        </td>
+                    </tr>
                 </form>
                 @endforeach
             </tbody>
             <tfoot>
-                <form action="{{ route('bible-versions.store') }}" method="post">@csrf
-                <tr>
-                    <td colspan="10">---</td> 
-                </tr>
-                <tr>
-                    <th colspan="2">Add book</th>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><input type="number" name="index" value="{{ old('index') }}" placeholder="index" class="w-16"></td>
-                    <td><input type="text" name="name" value="{{ old('name') }}" placeholder="name" class="input-w-full"></td>
-                    <td><input type="text" name="alias" value="{{ old('alias') }}" placeholder="alias" class="input-w-full"></td>
-                    <td><input type="text" name="slug" value="{{ old('slug') }}" placeholder="slug" class="input-w-full"></td>
-                    <td><input type="text" name="language" value="{{ old('language') }}" placeholder="language" class="input-w-full"></td>
-                    <td><input type="checkbox" name="public" value="1" {{ old('public') ? 'checked' : null }} class="mx-4"></td>
-                    <td><button type="submit"> Create </button></td>
-                </tr>
+                <form method="post">
+                    @csrf
+                    <input name="form_id" value="0" hidden>
+                    <tr>
+                        <td colspan="5">---</td> 
+                    </tr>
+                    <tr>
+                        <th colspan="5">Add chapter</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input name="index" value="{{ Form::value(0,'index') }}" placeholder="index" class="w-16" type="number"></td>
+                        <td class="w-full"><input name="name" value="{{ Form::value(0,'name') }}" placeholder="name" class="input-w-full" type="text"></td>
+                        <td><button name="_method" value="post" formaction="{{ route('bible-versions.books.chapters.store', [$bible->id, $bible->book->id]) }}" type="submit"> Create </button></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="5">
+                            <input name="add_verses" {{ Form::checked(0,'add_verses') }} type="checkbox" class="checked:next-hidden-show"> add verses
+                            <div class="hidden">
+                                <input name="regex" value="{{ Form::value(0,'regex') }}" type="text" class="block input-w-full">
+                                <textarea name="verses" class="mt-2 input-w-full">{{ Form::value(0,'verses') }}</textarea>
+                                <div class="flex justify-end">
+                                    <button type="submit" name="_method" value="post" formaction="/verses-preview"> Preview </button>
+                                </div>
+                                @if (session('verses_preview'))
+                                    <div class="">
+                                        @foreach (session('verses_preview') as $i => $verse)
+                                            <p>{{ ($i+1).'. '.$verse }}</p>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
                 </form>
             </tfoot>
         </table>

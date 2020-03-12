@@ -92,3 +92,11 @@ Route::post('/upload-photo', function(Request $request){
 Route::get('/dev/bible-versions', 'BibleVersionsController@manage');
 Route::get('/dev/bible-versions/{bible_version}/books', 'BooksController@manage');
 Route::get('/dev/bible-versions/{bible_version}/books/{book}/chapters', 'ChaptersController@manage');
+
+Route::post('/verses-preview', function (Request $request) 
+{
+    $verses = preg_split($request->regex, $request->verses);
+    $request->session()->flash('verses_preview', $verses);
+
+    return back()->withInput($request->all());
+});

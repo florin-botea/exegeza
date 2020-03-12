@@ -14,7 +14,7 @@ class Form
         $this->cross_identifier = $cross_identifier;
     }
 
-    public function value($field, $default = null)
+    public function _value($field, $default = null)
     {
         $default = $default ?? $this->model[$field] ?? null;
         return ( old($this->cross_identifier) == $this->form_id ? old($field, $default) : $default );
@@ -23,5 +23,18 @@ class Form
     public function error($field)
     {
         return (old($this->cross_identifier) == $this->form_id ? session('errors')->first($field) : null);
+    }
+
+    public static function value($form_id, $field, $default = null)
+    {
+        return (old('form_id') == $form_id ? old($field) : $default);
+    }
+
+    public static function checked($form_id, $field, $default = null)
+    {
+        if (old('form_id') == $form_id) {
+            return (old($field) ? 'checked' : null);
+        }
+        return $default;
     }
 }
