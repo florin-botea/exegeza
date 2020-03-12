@@ -27,7 +27,7 @@ class Chapter extends Model
 				'book_id' => $this->book->id,
 				'book_index' => $this->book->index,
 				'chapter_id' => $this->id,
-				'chapter_id' => $this->index,
+				'chapter_index' => $this->index,
 				'index' => $i + 1,
 				'text' => $verses[$i]
 			];

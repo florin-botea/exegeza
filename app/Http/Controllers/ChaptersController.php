@@ -19,13 +19,15 @@ class ChaptersController extends Controller
 	public function show(string $bible_slug, string $book_slug, int $chapter_index)
 	{
 		if ($chapter_index < 1) abort(404);
+
+		$bibles = \App\BibleVersion::all();
 		$bible = \App\BibleVersion::fetch([
 			'bible_version_slug' => $bible_slug,
 			'book_slug' => $book_slug,
 			'chapter_index' => $chapter_index
 		]);
 
-		return view('chapter')->with(compact('bible', 'articles'));
+		return view('chapter')->with(compact('bibles', 'bible', 'articles'));
 	}
 
 	public function create(string $bibleVersion, string $book)

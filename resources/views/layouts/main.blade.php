@@ -15,20 +15,23 @@
 	<link rel="stylesheet" href='/css/app.css'>
 	
 	<script>
-		const app = {
-			// aici voi trece tot ce e de trecut din php in js
-		}
+
 	</script>
 </head>
-<body>
+<body class="bg-gray-200">
 	<header>
 		@include('sections.navbar')
-		@include('sections.breadcrumb')
+		
 	</header>
-	@json($errors->all())
-	<main class="container mx-auto px-4 lg:px-32">
-		@yield('content')
-	</main>
+	<div class="container mx-auto px-4 lg:px-32">
+		<div class="flex flex-wrap bg-white mt-8 shadow-md" style="border: 1px solid purple;">
+			@include('sections.breadcrumb')
+			<div class="w-1/4"></div>
+			<main class="w-3/4">
+				@yield('content')
+			</main>
+		</div>
+	</div>
 	@guest
 		@include('auth.login-modal')
 	@endguest

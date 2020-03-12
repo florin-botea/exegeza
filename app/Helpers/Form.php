@@ -20,7 +20,7 @@ class Form
         return ( old($this->cross_identifier) == $this->form_id ? old($field, $default) : $default );
     }
 
-    public function error($field)
+    public function _error($field)
     {
         return (old($this->cross_identifier) == $this->form_id ? session('errors')->first($field) : null);
     }
@@ -36,5 +36,10 @@ class Form
             return (old($field) ? 'checked' : null);
         }
         return $default;
+    }
+
+    public static function error($form_id, $field)
+    {
+        return (old('form_id') == $form_id ? session('errors')->first($field) : null);
     }
 }
