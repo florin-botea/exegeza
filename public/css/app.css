@@ -17128,7 +17128,7 @@ input[type=checkbox].list-item ~ label {
 
 /* auth */
 
-input, select {
+input, select, textarea {
   border-width: 1px;
   border-color: #718096;
   padding-left: 0.5rem;
@@ -17188,6 +17188,31 @@ button {
   font-weight: 600;
   font-size: 0.875rem;
   color: #f56565;
+}
+
+.doxo-widget-calendar {
+  box-shadow: none !important;
+}
+
+.doxo-widget-calendar .view-header a[target=_blank] {
+  color: #97266d !important;
+}
+
+.doxo-widget-calendar .view-header span.line-header {
+  background-color: #97266d !important;
+}
+
+.doxo-widget-calendar .box-title-sfant a[target=_blank]:hover {
+  color: #97266d !important;
+}
+
+.doxo-widget-calendar .box-sfant-desc-citat a[target=_blank]:hover {
+  color: #97266d !important;
+}
+
+.doxo-widget-calendar:hover {
+  box-shadow: none !important;
+  cursor: default !important;
 }
 
 .text-shadow {

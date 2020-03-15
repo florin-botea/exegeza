@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ValidBibleVersion;
 use App\BibleVersion;
+use App\Article;
 
 class BibleVersionsController extends Controller
 {
@@ -24,17 +25,19 @@ class BibleVersionsController extends Controller
 		abort(404);
 	}
 
-	public function show(string $bible_slug)
+	public function show(Request $request, string $bible_slug)
 	{
 		$bibles = \App\BibleVersion::all();
 		$bible = \App\BibleVersion::with('books', 'language')->where('slug', $bible_slug)->first();
 		$books = $bible->books->groupBy('type');
 		unset($bible->books);
 		$bible->setAttribute('books', $books);
-		$last_articles = \App\Article::whereNotNull('published_by')->where('bible_version_id', $bible->id)->orderBy('created_at', 'desc')->limit(10)->get();
-		$popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
 
-		return view('books')->with(compact('bible', 'bibles', 'last_articles', 'popular_articles'));
+		$articles = Article::filtered($request->all())->paginate(1)->appends($request->query());
+		$last_articles = Article::whereNotNull('published_by')->where('bible_version_id', $bible->id)->orderBy('created_at', 'desc')->limit(10)->get();
+		$popular_articles = Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
+
+		return view('books')->with(compact('bible', 'bibles', 'last_articles', 'popular_articles', 'articles'));
 	}
 
 	public function store(ValidBibleVersion $request)

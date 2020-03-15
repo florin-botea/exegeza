@@ -14,9 +14,9 @@
 	<script src="https://kit.fontawesome.com/f669d10aec.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href='/css/app.css'>
 	
-	<script>
+	<style>
 
-	</script>
+	</style>
 </head>
 <body class="bg-gray-200">
 	<header>
@@ -24,9 +24,11 @@
 		
 	</header>
 	<div class="container mx-auto px-4 lg:px-32">
-		<div class="flex flex-wrap bg-white mt-8 shadow-md" style="border: 1px solid purple;">
+		<div class="flex flex-wrap bg-white mt-8 shadow-md border border-pink-800 p-2" style="border: 1px solid purple;">
 			@include('sections.breadcrumb')
-			<div class="w-1/4"></div>
+			<div role="left" class="w-1/4 pr-8">
+				<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
+			</div>
 			<main class="w-3/4">
 				@yield('content')
 			</main>

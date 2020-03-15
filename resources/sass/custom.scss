@@ -1,0 +1,25 @@
+.doxo-widget-calendar {
+    @apply shadow-none #{!important};
+
+    .view-header {
+        a[target="_blank"] {
+            @apply text-pink-800 #{!important};
+        }
+        span.line-header {
+            @apply bg-pink-800 #{!important};
+        }
+    }
+}
+
+.doxo-widget-calendar .box-title-sfant a[target="_blank"]:hover {
+    @apply text-pink-800 #{!important};
+}
+
+.doxo-widget-calendar .box-sfant-desc-citat a[target="_blank"]:hover {
+    @apply text-pink-800 #{!important};
+}
+
+.doxo-widget-calendar:hover {
+    @apply shadow-none #{!important};
+    cursor: default !important;
+}

@@ -39,15 +39,21 @@
 			</ul>
 		</section>
 	</section>
-	{{--
-	<div class="flex flex-wrap p-2">
-		<section class="w-1/2 pr-2">
-			@include('components.most-popular-articles', ['articles' => $popular_articles])
-		</section>
-		<section class="w-1/2 pl-2">
+
+	<hr class="mb-4">
+	
+	<section class="mb-4 bg-gray-100">
+		@include('components.articles-list', ['articles' => $articles])
+	</section>
+
+	<hr class="mb-4">
+
+	<div class="pr-2 flex bg-gray-100">
+		<section class="w-2/3">
 			@include('components.recent-articles', ['articles' => $last_articles])
 		</section>
+		<section class="w-1/3">
+			@include('components.most-popular-articles', ['articles' => $popular_articles])
+		</section>
 	</div>
-
-	Cauta in arhiva--}}
 @endsection

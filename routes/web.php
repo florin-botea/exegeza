@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,9 +63,20 @@ Route::post('/artisan', function () {
 });
 
 Route::get('/migrate-patches', function () {
-    Schema::table('user_details', function($table) {
-        $table->string('photo', 611)->nullable()->after('user_id');
-    });
+    //Schema::table('user_details', function($table) {
+    //    $table->string('photo', 611)->nullable()->after('user_id');
+    //});
+    $lipsum = new joshtronic\LoremIpsum();
+    for ($i=1; $i<28; $i++) {
+        $book = $lipsum->words(rand(1,4));
+        \App\BibleVersion::find(1)->books()->create([
+            'index' => $i,
+            'name' => $book,
+            'alias' => substr($book, 0, 3),
+            'slug' => Str::slug($book, '-'),
+            'type' => 'nt'
+        ]);
+    }
 });
 
 Route::get('/dev', function(Request $request){

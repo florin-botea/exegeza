@@ -15,7 +15,8 @@
         "laravel/helpers": "^1.1",
         "laravel/tinker": "^1.0",
         "spatie/laravel-activitylog": "^3.2",
-        "spatie/laravel-permission": "^2.38"
+        "spatie/laravel-permission": "^2.38",
+        "joshtronic/php-loremipsum": "dev-master"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

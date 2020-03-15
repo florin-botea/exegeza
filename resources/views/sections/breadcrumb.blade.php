@@ -30,7 +30,7 @@
             @if (isset($bible) && $bible->relationLoaded('book') && $bible->book && $bible->book->chapters)
                 <ul class="flex flex-wrap font-monospace font-semibold text-pink-800">
                     @foreach ($bible->book->chapters as $chapter)
-                        <a href=""><li class="px-1 m-1 border border-pink-800 rounded hover:underline hover:text-pink-600 hover:shadow-none shadow-md">{{ $chapter->index }}</li></a>
+                        <a href="{{ route('bible-versions.books.chapters.show', [$bible->slug, $bible->book->slug, $chapter->index]) }}"><li class="px-1 m-1 border border-pink-800 rounded hover:underline hover:text-pink-600 hover:shadow-none shadow-md">{{ $chapter->index }}</li></a>
                     @endforeach
                 </ul>
             @endif
