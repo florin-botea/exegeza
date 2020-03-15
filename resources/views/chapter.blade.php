@@ -17,23 +17,28 @@
             @if ($bible->book->chapter)
                 <section class="verses-section">
                     @foreach($bible->book->chapter->verses as $verse)
-                        <p class="">{{ $verse->index.' '.$verse->text }}</p>
+                        <p class="mb-2 text-blue-900 text-lg font-serif">{{ $verse->index.' '.$verse->text }}</p>
                     @endforeach
                 </section>
             @endif
         </section>
-        <hr>
-        {{--
-        <section role="articles-section">
-            <div class="d-flex justify-content-between">
-                <h2 class="mb-4">Articole</h2>
-                <a class="btn btn-outline-success align-self-center" href="{{ route('articles.create', ['bible-version'=>$bible->slug, 'book'=>$bible->book->slug, 'chapter'=>($bible->book->chapter ? $bible->book->chapter->index : 0)]) }}">
-                    <i class="far fa-plus-square"></i> New
-                </a>
-            </div>    
-            @include('components.articles-list', ['articles_list'=>$articles_list])
-            scroll in jos si se vor incarca tot mai multe articole, dar cele mai populare sunt primele
-        </section>--}}
+
+        <hr class="mb-4">
+	
+        <section class="mb-4 bg-gray-100">
+            @include('components.articles-list', ['articles' => $articles])
+        </section>
+    
+        <hr class="mb-4">
+    
+        <div class="pr-2 flex bg-gray-100">
+            <section class="w-2/3">
+                @include('components.recent-articles', ['articles' => $last_articles])
+            </section>
+            <section class="w-1/3">
+                @include('components.most-popular-articles', ['articles' => $popular_articles])
+            </section>
+        </div>
     </div>
 </div>
 @endsection

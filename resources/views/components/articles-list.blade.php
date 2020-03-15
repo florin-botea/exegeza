@@ -1,6 +1,11 @@
 <div class="">
-    <h5 class="inline text-xl font-serif font-semibold text-purple-900"> Articole </h5>
-    <label for="filters" class="cursor-pointer hover:text-blue-600"> filtre </label>
+    <div class="flex justify-between">
+        <div class="">
+            <h5 class="inline text-xl font-serif font-semibold text-purple-900"> Articole </h5>
+            <label for="filters" class="cursor-pointer hover:text-blue-600"> filtre </label>
+        </div>
+        <a href="{{ route('articles.create', ['bible-version'=>$bible->slug, 'book'=>$bible->book->slug, 'chapter'=>($bible->book->chapter ? $bible->book->chapter->index : 0)]) }}" class="block font-bold text-blue-800 hover:text-blue-600"> +Adauga articol </a>
+    </div>
     <input type="checkbox" id="filters" class="checked:next-hidden-show" hidden>
     <div role="filters" class="hidden">
         <form role="filters" class="flex">

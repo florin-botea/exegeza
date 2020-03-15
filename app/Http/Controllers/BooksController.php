@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ValidBook;
+use App\Article;
 
 class BooksController extends Controller
 {
@@ -17,7 +18,7 @@ class BooksController extends Controller
 		abort(404);
 	}
 
-	public function show(string $bible_slug, string $book_slug)
+	public function show(Request $request, string $bible_slug, string $book_slug)
 	{
 		$bibles = \App\BibleVersion::all();
 		
@@ -25,8 +26,12 @@ class BooksController extends Controller
 			'bible_version_slug' => $bible_slug,
 			'book_slug' => $book_slug,
 		]);
+
+		$articles = Article::filtered($request->all())->paginate(1)->appends($request->query());
+		$last_articles = Article::whereNotNull('published_by')->where('bible_version_id', $bible->id)->orderBy('created_at', 'desc')->limit(10)->get();
+		$popular_articles = Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
 	
-		return view('chapter')->with(compact('bible', 'bibles'));
+		return view('chapter')->with(compact('bible', 'bibles', 'articles', 'last_articles', 'popular_articles'));
 	}
 
 	public function create($bibleVersion)

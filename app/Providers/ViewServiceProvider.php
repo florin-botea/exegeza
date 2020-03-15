@@ -35,5 +35,6 @@ class ViewServiceProvider extends ServiceProvider
         Blade::include('components.formgroups.checkbox', 'checkbox');
 
         View::share('languages', \App\Language::all()->pluck('value'));
+        View::share('bibles', \App\BibleVersion::all());
     }
 }
