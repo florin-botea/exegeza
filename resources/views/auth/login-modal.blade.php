@@ -32,7 +32,7 @@
                     </label>
                 </div>
                 <div class="md:w-2/3">
-                    <input name="password" value="{{ Form::value('login','password') }}" id="password" class="bg-gray-200 border-gray-200 text-gray-700 focus:bg-white focus:border-purple-500" type="email">
+                    <input name="password" value="{{ Form::value('login','password') }}" id="password" class="bg-gray-200 border-gray-200 text-gray-700 focus:bg-white focus:border-purple-500" type="text">
                     <p class="text-error">{{ Form::error('login','password') }}</p>
                 </div>
             </div>

@@ -27,6 +27,11 @@ class Book extends Model
 	{
 		return $this->hasOne(\App\Chapter::class);
 	}
+
+	public function verses ()
+	{
+		return $this->hasMany(\App\Verse::class);
+	}
 	
 	public function articles ()
 	{

@@ -39,7 +39,7 @@
                     <td colspan="10">---</td> 
                 </tr>
                 <tr>
-                    <th colspan="2">Add book</th>
+                    <th colspan="2">Add bible</th>
                 </tr>
                 <tr>
                     <td></td>

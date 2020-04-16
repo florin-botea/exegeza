@@ -17,22 +17,26 @@ class Chapter extends Model
 		return $this->belongsTo(\App\Book::class);
 	}
 
+	public function verses()
+	{
+		return $this->hasMany(\App\Verse::class);
+	}
+
 	public function addVerses(array $verses)
 	{
-		$table_name = $this->book->bible->setVersesTable();
-
 		$stack = [];
 		for ($i = 0; $i < count($verses); $i++) {
 			$stack[] = [
+				'bible_version_id' => $this->book->bible_version_id,
 				'book_id' => $this->book->id,
-				'book_index' => $this->book->index,
 				'chapter_id' => $this->id,
+				'book_index' => $this->book->index,
 				'chapter_index' => $this->index,
 				'index' => $i + 1,
 				'text' => $verses[$i]
 			];
 		}
-		DB::table($table_name)->where(['book_id' => $this->book->id, 'chapter_id' => $this->book->chapter->id])->delete();
-		DB::table($table_name)->insert($stack);
+		$this->verses()->delete();
+		$this->verses()->insert($stack);
 	}
 }

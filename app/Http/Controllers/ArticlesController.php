@@ -9,23 +9,30 @@ use App\Article;
 
 class ArticlesController extends Controller
 {
-	public function __construct()
+	public function __construct(Request $request)
 	{
-		$this->middleware('slugify', ['only' => ['store', 'update', 'publish']]);
+        $this->middleware('slugify', ['only' => ['store', 'update', 'publish']]);
+        switch ($request->route()->getName()) {
+            case 'articles.create':
+            case 'articles.store': $this->middleware('can:create,\App\Article');
+            break;
+        }
+
 	}
 
-    public function index(Request $req)
+    public function index(Request $request)
     {
+        $articles = Article::filtered($request->all())->with('author', 'bible', 'book')->paginate(10)->appends($request->query());
 
-        // set it xmlhttp
+        return view('articles')->with(compact('articles'));
     }
 
     public function create(Request $request)
     {
         $bible = \App\BibleVersion::fetch([
-            'bible_version_slug' => $request->query('bible-version'),
-            'book_slug' => $request->query('book'),
-            'chapter_index' => $request->query('chapter')
+            'bible' => ['slug' => $request->query('bible-version')],
+            'book' => ['slug' => $request->query('book')],
+            'chapter' => ['index' => $request->query('chapter')]
         ]) ?? abort(404, 'Bible resource not found, or has been deleted');
 
         return view('article-form')->with(compact('bible'));
@@ -44,14 +51,10 @@ class ArticlesController extends Controller
     {
         $article = Article::with('tags', 'language', 'author')->where('slug', $slug)->firstOrFail();
         $bible = $article->getBible();
-        $popular_articles = null;
-        if ($article->published_by) {
-            $article->related = $article->getRelated();
-            $popular_articles = \App\Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
-            $article->makeViewLog();
-        }
+        $article->related = $article->getRelated();
+        if ($article->published_by) $article->makeViewLog();
 
-        return view('article')->with(compact('article', 'bible', 'popular_articles'));
+        return view('article')->with(compact('article', 'bible'));
     }
 
     public function edit($id)

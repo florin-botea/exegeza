@@ -21,18 +21,15 @@ class ChaptersController extends Controller
 	{
 		if ($chapter_index < 1) abort(404);
 
-		$bibles = \App\BibleVersion::all();
 		$bible = \App\BibleVersion::fetch([
-			'bible_version_slug' => $bible_slug,
-			'book_slug' => $book_slug,
-			'chapter_index' => $chapter_index
+			'bible' => ['slug' => $bible_slug],
+			'book' => ['slug' => $book_slug],
+			'chapter' => ['index' => $chapter_index]
 		]);
 
-		$articles = Article::filtered($request->all())->paginate(1)->appends($request->query());
-		$last_articles = Article::whereNotNull('published_by')->where('bible_version_id', $bible->id)->orderBy('created_at', 'desc')->limit(10)->get();
-		$popular_articles = Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
+		$articles = Article::filtered($request->all())->paginate(10)->appends($request->query());
 	
-		return view('chapter')->with(compact('bible', 'bibles', 'articles', 'last_articles', 'popular_articles'));
+		return view('bible@chapter(s)')->with(compact('bible', 'articles'));
 	}
 
 	public function create(string $bibleVersion, string $book)
@@ -68,17 +65,15 @@ class ChaptersController extends Controller
 	public function destroy(int $bible, int $book, int $id)
 	{
 		\App\Chapter::where('id', $id)->delete();
-		$bible = \App\BibleVersion::findOrFail($bible);
-		$book = \App\Book::findOrFail($book);
 
-		return redirect( route('bible-versions.books.show', [$bible->slug, $book->slug]));
+		return back();
 	}
 
 	public function manage(int $bible, int $book)
 	{
 		$bible = \App\BibleVersion::fetch([
-			'bible_version_id' => $bible,
-			'book_id' => $book,
+			'bible' => ['id' => $bible],
+			'book' => ['id' => $book],
 		]);
 
 		return view('dev.chapters')->with(compact('bible'));

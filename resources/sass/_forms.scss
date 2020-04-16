@@ -17,7 +17,7 @@ button {
 }
 
 .input-base {
-    @apply appearance-none border-2 rounded w-full py-2 px-4 text-gray-700 leading-tight outline-none;
+    @apply appearance-none input-w-full border border-gray-600 px-2 rounded py-1;
 }
 
 .label-base {
@@ -34,4 +34,8 @@ button {
 
 .text-error {
     @apply font-semibold text-sm text-red-500;
+}
+
+input-char-count {
+    @apply absolute m-1 text-sm font-semibold right-0 bottom-0 leading-none;
 }

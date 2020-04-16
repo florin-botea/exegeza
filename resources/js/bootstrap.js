@@ -1,20 +1,22 @@
 // window._ = require('lodash');
-import modal from "jquery-modal";
+//import modal from "jquery-modal";
 
 window.axios = require('axios');
-window.$ = window.jquery = require('jquery');
+window.$ = window.jquery = window.jQuery = require('jquery');
 import 'jquery-ui/ui/widgets/tabs.js';
 require("jquery-modal");
+import "./jquery-comments";
+require('./components/input-char-count');
 // window.popper = require('popper.js');
 // require('bootstrap');
 
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-let token = document.head.querySelector('meta[name="csrf-token"]');
+//let token = document.head.querySelector('meta[name="csrf-token"]');
 
-if (token) {
-	console.log(token)
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+if (csrfToken) {
+	console.log(csrfToken)
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
     axios.defaults.headers.common['Accept'] = 'application/json, text/plain, */*'
     //axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://exegeza-biblica.epizy.com';
     //axios.defaults.headers.common['Origin'] = 'http://exegeza-biblica.epizy.com/public'

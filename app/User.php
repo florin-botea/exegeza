@@ -39,7 +39,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function details() {
+    public function details() 
+    {
         return $this->hasOne(\App\UserDetails::class);
+    }
+
+    public function articles() 
+    {
+        return $this->hasMany(\App\Article::class);
+    }
+
+    public function getBio()
+    {
+        return $this->details ? $this->details->bio : '';
+    }
+
+    public function getDescription()
+    {
+        return $this->details && $this->details->description ? $this->details->description->content : '';
+    }
+
+    public function getPhotoUrl()
+    {
+        return $this->details && $this->details->photo ? asset($this->details->photo) : '/assets/default-user-image.png';
     }
 }

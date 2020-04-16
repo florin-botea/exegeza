@@ -5,7 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HasLanguage;
 use Awobaz\Compoships\Compoships; // for multiple column relationship
@@ -28,73 +30,58 @@ class BibleVersion extends Model
 		return $this->hasOne(\App\Book::class);
 	}
 
-	public static function fetch(array $args)
+	public function verses()
 	{
-		if (empty($args)) {
-			return null;
-		}
-		extract($args);
-
-		if ($book_id ?? false) {
-			$whereClause = ['id' => $book_id];
-		} elseif ($book_index ?? false) {
-			$whereClause = ['index' => $book_index];
-		} elseif ($book_slug ?? false) {
-			$whereClause = ['slug' => $book_slug];
-		} else {
-			return null;
-		}
-
-        $bible = self::with(['book' => function ($query) use ($whereClause) {
-			return $query->where($whereClause)->with('chapters');
-		}]);
-
-		if ($bible_version_id ?? false) {
-			$whereClause = ['id' => $bible_version_id];
-		} elseif ($bible_version_index ?? false) {
-			$whereClause = ['index' => $bible_version_index];
-		} elseif ($bible_version_slug ?? false) {
-			$whereClause = ['slug' => $bible_version_slug];
-		} else {
-			return null;
-		}
-
-		$bible = $bible = $bible->where($whereClause)->firstOrFail();
-		
-		if ($chapter_id ?? false) {
-			$chapter_id = $chapter_id;
-		} elseif ($chapter_index ?? false) {
-			$chapter_id = $bible->book->chapter()->where('index', $chapter_index)->firstOrFail()->id;
-		} else {
-			$bible->book->setAttribute('chapter', null);
-			return $bible;
-		}
-
-		$table_name = 'v_' . $bible->id . '_verses';
-		if (Schema::hasTable($table_name)) {
-			$verses = DB::table($table_name)->where(['book_id' => $bible->book->id, 'chapter_id' => $bible->book->chapter->id])->orderBy('index')->get();
-			$bible->book->chapter->setAttribute('verses', $verses);
-			return $bible;
-		} else {
-			return null;
-		}
+		return $this->hasMany(\App\Verse::class);
 	}
 
-	public function setVersesTable()
+	public static function fetch(array $args)
 	{
-		$table_name = 'v_' . $this->id . '_verses';
-		if (! Schema::hasTable($table_name)) {
-			Schema::create($table_name, function (Blueprint $table) {
-				$table->increments('id');
-				$table->integer('book_id')->unsigned();
-				$table->integer('book_index')->unsigned();
-				$table->integer('chapter_id')->unsigned();
-				$table->integer('chapter_index')->unsigned();
-				$table->integer('index')->unsigned();
-				$table->string('text')->length(900);
-			});
+		$canManageBibles = Auth::user() && Auth::user()->can('manage bibles');
+		$bible = null;
+		if (empty($args)) return $bible;
+
+		$bible_where = $args['bible'] ?? []; //Arr::only($args, ['bible_version_id', 'bible_version_index', 'bible_version_slug']);
+		$book_where = $args['book'] ?? []; //Arr::only($args, ['book_id', 'book_index', 'book_slug']);
+		$chapter_where = $args['chapter'] ?? []; //Arr::only($args, ['chapter_id', 'chapter_index', 'chapter_slug']);
+		$eager = !empty($bible_where) ? 'bible_books' : null;
+		$eager = !empty($book_where) ? 'bible_book_chapters' : $eager;
+		$eager = !empty($chapter_where) ? 'bible_book_chapter' : $eager;
+		if (!$canManageBibles) $bible_where['public'] = 1;
+
+		switch ($eager) {
+			case 'bible_books':
+				$bible = \App\BibleVersion::with('books', 'language')->where($bible_where)->firstOrFail();
+				$books = $bible->books->groupBy('type');
+				unset($bible->books);
+				$bible->setAttribute('book', null);
+				$bible->setAttribute('books', $books);
+			break;
+			case 'bible_book_chapters':
+				$bible = \App\BibleVersion::with('language')->with([ 'book' => function ($query) use ($book_where) {
+					return $query->where($book_where);
+				}])->where($bible_where)->firstOrFail();
+				$bible->book->setAttribute('chapter', null);
+			break;
+			case 'bible_book_chapter':
+				$bible = \App\BibleVersion::with('language')->with([ 'book' => function ($query) use ($book_where, $chapter_where) {
+					return $query->with(['chapter' => function($query) use ($chapter_where) {
+						return $query->where($chapter_where);
+					}])->where($book_where);
+				}])->where($bible_where)->firstOrFail();
+			break;
 		}
 
-		return $table_name;
+		return $bible;
+	}
+
+	public function toFlatArray()
+	{
+		$arr = ['bible' => $this->name];
+
+		if ($this->book) $arr['book'] = $this->book->name;
+		if ($this->book && $this->book->chapter) $arr['chapter'] = $this->book->chapter->index;
+
+		return $arr;
 	}
 }

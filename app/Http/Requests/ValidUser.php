@@ -26,7 +26,7 @@ class ValidUser extends FormRequest
         return [
             'name' => 'required|between:3,50',
             'email' => 'required|unique:users,email,'. request()->user .',id|between:5,100',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:min_width=100,min_height=200,max_width=300,max_height=600'
+            'photo' => 'image|mimes:jpeg,png,bmp,jpg,gif,svg|max:2048|dimensions:min_width=100,min_height=100'
         ];
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Traits\HasLanguage;
 use App\Traits\HasTags;
 use Awobaz\Compoships\Compoships; // for multiple column relationship
+use Illuminate\Support\Facades\Auth;
 
 class Article extends Model
 {
@@ -30,6 +31,16 @@ class Article extends Model
 		'published_by'
 	];
 
+	public function getCreatedAtAttribute($date)
+	{
+		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d-m-Y');
+	}
+
+	public function getUpdatedAtAttribute($date)
+	{
+		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d-m-Y');
+	}
+
 	public function author()
 	{
 		return $this->hasOne(\App\User::class, 'id', 'user_id');
@@ -38,6 +49,16 @@ class Article extends Model
 	public function publisher()
 	{
 		return $this->hasOne(\App\User::class, 'id', 'published_by');
+	}
+
+	public function bible()
+	{
+		return $this->hasOne(\App\BibleVersion::class, 'id', 'bible_version_id');
+	}
+
+	public function book()
+	{
+		return $this->hasOne(\App\Book::class, ['id', 'id'], ['book_id', 'bible_version_id']);
 	}
 
 	public function views()
@@ -54,7 +75,7 @@ class Article extends Model
             ], [
                 'slug' => $this->slug,
                 'url' => \Request::url(),
-                'user_id' => \Auth::id(),
+                'user_id' => Auth::id(),
                 'ip_address' => \Request::getClientIp(),
                 'user_agent' => \Request::header('User-Agent')
             ]);
@@ -64,9 +85,9 @@ class Article extends Model
 	public function getBible()
 	{
         return \App\BibleVersion::fetch([
-            'bible_version_id' => $this->bible_version_id,
-            'book_id' => $this->book_id,
-            'chapter_id' => $this->chapter_id
+            'bible' => ['id' => $this->bible_version_id],
+            'book' => ['id' => $this->book_id],
+            'chapter' => ['id' => $this->chapter_id]
         ]);
 	}
 
@@ -75,21 +96,30 @@ class Article extends Model
 		$tag_ids = $this->tags->pluck('id');
 		return self::whereHas('tags', function($query) use ($tag_ids){
 			$query->whereIn('tags.id', $tag_ids);
-		})->whereNotNull('published_by')->get();
+		})->whereNotNull('published_by')->whereNotIn('id', [$this->id])->get();
 	}
+
+    public function comments()
+    {
+        return $this->hasMany(\App\Comment::class)->where('model_type', get_class($this));
+    }
 
 	public function scopeFiltered($query, $args = [])
 	{
 		extract($args);
 
-		$target = [];
-		isset($book) ? $target['book_index'] = $book : false;
-		isset($chapter) ? $target['chapter_index'] = $chapter : false;
-		$query = $query->where($target);
+		$published = (Auth::check() && Auth::user()->can('publish articles')) ? ($public ?? 'true') : 'true';
+
+		//$target = [];
+		//isset($book_id) ? $target['book_id'] = $book_id : false;
+		//isset($chapter) ? $target['chapter_index'] = $chapter : false;
+		//if (count($target > 0)) $query = $query->where($target);
 		if(isset($cite) && count($cite) > 0) {
 			$query = $query->where('cite_from', 'LIKE', $keyword.'%');
 		}
-		if (isset($published)) $query = $query->whereNotNull('published_by');
+
+		$published == 'true' ? $query->whereNotNull('published_by') : $query->whereNull('published_by');
+
 		if (isset($keyword)) {
 			$query = $query->where(function($q) use ($keyword) {
 				$q->where('title', 'LIKE', '%'.$keyword.'%')

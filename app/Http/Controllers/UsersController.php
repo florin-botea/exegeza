@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        switch ($request->route()->getName()) {
+            case 'users.update': $this->middleware('can:update users');
+            break;
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -49,6 +56,10 @@ class UsersController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
+        $articles = $user->articles()->with('author')->whereNotNull('published_by')->get();
+        $unpublished = $user->articles()->with('author', 'bible', 'book')->whereNull('published_by')->get();
+
+        return view('user-page#profile')->with(compact('user', 'articles', 'unpublished'));
     }
 
     /**
@@ -61,7 +72,7 @@ class UsersController extends Controller
     {
         $user = User::with('details.description')->findOrFail($id);
         //$this->inspect($user);
-        return view('user-edit-page')->with(compact('user'));
+        return view('user-page#profile-edit')->with(compact('user'));
     }
 
     /**
@@ -84,7 +95,7 @@ class UsersController extends Controller
             $user->details->save();
         }
 
-        return back();
+        return redirect( route('users.show', $id) );
     }
 
     /**

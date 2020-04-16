@@ -1,8 +1,8 @@
 require('./bootstrap');
 
 import {serialize} from "./helpers.js";
+
 /*
-import Vue from 'vue';
 import vueDebounce from 'vue-debounce';
 import ArticlesList from './vue-components/ArticlesList.vue';
 
@@ -126,5 +126,95 @@ $(".upload-on-change").on("change", function() {
 		reader.readAsDataURL(this.files[0]);
 	}
 });
-
 /* end */
+
+/* ============================ COMMENTS SECTION ============================ */
+
+var commentsSectionIni = $("#commentsSection-ini");
+if (commentsSectionIni.length && commentsSectionIni.data("href")) {
+	axios.get(commentsSectionIni.data("href")).then( res => {
+		commentsSectionIni.after($(res.data));
+		//commentsSection.append( $(res.data) );
+		// commentsSectionIni.after append res.data
+		// commentsSectionIni.delete
+	});
+
+	
+
+	$(document).on("submit", function(e) {
+		try {
+			if (! e.target.className.includes("_add-comment-form")) return;
+			let form = $(e.target);
+			let comments = $(form.data("target"));
+			
+			let loadDown = comments.find("._load-down")[0];
+			let content = form.find("[name='content']")[0];
+			if (!content) { alert("no content"); return false; }
+			if (!loadDown) { alert("no loadDown"); return false; }
+
+			axios.post(loadDown.dataset.href, {
+				content: content.value
+			}).then( res => {
+				console.log(comments)
+				// form.find load-down and delete it
+				content.value = "";
+				comments.append( $(res.data) );
+			});
+			
+		} catch(e) {
+			alert(e)
+			return false;
+		}
+		return false;
+
+		let commentsSection = $(e.target).parent();
+		axios.get(e.target.dataset.href).then( res => {
+			commentsSection.append( $(res.data) );
+		});
+	});
+}
+
+var commentsContainer = $('#comments-container');
+if (commentsContainer.length) {
+	let src = commentsContainer.data("src");
+	$('#comments-container').comments({
+		enableNavigation: false,
+		defaultNavigationSortKey: 'oldest',
+		profilePictureURL: $('#authenticated-user-image').attr('src') || 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
+		
+		getComments: function(success, error) {
+			axios.get(src).then(res => {
+				success(res.data);
+			});
+		},
+
+		postComment: function(commentJSON, success, error) {
+			axios.post(src, commentJSON).then(res => {
+				success(res.data)
+			})
+		},
+
+		fieldMappings: {
+			id: 'id',
+			parent: 'parent',
+			created: 'created_at',
+			modified: 'updated_at',
+			content: 'content',
+			file: 'file',
+			fileURL: 'file_url',
+			fileMimeType: 'file_mime_type',
+			pings: 'pings',
+			creator: 'creator',
+			fullname: 'author',
+			profileURL: 'profile_url',
+			profilePictureURL: 'profile_picture_url',
+			isNew: 'is_new',
+			createdByAdmin: 'created_by_admin',
+			createdByCurrentUser: 'created_by_current_user',
+			upvoteCount: 'upvote_count',
+			userHasUpvoted: 'user_has_upvoted'
+		},
+	});
+}
+
+/* -------------------------------------------------------------------------- */

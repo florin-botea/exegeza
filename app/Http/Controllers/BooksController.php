@@ -20,18 +20,23 @@ class BooksController extends Controller
 
 	public function show(Request $request, string $bible_slug, string $book_slug)
 	{
-		$bibles = \App\BibleVersion::all();
-		
 		$bible = \App\BibleVersion::fetch([
-			'bible_version_slug' => $bible_slug,
-			'book_slug' => $book_slug,
+			'bible' => ['slug' => $bible_slug],
+			'book' => ['slug' => $book_slug],
 		]);
 
-		$articles = Article::filtered($request->all())->paginate(1)->appends($request->query());
-		$last_articles = Article::whereNotNull('published_by')->where('bible_version_id', $bible->id)->orderBy('created_at', 'desc')->limit(10)->get();
-		$popular_articles = Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
+		if (strlen ($request->query('search-word', '')) > 1) {
+			$verses = $bible->book->verses()->with('book', 'bible')
+				->where('text', 'LIKE', '%'.$request->query('search-word').'%')->paginate(100)->appends($request->all());
+
+			return view('bible@search')->with(compact('verses','bible'));
+		}
+
+		$articles = Article::filtered(array_merge($request->all(), [
+			'book_id' => $bible->book->id
+		]))->paginate(10)->appends($request->query());
 	
-		return view('chapter')->with(compact('bible', 'bibles', 'articles', 'last_articles', 'popular_articles'));
+		return view('bible@chapter(s)')->with(compact('bible', 'articles'));
 	}
 
 	public function create($bibleVersion)

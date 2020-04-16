@@ -27,24 +27,26 @@ class BibleVersionsController extends Controller
 
 	public function show(Request $request, string $bible_slug)
 	{
-		$bibles = \App\BibleVersion::all();
-		$bible = \App\BibleVersion::with('books', 'language')->where('slug', $bible_slug)->first();
-		$books = $bible->books->groupBy('type');
-		unset($bible->books);
-		$bible->setAttribute('books', $books);
+		$bible = \App\BibleVersion::fetch([
+			'bible' => ['slug' => $bible_slug]
+		]);
 
-		$articles = Article::filtered($request->all())->paginate(1)->appends($request->query());
-		$last_articles = Article::whereNotNull('published_by')->where('bible_version_id', $bible->id)->orderBy('created_at', 'desc')->limit(10)->get();
-		$popular_articles = Article::withCount('views')->whereNotNull('published_by')->orderBy('views_count', 'desc')->limit(10)->get();
+		if (strlen ($request->query('search-word', '')) > 1) {
+			$verses = $bible->verses()->with('book', 'bible')
+				->where('text', 'LIKE', '%'.$request->query('search-word').'%')->paginate(100)->appends($request->all());
 
-		return view('books')->with(compact('bible', 'bibles', 'last_articles', 'popular_articles', 'articles'));
+			return view('bible@search')->with(compact('verses','bible'));
+		}
+
+		$articles = Article::filtered($request->all())->where('bible_version_id', $bible->id)->paginate(10)->appends($request->query());
+
+		return view('bible@books')->with(compact('bible', 'articles'));
 	}
 
 	public function store(ValidBibleVersion $request)
 	{
 		$bible = \App\BibleVersion::create($request->all());
 		$bible->setLanguage($request->input('language'));
-		$bible->setVersesTable();
 
 		return back();
 	}

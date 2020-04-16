@@ -18,8 +18,8 @@ class CreateUserDetailsTable extends Migration
             $table->bigIncrements('id');
             $table->biginteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('photo', 611);
-            $table->string('bio', 611);
+            $table->string('photo', 611)->nullable();
+            $table->string('bio', 611)->nullable();
             $table->timestamps();
         });
     }
