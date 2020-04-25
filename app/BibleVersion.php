@@ -84,4 +84,9 @@ class BibleVersion extends Model
 
 		return $arr;
 	}
+
+	public function chapterIndex ()
+	{
+		return ($this->relationLoaded('book') && $this->book && $this->book->relationLoaded('chapter') && $this->book->chapter) ? $this->book->chapter->index : null;
+	}
 }

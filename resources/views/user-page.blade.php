@@ -2,13 +2,27 @@
 
 @section('content')
 <main>
-    <ul role="tabs" class="flex px-4">
-        <li class="bg-gray-200 border border-gray-400 border-r-2 border-b-2 rounded">
-            <a href="{{ route('users.show', [$user->id]) }}" class="px-2 py-1"> Profile </a>
+    <ul class="bg-gray-400 flex flex-wrap mb-4 pt-2">
+        <li>
+            <a class="ml-1 px-2 py-1 md:rounded-t-md font-medium {{ request()->route()->getName() == 'users.show' ? 'font-bold text-lg bg-white' : 'bg-gray-200' }}" 
+            href="{{ route('users.show', [$user->id]) }}"> Profile </a>
         </li>
         @can('update', $user)
-        <li class="bg-gray-200 border border-gray-400 border-r-2 border-b-2 rounded">
-            <a href="{{ route('users.edit', [$user->id]) }}" class="px-2 py-1"> Edit profile </a>
+        <li>
+            <a class="ml-1 px-2 py-1 md:rounded-t-md font-medium {{ request()->route()->getName() == 'users.edit' ? 'font-bold text-lg bg-white' : 'bg-gray-200' }}"
+            href="{{ route('users.edit', [$user->id]) }}"> Edit profile </a>
+        </li>
+        @endcan
+        @can('update', $user)
+        <li>
+            <a class="ml-1 px-2 py-1 md:rounded-t-md font-medium {{ request()->route()->getName() == 'users.options' ? 'font-bold text-lg bg-white' : 'bg-gray-200' }}"
+            href="#"> Options </a>
+        </li>
+        @endcan
+        @can('delete', $user)
+        <li>
+            <a class="ml-1 px-2 py-1 md:rounded-t-md font-medium {{ request()->route()->getName() == 'users.danger-zone' ? 'font-bold text-lg bg-white' : 'bg-gray-200' }}"
+            href="{{ route('users.danger-zone', [$user->id]) }}"> Danger zone </a>
         </li>
         @endcan
     </ul>

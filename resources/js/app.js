@@ -27,15 +27,18 @@ $(".single-submit-btn").on("click", function(e) {
  * AUTENTIFICARE
  * ========================================================================== 
  */
+//$('#authModal').tabs("option", "active", 0);
 window.loginModal = function(){
-	$('#authModal').tabs("option", "active", 0);
+	console.log('login error')
+	$("#login-radio").prop("checked", true);
 	$('#authModal').modal({
 		fadeDuration: 250
 	});
 }
 
 window.registerModal = function(){
-	$('#authModal').tabs("option", "active", 1);
+	console.log('register error')
+	$("#register-radio").prop("checked", true);
 	$('#authModal').modal({
 		fadeDuration: 250
 	});
@@ -178,9 +181,13 @@ var commentsContainer = $('#comments-container');
 if (commentsContainer.length) {
 	let src = commentsContainer.data("src");
 	$('#comments-container').comments({
+		currentUserIsAdmin: currentUserIsAdmin,
+		enableUpvoting: false,
+		enableDeleting: true,
+		enableEditing: true,
 		enableNavigation: false,
 		defaultNavigationSortKey: 'oldest',
-		profilePictureURL: $('#authenticated-user-image').attr('src') || 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
+		profilePictureURL: authUserPhotoUrl,
 		
 		getComments: function(success, error) {
 			axios.get(src).then(res => {
@@ -218,3 +225,23 @@ if (commentsContainer.length) {
 }
 
 /* -------------------------------------------------------------------------- */
+
+$(window).scroll(function() {
+    if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
+        $('#return-to-top').fadeIn(200);    // Fade in the arrow
+    } else {
+        $('#return-to-top').fadeOut(200);   // Else fade out the arrow
+    }
+});
+$('#return-to-top').click(function() {      // When arrow is clicked
+    $('body,html').animate({
+        scrollTop : 0                       // Scroll to top of body
+    }, 500);
+});
+
+$('oembed').each( function(i, el){
+	console.log(el);
+	let media = $(el);
+	let mediaUrl = $(el).attr('url');
+	media.append(`<figure class="relative w-full" style="padding-bottom:75%;"><iframe class="absolute w-full h-full" src="${mediaUrl}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></figure>`)
+});

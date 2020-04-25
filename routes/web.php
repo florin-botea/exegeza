@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ use Illuminate\Support\Str;
 |
 */
 Route::auth();
+Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
     $bibles = \App\BibleVersion::all();
@@ -44,6 +46,9 @@ Route::resource('articles', 'ArticlesController');
 //Route::resource('pending-articles', 'PendingArticlesController');
 
 Route::resource('users', 'UsersController');
+Route::get('/users/{user}/danger-zone', 'UsersController@dangerZone')->name('users.danger-zone');
+Route::put('/users/{user}/change-password', 'UsersController@changePassword')->name('users.change-password');
+Route::delete('/users/{user}/abort-destroy', 'UsersController@abortDestroy')->name('users.abort-destroy');
 
 Route::get('/artisan', function () {
     return view('artisan');
@@ -63,9 +68,10 @@ Route::post('/artisan', function () {
 });
 
 Route::get('/migrate-patches', function () {
-    //Schema::table('user_details', function($table) {
-    //    $table->string('photo', 611)->nullable()->after('user_id');
-    //});
+    Schema::table('tablename', function($table) {
+
+    });
+    /*
     $lipsum = new joshtronic\LoremIpsum();
     for ($i=1; $i<28; $i++) {
         $book = $lipsum->words(rand(1,4));
@@ -77,6 +83,17 @@ Route::get('/migrate-patches', function () {
             'type' => 'nt'
         ]);
     }
+    */
+    Schema::create('deletion_requests', function (Blueprint $table) {
+        $table->bigIncrements('id');
+        $table->string('model_type');
+        $table->bigInteger('model_id');
+        $table->bigInteger('deadline')->nullable();
+        $table->bigInteger('user_id')->unsigned();
+        $table->timestamps();
+
+        $table->foreign('user_id')->references('id')->on('users');
+    });
 });
 
 Route::get('/dev', function(Request $request){
@@ -114,3 +131,12 @@ Route::post('/verses-preview', function (Request $request)
 
     return back()->withInput($request->all());
 });
+
+Route::get('/opinions', function() {
+    return view('opinions');
+});
+
+Route::resource('comments', 'CommentsController');
+
+Route::resource('subscriptions', 'SubscriptionsController');
+Route::get('/subscriptions/{id}/verify', 'SubscriptionsController@verify')->name('subscriptions.verify');

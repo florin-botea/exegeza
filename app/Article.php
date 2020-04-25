@@ -8,12 +8,14 @@ use App\Traits\HasLanguage;
 use App\Traits\HasTags;
 use Awobaz\Compoships\Compoships; // for multiple column relationship
 use Illuminate\Support\Facades\Auth;
+use App\Traits\LogImages;
 
 class Article extends Model
 {
 	use HasLanguage;
 	use HasTags;
 	use Compoships;
+	use LogImages;
 
 	protected $fillable = [
 		'user_id',
@@ -31,6 +33,10 @@ class Article extends Model
 		'published_by'
 	];
 
+	private $logImages = ['content'];
+
+	/************************************ FORMATTERS ************************************/
+
 	public function getCreatedAtAttribute($date)
 	{
 		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d-m-Y');
@@ -40,6 +46,8 @@ class Article extends Model
 	{
 		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d-m-Y');
 	}
+
+	/************************************ RELATIONSHIPS ************************************/
 
 	public function author()
 	{
@@ -65,6 +73,13 @@ class Article extends Model
 	{
         return $this->hasMany(\App\ViewLog::class, 'article_id');
 	}
+
+    public function comments()
+    {
+        return $this->hasMany(\App\Comment::class)->where('model_type', get_class($this));
+    }
+
+	/************************************ ACTIONS ************************************/
 	
 	public function makeViewLog()
 	{
@@ -81,6 +96,8 @@ class Article extends Model
             ]);
         }
 	}
+
+	/************************************ GETTERS ************************************/
 
 	public function getBible()
 	{
@@ -99,10 +116,7 @@ class Article extends Model
 		})->whereNotNull('published_by')->whereNotIn('id', [$this->id])->get();
 	}
 
-    public function comments()
-    {
-        return $this->hasMany(\App\Comment::class)->where('model_type', get_class($this));
-    }
+	/************************************ FILTERS ************************************/
 
 	public function scopeFiltered($query, $args = [])
 	{

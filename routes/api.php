@@ -42,5 +42,3 @@ Route::get('/articles', function(Request $request) {
 
     return view('xmlhttp.articles-page')->with('articles', $articles);
 });
-
-Route::resource('comments', 'CommentsController');

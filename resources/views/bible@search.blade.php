@@ -3,14 +3,14 @@
 @section('bible_content')
     <main class="p-2 shadow-md mb-8">
         @if ($verses->count())
-            <section class="verses-section">
+            <section class="verses-section" id="verses-section">
                 @foreach($verses as $verse)
                     <p class="mb-2 text-blue-900 text-lg font-serif">
                         <a class="text-blue-800 hover:text-blue-600"
                         href="{{ route('bible-versions.books.chapters.show', [$verse->bible->slug, $verse->book->slug, $verse->chapter_index]) }}">
                             [{{ $verse->book->alias.'. '.$verse->chapter_index.':'.$verse->index }}]
                         </a>
-                        {{ $verse->text }}
+                        <span class="-verse_text">{{ $verse->text }}</span>
                     </p>
                 @endforeach
             </section>
@@ -39,6 +39,11 @@
                 @endif
             </nav>
             @endif
+            @else
+            <figure class="mb-4 flex p-2">
+                <img class="w-20" src="/assets/no-data-icon-68.png">
+                <p class="px-4 text-xl font-bold text-gray-500 self-center"> Niciun rezultat gasit </p>
+            </figure>
         @endif
     </main>
 @endsection

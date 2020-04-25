@@ -10,7 +10,7 @@
 @endphp
 
 @section('content')
-	<div class="row">
+	<div class="mb-8 md:mb-4">
 		<div class="col">
             <section class="p-2">
                 @if ($bible->book->chapter)

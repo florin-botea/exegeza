@@ -12,12 +12,7 @@ class ArticlesController extends Controller
 	public function __construct(Request $request)
 	{
         $this->middleware('slugify', ['only' => ['store', 'update', 'publish']]);
-        switch ($request->route()->getName()) {
-            case 'articles.create':
-            case 'articles.store': $this->middleware('can:create,\App\Article');
-            break;
-        }
-
+        $this->middleware('can:create,\App\Article');
 	}
 
     public function index(Request $request)

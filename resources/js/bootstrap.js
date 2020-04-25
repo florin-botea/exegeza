@@ -3,14 +3,14 @@
 
 window.axios = require('axios');
 window.$ = window.jquery = window.jQuery = require('jquery');
-import 'jquery-ui/ui/widgets/tabs.js';
+// import 'jquery-ui/ui/widgets/tabs.js';
 require("jquery-modal");
 import "./jquery-comments";
 require('./components/input-char-count');
+import AWN from "awesome-notifications";
+window.AWN = AWN;
 // window.popper = require('popper.js');
 // require('bootstrap');
-
-
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //let token = document.head.querySelector('meta[name="csrf-token"]');
 
@@ -80,8 +80,4 @@ $(".count-input").each(function (i, el) {
     formGroup.find("input").on("input", function(e){
         counter.html(e.target.value.length);
     });
-});
-
-$( function() {
-    $(".js-hasTabs").tabs();
 });

@@ -6,9 +6,26 @@ use App\JqueryComment;
 use App\Comment;
 use App\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentsController extends Controller
 {
+    private function guessModelType()
+    {
+        if ( request()->query('article') ) {
+            return Article::class;
+        }
+        elseif ( request()->query('app') ) {
+            return 'app';
+        }
+    }
+
+    private function guessModelId()
+    {
+        return (
+            request()->query('article') ?? request()->query('app')
+        );
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +34,8 @@ class CommentsController extends Controller
     public function index()
     {
         $comments = Comment::with('author.details')->where([
-            'model_type' => Article::class, 
-            'model_id' => request()->query('article')
+            'model_type' => $this->guessModelType(), 
+            'model_id' => $this->guessModelId()
         ])->get();
 
         $jqueryComments = [];
@@ -48,9 +65,9 @@ class CommentsController extends Controller
     public function store(Request $request)
     {
         $comment = Comment::create(array_merge($request->all(), [
-            'model_type' => Article::class, 
-            'model_id' => request()->query('article'),
-            'user_id' => 1
+            'model_type' => $this->guessModelType(),
+            'model_id' => $this->guessModelId(),
+            'user_id' => Auth::user()->id
         ]));
 
         //$comments = Comment::with('author.details')->where([

@@ -2,7 +2,7 @@
 	$isAcceptingArticles = in_array(request()->route()->getName(), ['bible-versions.books.show', 'bible-versions.books.chapters.show']);
 	$hasArticles = in_array(request()->route()->getName(), ['articles.show', 'bible-versions.show', 'articles.index', 'users.show', 'bible-versions.books.show', 'bible-versions.books.chapters.show']);
 @endphp
-{{request()->route()->getName()}}
+{{--request()->route()->getName()--}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -21,6 +21,8 @@
 	
 	<script>
 		var csrfToken = "{{ csrf_token() }}";
+		var currentUserIsAdmin = Boolean({{ auth()->user() && auth()->user()->hasRole('comments admin') ? 1 : 0 }});
+		var authUserPhotoUrl = "{{ auth()->user() ? auth()->user()->getPhotoUrl() : null }}";
 	</script>
 
 	<style>
@@ -70,13 +72,24 @@
 		#comments-container._unauthenticated .actions {
 			display: none !important;
 		}
+
+		#awn-toast-container {
+			z-index: 99999999;
+		}
 	</style>
 </head>
 <body class="bg-gray-200">
 	<header>
 		@include('sections.navbar')
 	</header>
-	<div class="container mx-auto px-0 md:px-0 lg:px-32">
+
+	<div class="mx-auto px-0 md:px-0 lg:px-16 xl:px-24">
+		@if (auth()->check() && !auth()->user()->hasVerifiedEmail())
+		<div class="px-4 py-2 bg-yellow-300 rounded-md border shadow-md">
+			<p> Adresa de mail nu a fost verificata. Click <a href="/email/resend" class="text-blue-600 hover:text-blue-400 font-bold">aici</a> pentru a retrimite email de confirmare. </p>
+		</div>
+		@endif
+
 		<div class="flex flex-wrap bg-white mt-8 shadow-md border border-pink-800 p-2" style="border: 1px solid purple;">
 			<div role="left" class="w-full sm:w-1/4 sm:pr-8 sm:order-first order-last">
 				<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
@@ -85,10 +98,6 @@
 				@include('sections.breadcrumb')
 				
 				@yield('content')
-
-				<div class="mt-4">
-					@include('components.subscribe-form')
-				</div>
 
 				@if ($hasArticles && isset($last_articles) && isset($popular_articles) && count($last_articles) && count($popular_articles))
 				{{-- semi-footer = articole recente, articole populare --}}
@@ -128,10 +137,20 @@
 					</div>
 				</section>
 				{{-- end:semi-footer --}}
+
+					@if (in_array(request()->route()->getName(), [null, 'bible-versions.show', 'bible-versions.books.show', 'bible-versions.books.chapters.show', 'articles.show']))
+					<div class="mt-4">
+						@include('components.subscribe-form')
+						<hr>
+					</div>
+					@endif
 				@endif
 			</div>
 		</div>
 	</div>
+
+	<div class="" id="return-to-top"></div>
+
 	@guest
 		@include('auth.login-modal')
 	@endguest
@@ -142,6 +161,36 @@
 	@foreach (($scripts??[]) as $script)
 		<script src="/js/{{$script}}"></script>
 	@endforeach
+
+	<script>
+		var message = null;
+		@if(isset($message) || session()->has('message'))
+			message = @json($message ?? session()->get('message'));
+		@endif
+		console.log(message)
+		{{ $errors->any() && old('form_id') == 'login' ? 'loginModal();' : '' }}
+		{{ $errors->any() && old('form_id') == 'register' ? 'registerModal();' : '' }}
+
+		if (message) {
+			try {
+				let awn = new AWN({
+					durations: {warning: 0}
+				});
+				awn[message.status](message.text)
+			} catch(e) {}
+		}
+		
+		@route(['bible-versions.show', 'bible-versions.books.show'])
+			@if (request()->query('search-word'))
+				$('.-verse_text').each(function(i, el) {
+					let verse = $(el);
+					let highlighted = verse.html().replace(/{{request()->query('search-word')}}/g, '<span class="bg-yellow-300">{{request()->query("search-word")}}</span>');
+					verse.html(highlighted);
+				});
+			@endif
+		@endroute
+	</script>
+
 	<!-- Go to www.addthis.com/dashboard to customize your tools -->
 	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5dc07d5c1954dce7"></script>
 </body>

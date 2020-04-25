@@ -1,5 +1,15 @@
-.checked\:next-hidden-show:checked ~ .hidden {
-	display:initial !important;
+@import "awesome-notifications/src/styles/style.scss";
+
+.checked\:next-hidden-show:checked + .hidden {
+	display: initial !important;
+}
+
+.checked\:next-hiddens-show:checked ~ .hidden {
+	display: initial !important;
+}
+
+.checked\:next-transparent-show:checked + .hidden {
+	opacity: 1 !important;
 }
 
 input[type=checkbox].list-item:checked ~ label {

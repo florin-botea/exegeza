@@ -6,15 +6,16 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Http\Requests\ValidUser;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Auth\Events\Verified;
+use App\Http\Requests\ValidPasswordChange;
+use Illuminate\Support\Facades\Hash;
+use App\Rules\MatchOldPassword;
 
 class UsersController extends Controller
 {
     public function __construct(Request $request)
     {
-        switch ($request->route()->getName()) {
-            case 'users.update': $this->middleware('can:update users');
-            break;
-        }
+
     }
     /**
      * Display a listing of the resource.
@@ -58,7 +59,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $articles = $user->articles()->with('author')->whereNotNull('published_by')->get();
         $unpublished = $user->articles()->with('author', 'bible', 'book')->whereNull('published_by')->get();
-
+        event(new Verified($user));
         return view('user-page#profile')->with(compact('user', 'articles', 'unpublished'));
     }
 
@@ -75,13 +76,13 @@ class UsersController extends Controller
         return view('user-page#profile-edit')->with(compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function dangerZone($id)
+    {
+        $user = User::with('deletionRequest')->findOrFail($id);
+
+        return view('user-page#danger')->with('user', $user);
+    }
+
     public function update(ValidUser $request, $id)
     {
         $user = User::findOrFail($id);
@@ -98,14 +99,44 @@ class UsersController extends Controller
         return redirect( route('users.show', $id) );
     }
 
+    public function changePassword(ValidPasswordChange $request, $id)
+    {
+        User::find($id)->update(['password'=> Hash::make($request->new_password)]);
+
+        return back()->with('message', [
+            'status' => 'success',
+            'text' => 'The password has been changed.'
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $request->validate([
+            'password' => ['required', new MatchOldPassword],
+        ]);
+        $days = 15;
+        
+        User::findOrFail($id)->makeDeletionRequest($days);
+
+        return back()->with('message', [
+            'status' => 'info',
+            'text' => "Your account will be deleted in 15 days",
+        ]);
+    }
+
+    public function abortDestroy($id)
+    {
+        User::findOrFail($id)->abortDeletion();
+
+        return back()->with('message', [
+            'status' => 'success',
+            'text' => "Your account deletion has canceled",
+        ]);
     }
 }

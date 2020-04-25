@@ -63,7 +63,7 @@ class ValidArticle extends FormRequest
             ])->first();
 
             if ($this->isPosting() && $duplicate_title) {
-                $validator->errors()->add('title', 'Title already taken');
+                $validator->errors()->add('title', 'Aveti deja postari cu acest titlu. Va rugam sa selectati un alt titlu.');
             }
 		});
 	}

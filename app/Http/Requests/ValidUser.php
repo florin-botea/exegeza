@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\User;
 
 class ValidUser extends FormRequest
 {
@@ -13,7 +14,16 @@ class ValidUser extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $can = false;
+        switch ($this->route()->getName()) {
+            case 'users.store': 
+                $can = true; 
+            break;
+            case 'users.update': 
+                $can = auth()->check() && auth()->user()->can('update', User::findOrFail($this->user)); 
+            break;
+        }
+        return $can;
     }
 
     /**

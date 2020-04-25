@@ -65,9 +65,10 @@
 
                 @if ($article->published_by)
                 <!-- data-href= link de pornire, ? article=[&comment=, in caz de notificare] -->
-                <section role="comments" class="{{ auth()->user() ? '' : '_unauthenticated' }} px-6 mb-6" id="comments-container" data-src="/api/comments?article={{$article->id}}">
+                <section role="comments" class="{{ auth()->check() && auth()->user()->hasVerifiedEmail() ? '' : '_unauthenticated' }} px-6 mb-6 bg-gray-100" id="comments-container" data-src="/comments?article={{$article->id}}">
 
                 </section>
+                <hr class="my-2">
 
                 @if (count($article->related))
                 <section role="articles-samples-list" class="bg-gray-100">

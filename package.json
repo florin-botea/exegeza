@@ -50,6 +50,7 @@
         "@ckeditor/ckeditor5-upload": "^15.0.0",
         "@wiris/mathtype-ckeditor5": "^7.17.1",
         "@yaireo/tagify": "^2.31.2",
+        "awesome-notifications": "^3.1.0",
         "bootstrap": "^4.3.1",
         "css-loader": "^3.2.0",
         "css-spinners": "^1.0.0",
