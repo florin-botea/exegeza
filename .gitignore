@@ -3,7 +3,8 @@
 /public/storage
 /storage/*.key
 /vendor
-vendor.zip
+/composer.lock
+/package-lock.json
 .env
 .env.backup
 .phpunit.result.cache
