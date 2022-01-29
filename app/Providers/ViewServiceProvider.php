@@ -20,8 +20,8 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Config::set('src_path', config('view.paths')[0]);
-        Config::set('dest_path', config('view.compiled')[0]);
+        Config::set('src_path', config('view.paths.0'));
+        Config::set('dest_path', config('view.compiled'));
     }
 
     /**
