@@ -1,4 +1,5 @@
 <!-- @extends('layouts.main') -->
+<extends template="layouts/app"/>
 
 <!-- @section('content') -->
 	<div class="flex">
