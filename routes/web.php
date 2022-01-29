@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Contracts\Session\Session;
+use App\Models\BibleVersion;
 use Illuminate\Http\Request;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,35 +20,36 @@ use Illuminate\Support\Arr;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::auth();
-Auth::routes(['verify' => true]);
+// Route::auth();
+// Auth::routes(['verify' => true]);
 
+// homepageController
 Route::get('/', function () {
-    $bibles = \App\BibleVersion::all();
+    $bibles = BibleVersion::all();
     return view('homepage')->with('bibles', $bibles);
 });
 
 Route::get('/bible-versions/search', 'BibleSearchController');
-Route::resource('bible-versions', 'BibleVersionsController');
-Route::resource('bible-versions.books', 'BooksController');
-Route::resource('bible-versions.books.chapters', 'ChaptersController');
-Route::resource('bible-versions.books.chapters.verses', 'VersesController');
+Route::resource('bible-versions', 'BibleVersionController');
+Route::resource('bible-versions.books', 'BookController');
+Route::resource('bible-versions.books.chapters', 'ChapterController');
+Route::resource('bible-versions.books.chapters.verses', 'VerseController');
 
 // articles
-Route::put('/articles/{article}/publish', 'ArticlesController@publish')->name('articles.publish');
-Route::put('/articles/{article}/unpublish', 'ArticlesController@unpublish')->name('articles.unpublish');
-Route::resource('articles', 'ArticlesController');
-// Route::resource('bible-versions.books.articles', 'ArticlesController');
-// Route::resource('bible-versions.books.chapters.articles', 'ArticlesController');
+Route::put('/articles/{article}/publish', 'ArticleController@publish')->name('articles.publish');
+Route::put('/articles/{article}/unpublish', 'ArticleController@unpublish')->name('articles.unpublish');
+Route::resource('articles', 'ArticleController');
+// Route::resource('bible-versions.books.articles', 'ArticleController');
+// Route::resource('bible-versions.books.chapters.articles', 'ArticleController');
 
-//Route::resource('articles', 'ArticlesController', ['publish' => 'articles.create']);
+//Route::resource('articles', 'ArticleController', ['publish' => 'articles.create']);
 
-//Route::resource('pending-articles', 'PendingArticlesController');
+//Route::resource('pending-articles', 'PendingArticleController');
 
-Route::resource('users', 'UsersController');
-Route::get('/users/{user}/danger-zone', 'UsersController@dangerZone')->name('users.danger-zone');
-Route::put('/users/{user}/change-password', 'UsersController@changePassword')->name('users.change-password');
-Route::delete('/users/{user}/abort-destroy', 'UsersController@abortDestroy')->name('users.abort-destroy');
+Route::resource('users', 'UserController');
+Route::get('/users/{user}/danger-zone', 'UserController@dangerZone')->name('users.danger-zone');
+Route::put('/users/{user}/change-password', 'UserController@changePassword')->name('users.change-password');
+Route::delete('/users/{user}/abort-destroy', 'UserController@abortDestroy')->name('users.abort-destroy');
 
 Route::get('/artisan', function () {
     return view('artisan');
@@ -119,12 +120,12 @@ Route::post('/upload-photo', function(Request $request){
 });
 
 Route::middleware(['can:manage bibles'])->group(function () {
-    Route::get('/dev/bible-versions', 'BibleVersionsController@manage');
-    Route::get('/dev/bible-versions/{bible_version}/books', 'BooksController@manage');
-    Route::get('/dev/bible-versions/{bible_version}/books/{book}/chapters', 'ChaptersController@manage');
+    Route::get('/dev/bible-versions', 'BibleVersionController@manage');
+    Route::get('/dev/bible-versions/{bible_version}/books', 'BookController@manage');
+    Route::get('/dev/bible-versions/{bible_version}/books/{book}/chapters', 'ChapterController@manage');
 });
 
-Route::post('/verses-preview', function (Request $request) 
+Route::post('/verses-preview', function (Request $request)
 {
     $verses = preg_split($request->regex, $request->verses);
     $request->session()->flash('verses_preview', $verses);
@@ -136,7 +137,7 @@ Route::get('/opinions', function() {
     return view('opinions');
 });
 
-Route::resource('comments', 'CommentsController');
+Route::resource('comments', 'CommentController');
 
-Route::resource('subscriptions', 'SubscriptionsController');
-Route::get('/subscriptions/{id}/verify', 'SubscriptionsController@verify')->name('subscriptions.verify');
+Route::resource('subscriptions', 'SubscriptionController');
+Route::get('/subscriptions/{id}/verify', 'SubscriptionController@verify')->name('subscriptions.verify');
