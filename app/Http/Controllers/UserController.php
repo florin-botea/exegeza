@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+use App\Models\User;
 use App\Http\Requests\ValidUser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Auth\Events\Verified;

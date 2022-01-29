@@ -2,12 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Article;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use App\Article;
+use App\Models\BibleVersion;
+use App\Models\Language;
 
 class ViewServiceProvider extends ServiceProvider
 {

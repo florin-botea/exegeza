@@ -20,8 +20,8 @@ use Illuminate\Support\Facades\Storage;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Route::auth();
-// Auth::routes(['verify' => true]);
+Route::auth();
+Auth::routes(['verify' => true]);
 
 // homepageController
 Route::get('/', function () {
