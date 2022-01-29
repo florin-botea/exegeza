@@ -8,7 +8,7 @@ use App\Http\Requests\ValidBibleVersion;
 use App\BibleVersion;
 use App\Article;
 
-class BibleVersionsController extends Controller
+class BibleVersionController extends Controller
 {
 	public function __construct()
 	{

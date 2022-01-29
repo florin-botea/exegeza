@@ -11,7 +11,7 @@ use App\Http\Requests\ValidPasswordChange;
 use Illuminate\Support\Facades\Hash;
 use App\Rules\MatchOldPassword;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     public function __construct(Request $request)
     {
@@ -121,7 +121,7 @@ class UsersController extends Controller
             'password' => ['required', new MatchOldPassword],
         ]);
         $days = 15;
-        
+
         User::findOrFail($id)->makeDeletionRequest($days);
 
         return back()->with('message', [

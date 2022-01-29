@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ValidBook;
 use App\Article;
 
-class BooksController extends Controller
+class BookController extends Controller
 {
 	public function __construct()
 	{

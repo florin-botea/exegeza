@@ -7,7 +7,7 @@ use App\Http\Requests\ValidArticle;
 use Illuminate\Support\Facades\Input;
 use App\Article;
 
-class ArticlesController extends Controller
+class ArticleController extends Controller
 {
 	public function __construct(Request $request)
 	{

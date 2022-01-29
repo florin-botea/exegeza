@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class VersesController extends Controller
+class VerseController extends Controller
 {
 	public function __construct ()
 	{
@@ -15,9 +15,9 @@ class VersesController extends Controller
 	{
 		abort(404);
 	}
-	
+
     public function store ()
 	{
-			
+
 	}
 }

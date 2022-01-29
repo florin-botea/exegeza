@@ -8,7 +8,7 @@ use App\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CommentsController extends Controller
+class CommentController extends Controller
 {
     private function guessModelType()
     {
@@ -34,7 +34,7 @@ class CommentsController extends Controller
     public function index()
     {
         $comments = Comment::with('author.details')->where([
-            'model_type' => $this->guessModelType(), 
+            'model_type' => $this->guessModelType(),
             'model_id' => $this->guessModelId()
         ])->get();
 
@@ -71,7 +71,7 @@ class CommentsController extends Controller
         ]));
 
         //$comments = Comment::with('author.details')->where([
-        //    'model_type' => Article::class, 
+        //    'model_type' => Article::class,
         //    'model_id' => request()->query('article')
         //])->get();
 

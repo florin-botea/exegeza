@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ValidChapter;
 use App\Article;
 
-class ChaptersController extends Controller
+class ChapterController extends Controller
 {
 	public function __construct()
 	{
