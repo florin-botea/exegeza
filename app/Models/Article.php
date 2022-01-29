@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,7 @@ class Article extends Model
 	protected $fillable = [
 		'user_id',
 		'cite_from',
-		'bible_version_id', 
+		'bible_version_id',
 		'book_index',
 		'book_id',
 		'chapter_index',
@@ -80,7 +80,7 @@ class Article extends Model
     }
 
 	/************************************ ACTIONS ************************************/
-	
+
 	public function makeViewLog()
 	{
         if (!$this->deleted_at && $this->published_by) {

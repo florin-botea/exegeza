@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -40,12 +40,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function details() 
+    public function details()
     {
         return $this->hasOne(\App\UserDetails::class);
     }
 
-    public function articles() 
+    public function articles()
     {
         return $this->hasMany(\App\Article::class);
     }

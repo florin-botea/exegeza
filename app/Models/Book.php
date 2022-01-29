@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +10,7 @@ class Book extends Model
 {
 	use SoftDeletes;
 	use Compoships;
-		 
+
 	protected $fillable = ['index', 'name', 'alias', 'slug', 'type'];
 
 	public function bible ()
@@ -22,7 +22,7 @@ class Book extends Model
 	{
 		return $this->hasMany(\App\Chapter::class);
 	}
-	
+
 	public function chapter ()
 	{
 		return $this->hasOne(\App\Chapter::class);
@@ -32,7 +32,7 @@ class Book extends Model
 	{
 		return $this->hasMany(\App\Verse::class);
 	}
-	
+
 	public function articles ()
 	{
 		return $this->hasManyThrough(\App\Article::class, \App\ModelHasArticle::class, 'model_id', 'id', 'id', 'article_id');//->where('model_type', $this->__class__);
