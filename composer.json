@@ -31,7 +31,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "PhpTemplates\\": "vendor/florin-botea/php-templates/src",
-            "IvoPetkov\\": "vendor/florin-botea/php-templates/html5-dom-document-php"
+            "IvoPetkov\\": "vendor/florin-botea/php-templates/html5-dom-document-php/src"
         }
     },
     "autoload-dev": {
