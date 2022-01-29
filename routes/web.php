@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Storage;
+use PhpTemplates\Facades\Template;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,8 @@ Auth::routes(['verify' => true]);
 // homepageController
 Route::get('/', function () {
     $bibles = BibleVersion::all();
-    return view('homepage')->with('bibles', $bibles);
+    Template::load('homepage', ['bibles' => $bibles]);
+    // return view('homepage')->with('bibles', $bibles);
 });
 
 Route::get('/bible-versions/search', 'BibleSearchController');

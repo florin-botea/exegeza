@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use App\Models\BibleVersion;
 use App\Models\Language;
+use PhpTemplates\Config;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -19,7 +20,8 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Config::set('src_path', config('view.paths')[0]);
+        Config::set('dest_path', config('view.compiled')[0]);
     }
 
     /**
