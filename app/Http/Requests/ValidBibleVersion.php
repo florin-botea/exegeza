@@ -26,22 +26,22 @@ class ValidBibleVersion extends FormRequest
 			$this->public ? '' : $post['public'] = 0;
 			$this->replace($post);
 		}
-		
+
 		return parent::getValidatorInstance();
 	}*/
 
 	public function withValidator($validator)
 	{
 		$validator->after(function ($validator) {
-			$duplicateIndex = \App\BibleVersion::where('index', Input::get('index'))->first();
-			$duplicateAlias = \App\BibleVersion::where('alias', Input::get('alias'))->first();
+			$duplicateIndex = BibleVersion::where('index', Input::get('index'))->first();
+			$duplicateAlias = BibleVersion::where('alias', Input::get('alias'))->first();
 			if ($duplicateIndex && !request()->isMethod('put')) {
 				$validator->errors()->add('index', 'Index already taken');
 			}
 			if ($duplicateAlias && !request()->isMethod('put')) {
 				$validator->errors()->add('alias', 'Alias already taken');
 			}
-			
+
 			if ($validator->errors()->any() && Input::has('form_id')) {
 				return back()
 					->withErrors($validator, Input::get('form_id'));

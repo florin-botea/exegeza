@@ -15,27 +15,27 @@ class Book extends Model
 
 	public function bible ()
 	{
-		return $this->belongsTo(\App\BibleVersion::class, 'bible_version_id');
+		return $this->belongsTo(BibleVersion::class, 'bible_version_id');
 	}
 
 	public function chapters ()
 	{
-		return $this->hasMany(\App\Chapter::class);
+		return $this->hasMany(Chapter::class);
 	}
 
 	public function chapter ()
 	{
-		return $this->hasOne(\App\Chapter::class);
+		return $this->hasOne(Chapter::class);
 	}
 
 	public function verses ()
 	{
-		return $this->hasMany(\App\Verse::class);
+		return $this->hasMany(Verse::class);
 	}
 
 	public function articles ()
 	{
-		return $this->hasManyThrough(\App\Article::class, \App\ModelHasArticle::class, 'model_id', 'id', 'id', 'article_id');//->where('model_type', $this->__class__);
+		return $this->hasManyThrough(Article::class, ModelHasArticle::class, 'model_id', 'id', 'id', 'article_id');//->where('model_type', $this->__class__);
 	}
 
 	public function url()

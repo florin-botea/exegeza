@@ -22,17 +22,17 @@ class BibleVersion extends Model
 
 	public function books()
 	{
-		return $this->hasMany(\App\Book::class);
+		return $this->hasMany(Book::class);
 	}
 
 	public function book()
 	{
-		return $this->hasOne(\App\Book::class);
+		return $this->hasOne(Book::class);
 	}
 
 	public function verses()
 	{
-		return $this->hasMany(\App\Verse::class);
+		return $this->hasMany(Verse::class);
 	}
 
 	public static function fetch(array $args)
@@ -51,20 +51,20 @@ class BibleVersion extends Model
 
 		switch ($eager) {
 			case 'bible_books':
-				$bible = \App\BibleVersion::with('books', 'language')->where($bible_where)->firstOrFail();
+				$bible = BibleVersion::with('books', 'language')->where($bible_where)->firstOrFail();
 				$books = $bible->books->groupBy('type');
 				unset($bible->books);
 				$bible->setAttribute('book', null);
 				$bible->setAttribute('books', $books);
 			break;
 			case 'bible_book_chapters':
-				$bible = \App\BibleVersion::with('language')->with([ 'book' => function ($query) use ($book_where) {
+				$bible = BibleVersion::with('language')->with([ 'book' => function ($query) use ($book_where) {
 					return $query->where($book_where);
 				}])->where($bible_where)->firstOrFail();
 				$bible->book->setAttribute('chapter', null);
 			break;
 			case 'bible_book_chapter':
-				$bible = \App\BibleVersion::with('language')->with([ 'book' => function ($query) use ($book_where, $chapter_where) {
+				$bible = BibleVersion::with('language')->with([ 'book' => function ($query) use ($book_where, $chapter_where) {
 					return $query->with(['chapter' => function($query) use ($chapter_where) {
 						return $query->where($chapter_where);
 					}])->where($book_where);

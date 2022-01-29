@@ -32,7 +32,7 @@ class ValidArticle extends FormRequest
         $this->replace($article);
 		return parent::getValidatorInstance();
 	}
-    
+
     public function rules()
     {
         $rules = [
@@ -57,8 +57,8 @@ class ValidArticle extends FormRequest
 	public function withValidator($validator)
 	{
 		$validator->after(function ($validator) {
-            $duplicate_title = \App\Article::where([
-                'user_id' => auth()->user()->id, 
+            $duplicate_title = Article::where([
+                'user_id' => auth()->user()->id,
                 'slug' => $this->slug
             ])->first();
 

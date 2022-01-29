@@ -18,11 +18,11 @@ class Verse extends Model
 
     public function book()
     {
-        return $this->hasOne(\App\Book::class, 'id', 'book_id');
+        return $this->hasOne(Book::class, 'id', 'book_id');
     }
 
     public function bible()
     {
-        return $this->hasOne(\App\BibleVersion::class, 'id', 'bible_version_id');
+        return $this->hasOne(BibleVersion::class, 'id', 'bible_version_id');
     }
 }

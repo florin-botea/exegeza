@@ -27,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        //\App\BibleVersion::observe(\App\Observers\BibleVersionObserver::class);
+        //BibleVersion::observe(\App\Observers\BibleVersionObserver::class);
     }
 }

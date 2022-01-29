@@ -42,12 +42,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function details()
     {
-        return $this->hasOne(\App\UserDetails::class);
+        return $this->hasOne(UserDetails::class);
     }
 
     public function articles()
     {
-        return $this->hasMany(\App\Article::class);
+        return $this->hasMany(Article::class);
     }
 
     public function getBio()
@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function deletionRequest()
     {
-        return $this->hasOne(\App\DeletionRequest::class)->where('model_type', get_class($this));
+        return $this->hasOne(DeletionRequest::class)->where('model_type', get_class($this));
     }
 
     public function assignBasicRolesAndPermissions()
@@ -81,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function makeDeletionRequest($days)
     {
-        return \App\DeletionRequest::updateOrCreate([
+        return DeletionRequest::updateOrCreate([
             'model_type' => get_class($this),
             'model_id' => $this->id
         ], [
@@ -92,7 +92,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function abortDeletion()
     {
-        return \App\DeletionRequest::where([
+        return DeletionRequest::where([
             'model_type' => get_class($this),
             'model_id' => $this->id
         ])->delete();

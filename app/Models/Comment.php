@@ -20,7 +20,7 @@ class Comment extends Model
 
     public function author()
     {
-        return $this->hasOne(\App\User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function toJqueryComment()

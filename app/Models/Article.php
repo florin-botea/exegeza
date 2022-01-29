@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use App\Traits\HasLanguage;
 use App\Traits\HasTags;
 use Awobaz\Compoships\Compoships; // for multiple column relationship
 use Illuminate\Support\Facades\Auth;
 use App\Traits\LogImages;
+use Illuminate\Support\Facades\Request;
 
 class Article extends Model
 {
@@ -51,32 +51,32 @@ class Article extends Model
 
 	public function author()
 	{
-		return $this->hasOne(\App\User::class, 'id', 'user_id');
+		return $this->hasOne(User::class, 'id', 'user_id');
 	}
 
 	public function publisher()
 	{
-		return $this->hasOne(\App\User::class, 'id', 'published_by');
+		return $this->hasOne(User::class, 'id', 'published_by');
 	}
 
 	public function bible()
 	{
-		return $this->hasOne(\App\BibleVersion::class, 'id', 'bible_version_id');
+		return $this->hasOne(BibleVersion::class, 'id', 'bible_version_id');
 	}
 
 	public function book()
 	{
-		return $this->hasOne(\App\Book::class, ['id', 'id'], ['book_id', 'bible_version_id']);
+		return $this->hasOne(Book::class, ['id', 'id'], ['book_id', 'bible_version_id']);
 	}
 
 	public function views()
 	{
-        return $this->hasMany(\App\ViewLog::class, 'article_id');
+        return $this->hasMany(ViewLog::class, 'article_id');
 	}
 
     public function comments()
     {
-        return $this->hasMany(\App\Comment::class)->where('model_type', get_class($this));
+        return $this->hasMany(Comment::class)->where('model_type', get_class($this));
     }
 
 	/************************************ ACTIONS ************************************/
@@ -86,13 +86,13 @@ class Article extends Model
         if (!$this->deleted_at && $this->published_by) {
             $this->views()->firstOrCreate([
                 'article_id' => $this->id,
-                'session_id' => \Request::getSession()->getId()
+                'session_id' => Request::getSession()->getId()
             ], [
                 'slug' => $this->slug,
-                'url' => \Request::url(),
+                'url' => Request::url(),
                 'user_id' => Auth::id(),
-                'ip_address' => \Request::getClientIp(),
-                'user_agent' => \Request::header('User-Agent')
+                'ip_address' => Request::getClientIp(),
+                'user_agent' => Request::header('User-Agent')
             ]);
         }
 	}
@@ -101,7 +101,7 @@ class Article extends Model
 
 	public function getBible()
 	{
-        return \App\BibleVersion::fetch([
+        return BibleVersion::fetch([
             'bible' => ['id' => $this->bible_version_id],
             'book' => ['id' => $this->book_id],
             'chapter' => ['id' => $this->chapter_id]

@@ -32,8 +32,8 @@ class ViewServiceProvider extends ServiceProvider
             if ($view->getName() == 'artisan') return;
             $common = Cache::remember('common', 30, function () {
                 return [
-                    'languages' => \App\Language::all()->pluck('value'),
-                    'bibles' => \App\BibleVersion::all()
+                    'languages' => Language::all()->pluck('value'),
+                    'bibles' => BibleVersion::all()
                 ];
             });
             $view->with($common);

@@ -40,7 +40,7 @@ class SubscriptionsController extends Controller
      */
     public function store(Request $request)
     {
-        $subscription = \App\Subscribe::where('email', $request->email)->first();
+        $subscription = Subscribe::where('email', $request->email)->first();
 
         if ($subscription && !$subscription->hasVerifiedEmail()) {
             $subscription->sendEmailVerificationNotification();

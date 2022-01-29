@@ -23,7 +23,7 @@ class ValidBook extends FormRequest
 	public function withValidator($validator)
 	{
 		$validator->after(function ($validator) {
-            $bible = \App\BibleVersion::findOrFail(request()->route('bible_version'));
+            $bible = BibleVersion::findOrFail(request()->route('bible_version'));
 			$duplicateIndex = $bible->books()->where(['index' => request()->input('index')])->first();
 			$duplicateAlias = $bible->books()->where(['alias' => request()->input('alias')])->first();
 			if ($duplicateIndex && !request()->isMethod('put')) {
@@ -46,7 +46,7 @@ class ValidBook extends FormRequest
             'index' => 'required|integer|min:1',
             'name' => 'required|between:3,100',
             'alias' => 'required|between:2,100',
-            'type' => ['required', 'regex:/(vt|nt|altele)/']		
+            'type' => ['required', 'regex:/(vt|nt|altele)/']
         ];
     }
 }

@@ -9,6 +9,6 @@ class UserDetails extends Model
     protected $fillable = ['bio'];
 
     public function description() {
-        return $this->hasOne(\App\UserDescription::class);
+        return $this->hasOne(UserDescription::class);
     }
 }

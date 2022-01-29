@@ -18,18 +18,18 @@ class BibleSearchController extends Controller
 		if (!$request->words || $request->words == '' || !$request->words === null || strlen($request->words) < 3 ){
 			return back();
 		}
-		$bible = \App\BibleVersion::where('slug', $request->translation)->firstOrFail();
+		$bible = BibleVersion::where('slug', $request->translation)->firstOrFail();
 		$table_name = 'v_'.$bible->id.'_verses';
-		
+
 		$words = explode(' ', $request->words);
 		if ( $request->flexibility === 'relative' ){
 			$words = array_map( function($word){
 				return strlen($word) > 5 ? substr($word, 1, -2) : $word;
 			}, $words);
 		}
-		
+
 		$query = DB::table($table_name);
-		
+
 		if ( $request->eager === 'all' ){//sa le contina pe toate
 			foreach( $words as $word ){
 				$query->where('text', 'like', '%'.$word.'%');
@@ -45,7 +45,7 @@ class BibleSearchController extends Controller
 			}
 		}
 		//if ( $request->book !== 'all' ){
-		//	$book = \App\Book::where(['bible_version_id' => $bible->id, 'slug' => $request->book])->firstOrFail();
+		//	$book = Book::where(['bible_version_id' => $bible->id, 'slug' => $request->book])->firstOrFail();
 		//	$query->where($table_name.'.book_id', $book->id);
 		//}
 		//$query->join('books', $table_name.'.book_id', '=', 'books.id');
@@ -53,7 +53,7 @@ class BibleSearchController extends Controller
 		//	->select(['books.name as book_name', 'books.index as book_index', 'chapters.index as chapter_index', $table_name.'.index', $table_name.'.text']);
 
         $searchResults = $query->paginate(50)->withPath(request()->fullUrl());
-        
+
         $this->inspect($searchResults);
 
 		//return view('search')->with(['searchResults' => $searchResults]);

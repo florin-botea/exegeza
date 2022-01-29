@@ -24,7 +24,7 @@ class ArticlesController extends Controller
 
     public function create(Request $request)
     {
-        $bible = \App\BibleVersion::fetch([
+        $bible = BibleVersion::fetch([
             'bible' => ['slug' => $request->query('bible-version')],
             'book' => ['slug' => $request->query('book')],
             'chapter' => ['index' => $request->query('chapter')]
@@ -79,7 +79,7 @@ class ArticlesController extends Controller
         if ($id > 0) {
             $article = Article::updateOrCreate(['id'=>$id], $request->all());
         } else {
-            $article = \App\Article::create($request->all());
+            $article = Article::create($request->all());
         }
         $article->setLanguage($request->input('language'));
         $article->addTags(json_decode($request->tags, true));

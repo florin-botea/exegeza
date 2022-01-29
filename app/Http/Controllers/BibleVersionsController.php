@@ -27,7 +27,7 @@ class BibleVersionsController extends Controller
 
 	public function show(Request $request, string $bible_slug)
 	{
-		$bible = \App\BibleVersion::fetch([
+		$bible = BibleVersion::fetch([
 			'bible' => ['slug' => $bible_slug]
 		]);
 
@@ -45,7 +45,7 @@ class BibleVersionsController extends Controller
 
 	public function store(ValidBibleVersion $request)
 	{
-		$bible = \App\BibleVersion::create($request->all());
+		$bible = BibleVersion::create($request->all());
 		$bible->setLanguage($request->input('language'));
 
 		return back();
@@ -53,16 +53,16 @@ class BibleVersionsController extends Controller
 
 	public function update(ValidBibleVersion $request, $id)
 	{
-		\App\BibleVersion::findOrFail($id)->update($request->all());
-		$bible = \App\BibleVersion::findOrFail($id);
-		\App\BibleVersion::findOrFail($id)->setVersesTable();
+		BibleVersion::findOrFail($id)->update($request->all());
+		$bible = BibleVersion::findOrFail($id);
+		BibleVersion::findOrFail($id)->setVersesTable();
 
 		return back();
 	}
 
 	public function destroy($id)
 	{
-		\App\BibleVersion::where('id', $id)->delete();
+		BibleVersion::where('id', $id)->delete();
 
 		return back();
 	}

@@ -20,7 +20,7 @@ class BooksController extends Controller
 
 	public function show(Request $request, string $bible_slug, string $book_slug)
 	{
-		$bible = \App\BibleVersion::fetch([
+		$bible = BibleVersion::fetch([
 			'bible' => ['slug' => $bible_slug],
 			'book' => ['slug' => $book_slug],
 		]);
@@ -35,7 +35,7 @@ class BooksController extends Controller
 		$articles = Article::filtered(array_merge($request->all(), [
 			'book_id' => $bible->book->id
 		]))->paginate(10)->appends($request->query());
-	
+
 		return view('bible@chapter(s)')->with(compact('bible', 'articles'));
 	}
 
@@ -46,32 +46,32 @@ class BooksController extends Controller
 
 	public function store(ValidBook $request, int $bibleVersion)
 	{
-		\App\BibleVersion::findOrFail($bibleVersion)->books()->create($request->all());
+		BibleVersion::findOrFail($bibleVersion)->books()->create($request->all());
 
 		return back();
 	}
 
 	public function update(ValidBook $request, int $bibleVersion, int $id)
 	{
-		\App\Book::findOrFail($id)->update($request->all());
+		Book::findOrFail($id)->update($request->all());
 
 		return back();
 	}
 
 	public function destroy(int $bibleVersion, int $id)
 	{
-		$book = \App\Book::find($id);
+		$book = Book::find($id);
 		$book->index = -1;
 		$book->alias = 'del-' . $book->alias;
 		$book->save();
-		\App\Book::where('id', $id)->delete();
+		Book::where('id', $id)->delete();
 
 		return back();
 	}
 
 	public function manage($bible_id)
 	{
-		$bible = \App\BibleVersion::with('books')->findOrFail($bible_id);
+		$bible = BibleVersion::with('books')->findOrFail($bible_id);
 
 		return view('dev.books')->with(compact('bible'));
 	}

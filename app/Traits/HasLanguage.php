@@ -6,8 +6,8 @@ trait HasLanguage
 {
     public function setLanguage(string $language)
     {
-        $language = \App\Language::firstOrCreate(["value" => $language]);
-        \App\ModelHasLanguage::firstOrCreate([
+        $language = Language::firstOrCreate(["value" => $language]);
+        ModelHasLanguage::firstOrCreate([
             "model_type" => get_class($this),
             "model_id" => $this->id,
             "language_id" => $language->id
@@ -16,6 +16,6 @@ trait HasLanguage
 
     public function language()
     {
-        return $this->hasOneThrough(\App\Language::class, \App\ModelHasLanguage::class, 'model_id', 'id', 'id', 'language_id')->where('model_type', get_class($this));
+        return $this->hasOneThrough(Language::class, ModelHasLanguage::class, 'model_id', 'id', 'id', 'language_id')->where('model_type', get_class($this));
     }
 }

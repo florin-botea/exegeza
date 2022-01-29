@@ -14,12 +14,12 @@ class Chapter extends Model
 
 	public function book()
 	{
-		return $this->belongsTo(\App\Book::class);
+		return $this->belongsTo(Book::class);
 	}
 
 	public function verses()
 	{
-		return $this->hasMany(\App\Verse::class);
+		return $this->hasMany(Verse::class);
 	}
 
 	public function addVerses(array $verses)

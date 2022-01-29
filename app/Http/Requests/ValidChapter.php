@@ -23,7 +23,7 @@ class ValidChapter extends FormRequest
 	public function withValidator($validator)
 	{
 		$validator->after(function ($validator) {
-            $bible = \App\BibleVersion::findOrFail(request()->route('bible_version'));
+            $bible = BibleVersion::findOrFail(request()->route('bible_version'));
             $book = $bible->book()->findOrFail(request()->route('book'));
 			$duplicateIndex = $book->chapters()->where('index', request()->input('index'))->first();
 			if ($duplicateIndex && !request()->isMethod('put')) {
