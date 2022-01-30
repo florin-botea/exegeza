@@ -80,7 +80,7 @@
 </head>
 <body class="bg-gray-200">
 	<header>
-		@include('sections.navbar')
+		<template is="partials/navbar"></template>
 	</header>
 
 	<div class="mx-auto px-0 md:px-0 lg:px-16 xl:px-24">
@@ -93,7 +93,7 @@
 				<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
 			</div>
 			<div role="right" class="w-full sm:w-3/4">
-				@include('sections.breadcrumb')
+				<template is="partials/breadcrumb"></template>
 
 				<slot></slot>
 
@@ -135,7 +135,7 @@
                     </section>
 
 					<div p-if="in_array(request()->route()->getName(), [null, 'bible-versions.show', 'bible-versions.books.show', 'bible-versions.books.chapters.show', 'articles.show'])" class="mt-4">
-						@include('components.subscribe-form')
+						<template is="partials/subscribe-form"></template>
 						<hr>
 					</div>
 				</template>
@@ -145,9 +145,8 @@
 
 	<div class="" id="return-to-top"></div>
 
-	@guest
-		@include('auth.login-modal')
-	@endguest
+    <template is="auth/login-modal" if="!auth()->check()"></template>
+
 	<!--script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script-->
@@ -158,12 +157,16 @@
 
 	<script>
 		var message = null;
-		@if(isset($message) || session()->has('message'))
-			message = @json($message ?? session()->get('message'));
+		<php>
+            if (isset($message) || session()->has('message')) {
+                message = @json($message ?? session()->get('message'));
+            }
+        </php>
+
 		@endif
 		console.log(message)
-		{{ $errors->any() && old('form_id') == 'login' ? 'loginModal();' : '' }}
-		{{ $errors->any() && old('form_id') == 'register' ? 'registerModal();' : '' }}
+		{{ $errors && old('form_id') == 'login' ? 'loginModal();' : '' }}
+		{{ $errors && old('form_id') == 'register' ? 'registerModal();' : '' }}
 
 		if (message) {
 			try {
