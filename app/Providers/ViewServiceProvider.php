@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\BibleVersion;
 use App\Models\Language;
 use PhpTemplates\Config;
+use PhpTemplates\DomEvent;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -20,8 +21,8 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Config::set('src_path', config('view.paths')[0]);
-        Config::set('dest_path', config('view.compiled')[0]);
+        Config::set('src_path', config('view.paths.0'));
+        Config::set('dest_path', config('view.compiled'));
     }
 
     /**
@@ -31,16 +32,27 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer('*', function ($view) {
-            if ($view->getName() == 'artisan') return;
+        DomEvent::on('rendering', 'layouts/app', function($t, &$data) {
             $common = Cache::remember('common', 30, function () {
                 return [
                     'languages' => Language::all()->pluck('value'),
                     'bibles' => BibleVersion::all()
                 ];
             });
-            $view->with($common);
+
+            $data = array_merge($data, $common);
         });
+
+        // View::composer('*', function ($view) {
+        //     if ($view->getName() == 'artisan') return;
+        //     $common = Cache::remember('common', 30, function () {
+        //         return [
+        //             'languages' => Language::all()->pluck('value'),
+        //             'bibles' => BibleVersion::all()
+        //         ];
+        //     });
+        //     $view->with($common);
+        // });
 
         View::composer(['bible', 'article'], function ($view) {
             $uncommon = Cache::remember('lp_', 60, function () {
