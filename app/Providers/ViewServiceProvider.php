@@ -12,6 +12,7 @@ use App\Models\Language;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use PhpTemplates\Config;
+use PhpTemplates\Directive;
 use PhpTemplates\DomEvent;
 
 class ViewServiceProvider extends ServiceProvider
@@ -32,6 +33,24 @@ class ViewServiceProvider extends ServiceProvider
             // 'x-card' => 'components/card',
             // 'x-helper' => 'components/helper',
         ]);
+
+        Directive::add('auth', function() {
+            return [
+                'p-if' => 'auth()->check()'
+            ];
+        });
+
+        Directive::add('guest', function() {
+            return [
+                'p-if' => '!auth()->check()'
+            ];
+        });
+
+        Directive::add('can', function($permission) {
+            return [
+                'p-if' => 'auth()->check() && ' . $permission
+            ];
+        });
     }
 
     /**

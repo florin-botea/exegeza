@@ -1,51 +1,38 @@
-<nav role="navbar" class="flex flex-wrap px-2 sm:px-4 md:px-8 py-4 bg-gray-900 text-yellow-200 font-bold">
-	<div role="navbar-menuContainer" class="">
-		<ul role="navbar-menuList" class="flex">
-			<li class="mx-1">
-				<a class="" href="/"> Home </a>
-			</li>
-		<!--
-			<li class="mx-1">
-				<a class="" href="#"> Predici </a>
-			</li>
-			<li class="mx-1">
-				<a class="" href="#"> Pilde </a>
-			</li>
-			<li class="mx-1">
-				<a class="" href="#"> Cantari </a>
-			</li>
-			<li class="mx-1">
-				<a class="" href="#"> Biblioteca </a>
-			</li>
-			<li class="mx-1">
-				<a class="" href="#"> Note </a>
-			</li>
-		-->
-			<li class="mx-1">
-				<a class="" href="/opinions"> Pareri/Sugestii </a>
-			</li>
-		</ul>
-	</div>
-
-	<div p-if="!auth()->check()" class="ml-auto d-flex">
-		<!-- <a class="bg-blue-600 hover:bg-blue-400 hover:underline font-bold text-white px-2 rounded shadow cursor-pointer shadow-inner" id="registerBtn">
-			Register
-		</a> -->
-		<a class="bg-green-600 hover:bg-green-400 hover:underline font-bold text-white px-2 rounded shadow cursor-pointer shadow-inner" id="loginBtn">
-			Login
-		</a>
-	</div>
-
-	<div p-else class="ml-auto flex">
-		<a class="block self-stretch w-8 bg-center bg-contain rounded bg-no-repeat" style="background-image: url('{{ auth()->user()->getPhotoUrl() }}')"
-		href="/users/{{ auth()->user()->id }}"></a>
-
-		<div class="pl-2 hidden sm:block">
-			<a href="/users/{{ auth()->user()->id }}">{{ auth()->user()->name }}</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">Navbar</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="#">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Link</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Dropdown
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="#">Action</a></li>
+						<li><a class="dropdown-item" href="#">Another action</a></li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li><a class="dropdown-item" href="#">Something else here</a></li>
+					</ul>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+				</li>
+			</ul>
+			<form class="d-flex">
+				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-success" type="submit">Search</button>
+			</form>
 		</div>
-		<form class="self-stretch pl-2 m-0" action="/logout" method="POST">
-			@csrf
-			<button type="submit" class="h-full px-2 bg-transparent text-white rounded"><i class="fas fa-sign-out-alt"></i></button>
-		</form>
 	</div>
 </nav>

@@ -10,14 +10,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<!--link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"-->
-
 	<link rel="icon" href="/logo.jpeg">
 	<meta name="description" content="{{ $page_description ?? 'config description' }}"/>
 	<title>{{ $page_title ?? 'config title' }}</title>
-
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<script src="https://kit.fontawesome.com/f669d10aec.js" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href='/css/app.css'>
+	<!-- <link rel="stylesheet" href='/css/app.css'> -->
 
 	<script>
 		var csrfToken = "{{ csrf_token() }}";
@@ -78,22 +78,24 @@
 		}
 	</style>
 </head>
-<body class="bg-gray-200">
+<body class="">
 	<header>
 		<template is="partials/navbar"></template>
 	</header>
 
-	<div class="mx-auto px-0 md:px-0 lg:px-16 xl:px-24">
+	<div class="container">
 		<div p-if="auth()->check() && !auth()->user()->hasVerifiedEmail()" class="px-4 py-2 bg-yellow-300 rounded-md border shadow-md">
 			<p> Adresa de mail nu a fost verificata. Click <a href="/email/resend" class="text-blue-600 hover:text-blue-400 font-bold">aici</a> pentru a retrimite email de confirmare. </p>
 		</div>
 
-		<div class="flex flex-wrap bg-white mt-8 shadow-md border border-pink-800 p-2" style="border: 1px solid purple;">
-			<div role="left" class="w-full sm:w-1/4 sm:pr-8 sm:order-first order-last">
+		<div class="row">
+			<div role="left" class="col-sm-3">
 				<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
 			</div>
-			<div role="right" class="w-full sm:w-3/4">
-				<template is="partials/breadcrumb"></template>
+			<div role="main" class="col-sm-9">
+				<div class="py-2">
+					<template is="partials/breadcrumb"></template>
+				</div>
 
 				<slot></slot>
 
@@ -157,13 +159,12 @@
 
 	<script>
 		var message = null;
-		<php>
+		<?php
             if (isset($message) || session()->has('message')) {
-                message = @json($message ?? session()->get('message'));
+                echo 'message = ' . json_encode($message ?? session()->get('message'));
             }
-        </php>
+        ?>
 
-		@endif
 		console.log(message)
 		{{ $errors && old('form_id') == 'login' ? 'loginModal();' : '' }}
 		{{ $errors && old('form_id') == 'register' ? 'registerModal();' : '' }}
