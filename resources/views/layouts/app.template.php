@@ -14,9 +14,16 @@
 	<meta name="description" content="{{ $page_description ?? 'config description' }}"/>
 	<title>{{ $page_title ?? 'config title' }}</title>
 	
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<script src="https://kit.fontawesome.com/f669d10aec.js" crossorigin="anonymous"></script>
+	
+	<!-- Main Quill library -->
+    <!-- Include stylesheet -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+
 	<!-- <link rel="stylesheet" href='/css/app.css'> -->
 
 	<script>
@@ -149,9 +156,24 @@
 
     <template is="auth/login-modal" if="!auth()->check()"></template>
 
-	<!--script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<!--
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script-->
+	
+    <div class="html-editor"></div>
+    
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    
+    <!-- Initialize Quill editor -->
+    <script>
+        $('.html-editor').each((i, el) => {
+			new Quill(el, {
+				theme: 'snow'
+			});
+		});
+    </script>
+	
 	<script src="/js/app.js"></script>
 	@foreach (($scripts??[]) as $script)
 		<script src="/js/{{$script}}"></script>
@@ -178,15 +200,15 @@
 			} catch(e) {}
 		}
 
-		@route(['bible-versions.show', 'bible-versions.books.show'])
-			@if (request()->query('search-word'))
-				$('.-verse_text').each(function(i, el) {
-					let verse = $(el);
-					let highlighted = verse.html().replace(/{{request()->query('search-word')}}/g, '<span class="bg-yellow-300">{{request()->query("search-word")}}</span>');
-					verse.html(highlighted);
-				});
-			@endif
-		@endroute
+		// @route(['bible-versions.show', 'bible-versions.books.show'])
+		// 	@if (request()->query('search-word'))
+		// 		$('.-verse_text').each(function(i, el) {
+		// 			let verse = $(el);
+		// 			let highlighted = verse.html().replace(/{{request()->query('search-word')}}/g, '<span class="bg-yellow-300">{{request()->query("search-word")}}</span>');
+		// 			verse.html(highlighted);
+		// 		});
+		// 	@endif
+		// @endroute
 	</script>
 
 	<!-- Go to www.addthis.com/dashboard to customize your tools -->
