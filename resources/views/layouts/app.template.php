@@ -10,14 +10,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<!--link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"-->
-
 	<link rel="icon" href="/logo.jpeg">
 	<meta name="description" content="{{ $page_description ?? 'config description' }}"/>
 	<title>{{ $page_title ?? 'config title' }}</title>
-
+	
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<script src="https://kit.fontawesome.com/f669d10aec.js" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href='/css/app.css'>
+	
+	<!-- Main Quill library -->
+    <!-- Include stylesheet -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+
+	<!-- <link rel="stylesheet" href='/css/app.css'> -->
 
 	<script>
 		var csrfToken = "{{ csrf_token() }}";
@@ -78,22 +85,24 @@
 		}
 	</style>
 </head>
-<body class="bg-gray-200">
+<body class="">
 	<header>
-		@include('sections.navbar')
+		<template is="partials/navbar"></template>
 	</header>
 
-	<div class="mx-auto px-0 md:px-0 lg:px-16 xl:px-24">
+	<div class="container">
 		<div p-if="auth()->check() && !auth()->user()->hasVerifiedEmail()" class="px-4 py-2 bg-yellow-300 rounded-md border shadow-md">
 			<p> Adresa de mail nu a fost verificata. Click <a href="/email/resend" class="text-blue-600 hover:text-blue-400 font-bold">aici</a> pentru a retrimite email de confirmare. </p>
 		</div>
 
-		<div class="flex flex-wrap bg-white mt-8 shadow-md border border-pink-800 p-2" style="border: 1px solid purple;">
-			<div role="left" class="w-full sm:w-1/4 sm:pr-8 sm:order-first order-last">
+		<div class="row">
+			<div role="left" class="col-sm-3">
 				<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
 			</div>
-			<div role="right" class="w-full sm:w-3/4">
-				@include('sections.breadcrumb')
+			<div role="main" class="col-sm-9">
+				<div class="py-2">
+					<template is="partials/breadcrumb"></template>
+				</div>
 
 				<slot></slot>
 
@@ -135,7 +144,7 @@
                     </section>
 
 					<div p-if="in_array(request()->route()->getName(), [null, 'bible-versions.show', 'bible-versions.books.show', 'bible-versions.books.chapters.show', 'articles.show'])" class="mt-4">
-						@include('components.subscribe-form')
+						<template is="partials/subscribe-form"></template>
 						<hr>
 					</div>
 				</template>
@@ -145,12 +154,26 @@
 
 	<div class="" id="return-to-top"></div>
 
-	@guest
-		@include('auth.login-modal')
-	@endguest
-	<!--script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <template is="auth/login-modal" if="!auth()->check()"></template>
+
+	<!--
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script-->
+	
+    <div class="html-editor"></div>
+    
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    
+    <!-- Initialize Quill editor -->
+    <script>
+        $('.html-editor').each((i, el) => {
+			new Quill(el, {
+				theme: 'snow'
+			});
+		});
+    </script>
+	
 	<script src="/js/app.js"></script>
 	@foreach (($scripts??[]) as $script)
 		<script src="/js/{{$script}}"></script>
@@ -158,12 +181,15 @@
 
 	<script>
 		var message = null;
-		@if(isset($message) || session()->has('message'))
-			message = @json($message ?? session()->get('message'));
-		@endif
+		<?php
+            if (isset($message) || session()->has('message')) {
+                echo 'message = ' . json_encode($message ?? session()->get('message'));
+            }
+        ?>
+
 		console.log(message)
-		{{ $errors->any() && old('form_id') == 'login' ? 'loginModal();' : '' }}
-		{{ $errors->any() && old('form_id') == 'register' ? 'registerModal();' : '' }}
+		{{ $errors && old('form_id') == 'login' ? 'loginModal();' : '' }}
+		{{ $errors && old('form_id') == 'register' ? 'registerModal();' : '' }}
 
 		if (message) {
 			try {
@@ -174,15 +200,15 @@
 			} catch(e) {}
 		}
 
-		@route(['bible-versions.show', 'bible-versions.books.show'])
-			@if (request()->query('search-word'))
-				$('.-verse_text').each(function(i, el) {
-					let verse = $(el);
-					let highlighted = verse.html().replace(/{{request()->query('search-word')}}/g, '<span class="bg-yellow-300">{{request()->query("search-word")}}</span>');
-					verse.html(highlighted);
-				});
-			@endif
-		@endroute
+		// @route(['bible-versions.show', 'bible-versions.books.show'])
+		// 	@if (request()->query('search-word'))
+		// 		$('.-verse_text').each(function(i, el) {
+		// 			let verse = $(el);
+		// 			let highlighted = verse.html().replace(/{{request()->query('search-word')}}/g, '<span class="bg-yellow-300">{{request()->query("search-word")}}</span>');
+		// 			verse.html(highlighted);
+		// 		});
+		// 	@endif
+		// @endroute
 	</script>
 
 	<!-- Go to www.addthis.com/dashboard to customize your tools -->

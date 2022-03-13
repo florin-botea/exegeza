@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use App\Models\BibleVersion;
 use App\Models\Language;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use PhpTemplates\Config;
+use PhpTemplates\Directive;
 use PhpTemplates\DomEvent;
 
 class ViewServiceProvider extends ServiceProvider
@@ -23,6 +26,31 @@ class ViewServiceProvider extends ServiceProvider
     {
         Config::set('src_path', config('view.paths.0'));
         Config::set('dest_path', config('view.compiled'));
+
+        Config::set('aliased', [
+            'form-group' => 'components/form/form-group',
+            // 'x-input-group' => 'components/input-group',
+            // 'x-card' => 'components/card',
+            // 'x-helper' => 'components/helper',
+        ]);
+
+        Directive::add('auth', function() {
+            return [
+                'p-if' => 'auth()->check()'
+            ];
+        });
+
+        Directive::add('guest', function() {
+            return [
+                'p-if' => '!auth()->check()'
+            ];
+        });
+
+        Directive::add('can', function($permission) {
+            return [
+                'p-if' => 'auth()->check() && ' . $permission
+            ];
+        });
     }
 
     /**
@@ -36,7 +64,8 @@ class ViewServiceProvider extends ServiceProvider
             $common = Cache::remember('common', 30, function () {
                 return [
                     'languages' => Language::all()->pluck('value'),
-                    'bibles' => BibleVersion::all()
+                    'bibles' => BibleVersion::all(),
+                    'errors' => session()->get('errors')
                 ];
             });
 
