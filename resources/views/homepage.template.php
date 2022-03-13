@@ -1,7 +1,6 @@
-<!-- @extends('layouts.main') -->
 <extends template="layouts/app"/>
 
-<!-- @section('content') -->
+<card>
 	<div class="flex">
 		<section role="info" class="p-2">
 			<p class="">
@@ -14,4 +13,4 @@
 			</p>
 		</section>
 	</div>
-<!-- @endsection -->
+</card>

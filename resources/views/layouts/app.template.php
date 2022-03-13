@@ -26,13 +26,16 @@
 
 	<!-- <link rel="stylesheet" href='/css/app.css'> -->
 
-	<script>
+	<!-- <script>
 		var csrfToken = "{{ csrf_token() }}";
 		var currentUserIsAdmin = Boolean({{ auth()->user() && auth()->user()->hasRole('comments admin') ? 1 : 0 }});
 		var authUserPhotoUrl = "{{ auth()->user() ? auth()->user()->getPhotoUrl() : null }}";
-	</script>
+	</script> -->
 
 	<style>
+		body {
+			background-color: #fff9ec;
+		}
 		#filter-published + #filter-published-labels > #unpublished {
 			display: none;
 		}
@@ -83,6 +86,18 @@
 		#awn-toast-container {
 			z-index: 99999999;
 		}
+
+		.card {
+			margin: 1rem 0rem;
+		}
+
+		.card.card-breadcrumb .card-body {
+			padding: 0.4rem 1rem;
+		}
+
+		.card.p-0 .card-body {
+			padding: 0px;
+		}
 	</style>
 </head>
 <body class="">
@@ -97,12 +112,14 @@
 
 		<div class="row">
 			<div role="left" class="col-sm-3">
-				<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
+				<card class="p-0">
+					<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
+				</card>
 			</div>
 			<div role="main" class="col-sm-9">
-				<div class="py-2">
-					<template is="partials/breadcrumb"></template>
-				</div>
+				<card class="card-breadcrumb">
+					<template is="partials/breadcrumb" :links="$breadcrumbs"></template>
+				</card>
 
 				<slot></slot>
 
@@ -166,7 +183,7 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     
     <!-- Initialize Quill editor -->
-    <script>
+    <script p-guest>
         $('.html-editor').each((i, el) => {
 			new Quill(el, {
 				theme: 'snow'

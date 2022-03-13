@@ -27,7 +27,10 @@ Auth::routes(['verify' => true]);
 // homepageController
 Route::get('/', function () {
     $bibles = BibleVersion::all();
-    Template::load('homepage', ['bibles' => $bibles]);
+    $breadcrumbs[] = [
+        'name' => 'Home'
+    ];
+    Template::load('homepage', compact('bibles', 'breadcrumbs'));
     // return view('homepage')->with('bibles', $bibles);
 });
 

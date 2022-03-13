@@ -29,8 +29,8 @@ class ViewServiceProvider extends ServiceProvider
 
         Config::set('aliased', [
             'form-group' => 'components/form/form-group',
+            'card' => 'components/card',
             // 'x-input-group' => 'components/input-group',
-            // 'x-card' => 'components/card',
             // 'x-helper' => 'components/helper',
         ]);
 
