@@ -1,7 +1,7 @@
-<php>
+@php
 	$isAcceptingArticles = in_array(request()->route()->getName(), ['bible-versions.books.show', 'bible-versions.books.chapters.show']);
 	$hasArticles = in_array(request()->route()->getName(), ['articles.show', 'bible-versions.show', 'articles.index', 'users.show', 'bible-versions.books.show', 'bible-versions.books.chapters.show']);
-</php>
+@endphp
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
