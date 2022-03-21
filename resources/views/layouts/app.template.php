@@ -111,12 +111,12 @@
 		</div>
 
 		<div class="row">
-			<div role="left" class="col-sm-3">
+			<div role="left" class="col-sm-3 order-2 order-sm-1">
 				<card class="p-0">
 					<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
 				</card>
 			</div>
-			<div role="main" class="col-sm-9">
+			<div role="main" class="col-sm-9 order-1">
 				<card class="card-breadcrumb">
 					<template is="partials/breadcrumb" :links="$breadcrumbs"></template>
 				</card>
