@@ -192,7 +192,7 @@
 	
 	<script src="/js/app.js"></script>
 	@foreach (($scripts??[]) as $script)
-		<script src="/js/{{$script}}"></script>
+		<!-- <script src="/js/{{$s cript}}"></script> -->
 	@endforeach
 
 	<script>
