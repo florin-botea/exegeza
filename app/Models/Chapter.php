@@ -10,7 +10,7 @@ class Chapter extends Model
 {
 	use SoftDeletes;
 
-	protected $fillable = ['index', 'name'];
+	protected $fillable = ['book_index', 'index', 'name'];
 
 	public function book()
 	{

@@ -26,7 +26,7 @@ Route::auth();
 Auth::routes(['verify' => true]);
 
 
-//Route::get('/', 'WebScrapperController');
+// Route::get('/web', 'WebScrapperController');
 //return;
 // homepageController
 Route::get('/', 'HomepageController@index');

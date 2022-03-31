@@ -16,9 +16,7 @@ class CreateChaptersTable extends Migration
         if (!Schema::hasTable('chapters'))
         Schema::create('chapters', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('book_id')->unsigned();
-            $table->foreign('book_id')->references('id')->on('books');
-            //$table->integer('book_index')->unsigned();
+            $table->integer('book_index')->unsigned();
             $table->integer('index');
             $table->string('name')->length(700);
             $table->timestamps();

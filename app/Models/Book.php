@@ -11,7 +11,7 @@ class Book extends Model
 	use SoftDeletes;
 	use Compoships;
 
-	protected $fillable = ['index', 'name', 'alias', 'slug', 'type'];
+	protected $fillable = ['index', 'name', 'alias', 'slug', 'version', 'type'];
 
 	public function bible ()
 	{

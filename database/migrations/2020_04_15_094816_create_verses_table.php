@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreateVersesTable extends Migration
 {
@@ -16,20 +17,15 @@ class CreateVersesTable extends Migration
         if (! Schema::hasTable('verses'))
         Schema::create('verses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('bible_version_id')->unsigned();
-            $table->bigInteger('book_id')->unsigned();
-            $table->bigInteger('chapter_id')->unsigned();
-
             $table->integer('book_index')->unsigned();
             $table->integer('chapter_index')->unsigned();
             $table->integer('index')->unsigned();
             $table->string('text')->length(900);
             $table->timestamps();
-
-            $table->foreign('bible_version_id')->references('id')->on('bible_versions');
-            $table->foreign('book_id')->references('id')->on('books');
-            $table->foreign('chapter_id')->references('id')->on('chapters');
         });
+        // $path = storage_path('app/sql/ntr.sql');
+        // $sql = file_get_contents($path);
+        // DB::unprepared($sql);
     }
     
     /**
