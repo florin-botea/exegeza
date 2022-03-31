@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BibleVersion;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Auth;
@@ -24,18 +25,15 @@ use PhpTemplates\Facades\Template;
 Route::auth();
 Auth::routes(['verify' => true]);
 
-// homepageController
-Route::get('/', function () {
-    $bibles = BibleVersion::all();
-    $breadcrumbs[] = [
-        'name' => 'Home'
-    ];
-    Template::load('homepage', compact('bibles', 'breadcrumbs'));
-    // return view('homepage')->with('bibles', $bibles);
-});
 
-Route::get('/bible-versions/search', 'BibleSearchController');
-Route::resource('bible-versions', 'BibleVersionController');
+//Route::get('/', 'WebScrapperController');
+//return;
+// homepageController
+Route::get('/', 'HomepageController@index');
+Route::resource('books', 'BookController');
+
+//Route::get('/bible-versions/search', 'BibleSearchController');
+//Route::resource('bible-versions', 'BibleVersionController');
 Route::resource('bible-versions.books', 'BookController');
 Route::resource('bible-versions.books.chapters', 'ChapterController');
 Route::resource('bible-versions.books.chapters.verses', 'VerseController');

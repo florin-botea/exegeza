@@ -1,6 +1,11 @@
 <extends template="layouts/app"/>
 
 <card>
+    <div class="list-group">
+      <a p-foreach="$books as $book" href="#" class="list-group-item list-group-item-action list-group-flush">
+        {{ $book->name }}
+      </a>
+    </div>
 	<div class="flex">
 		<section role="info" class="p-2">
 			<p class="">

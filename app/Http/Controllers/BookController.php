@@ -18,12 +18,9 @@ class BookController extends Controller
 		abort(404);
 	}
 
-	public function show(Request $request, string $bible_slug, string $book_slug)
+	public function show(Request $request, string $book_slug)
 	{
-		$bible = BibleVersion::fetch([
-			'bible' => ['slug' => $bible_slug],
-			'book' => ['slug' => $book_slug],
-		]);
+		$book = Book::where('slug', $book_slug)->firstOrFail();
 
 		if (strlen ($request->query('search-word', '')) > 1) {
 			$verses = $bible->book->verses()->with('book', 'bible')

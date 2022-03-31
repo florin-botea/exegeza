@@ -1,8 +1,3 @@
-@php
-	$isAcceptingArticles = in_array(request()->route()->getName(), ['bible-versions.books.show', 'bible-versions.books.chapters.show']);
-	$hasArticles = in_array(request()->route()->getName(), ['articles.show', 'bible-versions.show', 'articles.index', 'users.show', 'bible-versions.books.show', 'bible-versions.books.chapters.show']);
-@endphp
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -100,7 +95,11 @@
 		}
 	</style>
 </head>
-<body class="">
+<body>
+    @php
+    	$isAcceptingArticles = in_array(request()->route()->getName(), ['bible-versions.books.show', 'bible-versions.books.chapters.show']);
+    	$hasArticles = in_array(request()->route()->getName(), ['articles.show', 'bible-versions.show', 'articles.index', 'users.show', 'bible-versions.books.show', 'bible-versions.books.chapters.show']);
+    @endphp
 	<header>
 		<template is="partials/navbar"></template>
 	</header>
