@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ValidBook;
 use App\Article;
+use App\Models\Book;
+use PhpTemplates\Facades\Template;
 
 class BookController extends Controller
 {
@@ -20,7 +22,17 @@ class BookController extends Controller
 
 	public function show(Request $request, string $book_slug)
 	{
-		$book = Book::where('slug', $book_slug)->firstOrFail();
+		$book = Book::where('slug', $book_slug)->with('chapters.book')->firstOrFail();
+        $chapters = $book->chapters;
+        $breadcrumbs[] = [
+            'name' => 'Home',
+            'href' => '/'
+        ];
+        $breadcrumbs[] = [
+            'name' => $book->name
+        ];
+        Template::load('book@show', compact('book', 'chapters', 'breadcrumbs'));
+return;
 
 		if (strlen ($request->query('search-word', '')) > 1) {
 			$verses = $bible->book->verses()->with('book', 'bible')

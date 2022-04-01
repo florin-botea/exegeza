@@ -10,17 +10,19 @@ class Book extends Model
 {
 	use SoftDeletes;
 	use Compoships;
+	
+	protected $appends = ['url'];
 
 	protected $fillable = ['index', 'name', 'alias', 'slug', 'version', 'type'];
 
-	public function bible ()
+	public function bible()
 	{
 		return $this->belongsTo(BibleVersion::class, 'bible_version_id');
 	}
 
-	public function chapters ()
+	public function chapters()
 	{
-		return $this->hasMany(Chapter::class);
+		return $this->hasMany(Chapter::class, 'book_index', 'index');
 	}
 
 	public function chapter ()
@@ -37,9 +39,10 @@ class Book extends Model
 	{
 		return $this->hasManyThrough(Article::class, ModelHasArticle::class, 'model_id', 'id', 'id', 'article_id');//->where('model_type', $this->__class__);
 	}
-
-	public function url()
+	
+	// GETTERS
+	public function getUrlAttribute()
 	{
-		return $this->slug;
+	    return route('book', $this->slug);
 	}
 }

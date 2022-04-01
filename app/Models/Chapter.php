@@ -12,14 +12,17 @@ class Chapter extends Model
 
 	protected $fillable = ['book_index', 'index', 'name'];
 
+    protected $appends = ['url'];
+
 	public function book()
 	{
-		return $this->belongsTo(Book::class);
+		return $this->belongsTo(Book::class, 'book_index', 'index');
 	}
 
 	public function verses()
 	{
-		return $this->hasMany(Verse::class);
+		return $this->hasMany(Verse::class, 'chapter_index', 'index')
+		->where('book_index', $this->book_index);
 	}
 
 	public function addVerses(array $verses)
@@ -38,5 +41,48 @@ class Chapter extends Model
 		}
 		$this->verses()->delete();
 		$this->verses()->insert($stack);
+	}
+	
+	// GETTERS
+	public function getUrlAttribute()
+	{
+	    return route('chapter', [$this->book->slug, $this->index]);
+	}
+	
+	public function getPrevAttribute()
+	{
+	    if ($this->index == 1 && $this->book_index == 1) {
+	        return null;
+	    }
+	    
+	    $book_index = $this->book_index;
+	    $chapter_index = $this->index;
+	    if ($this->index == 1) {
+	        $book_index--;
+	    } else {
+	        $chapter_index--;
+	    }
+	        
+	    return Chapter::where('book_index', $book_index)
+	    ->where('index', $chapter_index)
+	    ->first();
+	}
+	
+	public function getNextAttribute()
+	{
+	    $last = $this->book->chapters->last();
+	    
+	    $book_index = $this->book_index;
+	    $chapter_index = $this->index;
+	    if ($this->index == $last->index) {
+	        $book_index++;
+	        $chapter_index = 1;
+	    } else {
+	        $chapter_index++;
+	    }
+	        
+	    return Chapter::where('book_index', $book_index)
+	    ->where('index', $chapter_index)
+	    ->first();
 	}
 }

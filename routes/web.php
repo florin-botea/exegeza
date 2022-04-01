@@ -27,10 +27,11 @@ Auth::routes(['verify' => true]);
 
 
 // Route::get('/web', 'WebScrapperController');
-//return;
 // homepageController
-Route::get('/', 'HomepageController@index');
-Route::resource('books', 'BookController');
+Route::get('/', 'HomepageController@index');// bible index de fapt trb
+Route::get('/{book}', 'BookController@show')->name('book');
+Route::get('/{book}/{chapter}', 'ChapterController@show')->name('chapter');
+// Route::resource('books', 'BookController');
 
 //Route::get('/bible-versions/search', 'BibleSearchController');
 //Route::resource('bible-versions', 'BibleVersionController');

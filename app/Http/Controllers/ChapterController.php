@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ValidChapter;
 use App\Article;
+use App\Models\Book;
+use PhpTemplates\Facades\Template;
 
 class ChapterController extends Controller
 {
@@ -17,8 +19,43 @@ class ChapterController extends Controller
 		abort(404);
 	}
 
-	public function show(Request $request, string $bible_slug, string $book_slug, int $chapter_index)
+	public function show(Request $request, string $book_slug, int $chapter_index)
 	{
+		$book = Book::where('slug', $book_slug)->with('chapters.book')->firstOrFail();
+        $chapters = $book->chapters;
+        $chapter = $chapters->where('index', $chapter_index)->firstOrFail();
+        $verses = $chapter->verses;
+        $breadcrumbs[] = [
+            'name' => 'Home',
+            'href' => '/'
+        ];
+        $breadcrumbs[] = [
+            'name' => $book->name,
+            'href' => $book->url
+        ];
+        $breadcrumbs[] = [
+            'name' => $chapter->name
+        ];
+        
+        $prev = $next = null;
+        if ($prev = $chapter->prev) {
+            $prev = [
+                'href' => $prev->url,
+                'name' => $prev->book_index != $chapter->book_index ? $prev->book->name : $prev->name
+            ];
+        }
+        if ($next = $chapter->next) {
+            $next = [
+                'href' => $next->url,
+                'name' => $next->book_index != $chapter->book_index ? $next->book->name : $next->name
+            ];
+        }
+        
+        Template::load('chapter@show', compact('book', 'chapters', 'chapter', 'verses', 'breadcrumbs', 'prev', 'next'));
+	return;
+	
+	
+	
 		if ($chapter_index < 1) abort(404);
 
 		$bible = BibleVersion::fetch([
