@@ -11,5 +11,5 @@
 |
 */
 
-Route::auth();
+
 Auth::routes(['verify' => true]);

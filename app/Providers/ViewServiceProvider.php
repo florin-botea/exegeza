@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use PhpTemplates\Config;
 use PhpTemplates\Directive;
 use PhpTemplates\DomEvent;
+use PhpTemplates\Facades\Template;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -24,29 +25,39 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Config::set('src_path', config('view.paths.0'));
-        Config::set('dest_path', config('view.compiled'));
+        /**
+         * @var Config $cfg 
+         */
+        $cfg = Template::getConfig();
+        $cfg->setSrcPath(config('view.paths.0'));
+        $cfg->setDestPath(config('view.compiled'));
 
-        Config::set('aliased', [
-            'form-group' => 'components/form/form-group',
-            'card' => 'components/card',
-            // 'x-input-group' => 'components/input-group',
-            // 'x-helper' => 'components/helper',
-        ]);
+        $cfg->addAlias('l-form', 'components/form/l-form');
+        $cfg->addAlias('form-group', 'components/form/form-group');
+        $cfg->addAlias('csrf', 'components/form/csrf');
+        $cfg->addAlias('card', 'components/card');
+        $cfg->addAlias('modal', 'components/modal');
+        $cfg->addAlias('tabs', 'components/tabs');
 
-        Directive::add('auth', function() {
+        $cfg->addDirective('checked', function($val) {
+            return [
+                'p-raw' => "$val ? 'checked' : ''"
+            ];
+        });
+
+        $cfg->addDirective('auth', function() {
             return [
                 'p-if' => 'auth()->check()'
             ];
         });
 
-        Directive::add('guest', function() {
+         $cfg->addDirective('guest', function() {
             return [
                 'p-if' => '!auth()->check()'
             ];
         });
 
-        Directive::add('can', function($permission) {
+         $cfg->addDirective('can', function($permission) {
             return [
                 'p-if' => 'auth()->check() && ' . $permission
             ];

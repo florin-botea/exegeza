@@ -1,13 +1,12 @@
-<div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-        <label :for="$id" class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-            {{ $label ?? $name ?? '' }}
-        </label>
-    </div>
-    <div class="md:w-2/3">
+<div class="form-group row mb-3">
+    <label :for="$id ?? $name" class="control-label col-sm-3">
+        {{ $label ?? $name ?? '' }}
+    </label>
+    <div class="col-sm-9">
         <slot>
-            <input :type="$type" :id="$id" p-bind="$this->attrs" class="bg-gray-200 border-gray-200 text-gray-700 focus:bg-white focus:border-purple-500">
+            <input p-if="$type == 'checkbox'" type="checkbox" p-checked="$value">
+            <input p-else :type="$type" :id="$id ?? $name" p-bind="$this->attrs" class="form-control">
         </slot>
-        <p p-if="isset($error) && $error" class="text-error">{{ $error }}</p>
+        <p p-if="isset($error) && $error" class="text-danger">{{ $error }}</p>
     </div>
 </div>
