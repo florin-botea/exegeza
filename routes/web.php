@@ -33,10 +33,19 @@ Auth::routes(['verify' => true]);
 
 // Route::get('/web', 'WebScrapperController');
 // homepageController
-Route::post('/', function() {});
+Route::post('/public', function() {
+    ob_start();
+    dump($_COOKIE);
+    $foo = ob_get_contents();
+    ob_end_clean();
+    return $foo;
+});
 Route::get('/', function() {
-    setcookie('foo', 'bar');
-    return '
+    ob_start();
+    dump($_COOKIE);
+    $foo = ob_get_contents();
+    ob_end_clean();
+    return $foo.'
 <script>
 function listCookies() {
     var theCookies = document.cookie.split(";");
@@ -48,7 +57,7 @@ function listCookies() {
 }
 alert(listCookies());
 </script>
-<form action="/" method="post">
+<form action="/public" method="post">
 <input type="text" name="_token" value="'.csrf_token().'">
 <button>fooo</button>
 </form>
