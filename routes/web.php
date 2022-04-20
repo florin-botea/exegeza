@@ -11,7 +11,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Storage;
 use PhpTemplates\Facades\Template;
-
+//dd(config('app.log_level'));
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,13 +22,39 @@ use PhpTemplates\Facades\Template;
 | contains the "web" middleware group. Now create something great!
 |
 */
+if (!session('ff')) {
+    session()->put('ff', uniqid());
+}
+//dump(session('ff'));
+
 Route::auth();
 Auth::routes(['verify' => true]);
 
 
 // Route::get('/web', 'WebScrapperController');
 // homepageController
-Route::get('/', 'HomepageController@index');// bible index de fapt trb
+Route::post('/', function() {});
+Route::get('/', function() {
+    setcookie('foo', 'bar');
+    return '
+<script>
+function listCookies() {
+    var theCookies = document.cookie.split(";");
+    var aString = "";
+    for (var i = 1 ; i <= theCookies.length; i++) {
+        aString += i + " " + theCookies[i-1] + "\n";
+    }
+    return aString;
+}
+alert(listCookies());
+</script>
+<form action="/" method="post">
+<input type="text" name="_token" value="'.csrf_token().'">
+<button>fooo</button>
+</form>
+';
+});
+//Route::get('/', 'HomepageController@index');// bible index de fapt trb
 Route::get('/{book}', 'BookController@show')->name('book');
 Route::get('/{book}/{chapter}', 'ChapterController@show')->name('chapter');
 // Route::resource('books', 'BookController');

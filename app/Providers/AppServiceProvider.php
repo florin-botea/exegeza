@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
+use PhpTemplates\Integrations\Laravel\ViewFactory;
 
 class AppServiceProvider extends ServiceProvider
 {

@@ -16,6 +16,8 @@ class HomepageController extends Controller
         $breadcrumbs[] = [
             'name' => 'Home'
         ];
-        Template::load('homepage', compact('bibles', 'books', 'breadcrumbs'));
+      //return response('Hello World');
+  
+        return view('homepage', compact('bibles', 'books', 'breadcrumbs'));
     }
 }

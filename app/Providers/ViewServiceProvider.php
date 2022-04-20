@@ -28,10 +28,8 @@ class ViewServiceProvider extends ServiceProvider
         /**
          * @var Config $cfg 
          */
-        $cfg = Template::getConfig();
-        $cfg->setSrcPath(config('view.paths.0'));
-        $cfg->setDestPath(config('view.compiled'));
-
+        /*
+        $cfg = view();
         $cfg->addAlias('l-form', 'components/form/l-form');
         $cfg->addAlias('form-group', 'components/form/form-group');
         $cfg->addAlias('csrf', 'components/form/csrf');
@@ -61,7 +59,7 @@ class ViewServiceProvider extends ServiceProvider
             return [
                 'p-if' => 'auth()->check() && ' . $permission
             ];
-        });
+        });*/
     }
 
     /**
@@ -75,7 +73,7 @@ class ViewServiceProvider extends ServiceProvider
             $common = Cache::remember('common', 30, function () {
                 return [
                     'languages' => Language::all()->pluck('value'),
-                    'bibles' => BibleVersion::all(),
+                    //'bibles' => BibleVersion::all(),
                     'errors' => session()->get('errors')
                 ];
             });

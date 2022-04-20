@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class AddExtraFunctionsToRequest
 {
@@ -14,9 +15,21 @@ class AddExtraFunctionsToRequest
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
+    {dd(12);
         request()->merge(['notifications' => collect([])]);
 
-        return $next($request);
+        $response = $next($request);
+        
+    $response->headers->setCookie(
+        new Cookie('laravelsession',
+            $request->session()->getId(),
+            time() + 60 * 120,
+            '/',
+            null,
+            config('session.secure'),
+            false)
+    );
+    
+    return $response->withCookie(cookie('sss', 'ddd', 60));
     }
 }

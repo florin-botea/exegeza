@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<meta name="csrf-token" :content="csrf_token()">
 
 	<link rel="icon" href="/logo.jpeg">
 	<meta name="description" content="{{ $page_description ?? 'config description' }}"/>
@@ -110,11 +110,11 @@
 		</div>
 
 		<div class="row">
-			<div role="left" class="col-sm-3 order-2 order-sm-1">
+			<!-- div role="left" class="col-sm-3 order-2 order-sm-1">
 				<card class="p-0">
 					<table width="100%" class="doxo-table border-2 border-blue-900"><tr><td ><div  class=""><script type="text/javascript">widgetContext_417c8830427f = {"widgetid":"web_widgets_inline_602b4679437414a28c163b73154c8142"};</script><script src="https://doxologia.ro/doxowidgetcalendar"></script><div class="doxowidgetcalendar" id="web_widgets_inline_602b4679437414a28c163b73154c8142"></div></td></tr></table>
 				</card>
-			</div>
+			</div -->
 			<div role="main" class="col-sm-9 order-1">
 				<card class="card-breadcrumb">
 					<template is="partials/breadcrumb" :links="$breadcrumbs"></template>
@@ -171,6 +171,17 @@
 	<div class="" id="return-to-top"></div>
 
 	<slot name="modals"></slot>
+	<script>
+function listCookies() {
+    var theCookies = document.cookie.split(';');
+    var aString = '';
+    for (var i = 1 ; i <= theCookies.length; i++) {
+        aString += i + ' ' + theCookies[i-1] + "\n";
+    }
+    return aString;
+}
+alert(listCookies());
+</script>
 	<!--
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script-->
@@ -223,6 +234,6 @@
 	</script>
 
 	<!-- Go to www.addthis.com/dashboard to customize your tools -->
-	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5dc07d5c1954dce7"></script>
+	<!-- script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5dc07d5c1954dce7"></script -->
 </body>
 </html>
