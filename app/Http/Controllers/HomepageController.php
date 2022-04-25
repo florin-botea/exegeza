@@ -17,7 +17,6 @@ class HomepageController extends Controller
             'name' => 'Home'
         ];
       //return response('Hello World');
-  
         return view('homepage', compact('bibles', 'books', 'breadcrumbs'));
     }
 }

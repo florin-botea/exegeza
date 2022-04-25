@@ -29,7 +29,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerTranslations();
         $this->registerConfig();
-        $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
     }
 
@@ -41,6 +40,7 @@ class AuthServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(ViewServiceProvider::class);
     }
 
     /**
@@ -56,37 +56,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             module_path($this->moduleName, 'Config/config.php'), $this->moduleNameLower
         );
-    }
-
-    /**
-     * Register views.
-     *
-     * @return void
-     */
-    public function registerViews()
-    {
-        $sourcePath = module_path($this->moduleName, 'Resources/views');
-        $this->loadViewsFrom($sourcePath, $this->moduleNameLower);
-     
-       // $cfg = new Config($sourcePath, config('view.compiled'));
-       // Template::setConfig($this->moduleName, $cfg);
-        
-        DomEvent::on('rendering', 'partials/navbar.navbar-items', function($t) {
-            $t->slots['navbar-items'][] = view()->raw(function() { ?>
-                <div class="ms-auto">
-                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#AuthModal">Login</button>
-                </div>
-            <?php }, ['_index' => 0.5]);
-        });
-        DomEvent::on('rendering', 'layouts/app', function($t) {
-            $t->slots['modals'][] = view()->get('auth:auth/login-modal');
-        });
-        
-        $viewPath = resource_path('views/modules/' . $this->moduleNameLower);
-
-        $this->publishes([
-            $sourcePath => $viewPath
-        ], ['views', $this->moduleNameLower . '-module-views']);
     }
 
     /**

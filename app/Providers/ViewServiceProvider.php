@@ -28,7 +28,7 @@ class ViewServiceProvider extends ServiceProvider
         /**
          * @var Config $cfg 
          */
-        /*
+        
         $cfg = view();
         $cfg->addAlias('l-form', 'components/form/l-form');
         $cfg->addAlias('form-group', 'components/form/form-group');
@@ -42,24 +42,6 @@ class ViewServiceProvider extends ServiceProvider
                 'p-raw' => "$val ? 'checked' : ''"
             ];
         });
-
-        $cfg->addDirective('auth', function() {
-            return [
-                'p-if' => 'auth()->check()'
-            ];
-        });
-
-         $cfg->addDirective('guest', function() {
-            return [
-                'p-if' => '!auth()->check()'
-            ];
-        });
-
-         $cfg->addDirective('can', function($permission) {
-            return [
-                'p-if' => 'auth()->check() && ' . $permission
-            ];
-        });*/
     }
 
     /**
@@ -69,6 +51,7 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /*
         DomEvent::on('rendering', 'layouts/app', function($t, &$data) {
             $common = Cache::remember('common', 30, function () {
                 return [
@@ -80,7 +63,7 @@ class ViewServiceProvider extends ServiceProvider
 
             $data = array_merge($data, $common);
         });
-
+*/
         // View::composer('*', function ($view) {
         //     if ($view->getName() == 'artisan') return;
         //     $common = Cache::remember('common', 30, function () {

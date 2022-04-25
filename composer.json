@@ -67,9 +67,13 @@
         }
     },
     "config": {
+        "platform-check": false,
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "7.3.10"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,5 +13,6 @@
 |
 */
 
-
 Auth::routes(['verify' => true]);
+Route::get('/users/{user_id}', 'UserController@show');
+Route::get('/users/{user_id}/edit', 'UserController@edit');

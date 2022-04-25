@@ -22,52 +22,17 @@ use PhpTemplates\Facades\Template;
 | contains the "web" middleware group. Now create something great!
 |
 */
-if (!session('ff')) {
-    session()->put('ff', uniqid());
-}
-//dump(session('ff'));
 
 Route::auth();
 Auth::routes(['verify' => true]);
 
-
 // Route::get('/web', 'WebScrapperController');
 // homepageController
-Route::post('/public', function() {
-    ob_start();
-    dump($_COOKIE);
-    $foo = ob_get_contents();
-    ob_end_clean();
-    return $foo;
-});
-Route::get('/', function() {
-    ob_start();
-    dump($_COOKIE);
-    $foo = ob_get_contents();
-    ob_end_clean();
-    return $foo.'
-<script>
-function listCookies() {
-    var theCookies = document.cookie.split(";");
-    var aString = "";
-    for (var i = 1 ; i <= theCookies.length; i++) {
-        aString += i + " " + theCookies[i-1] + "\n";
-    }
-    return aString;
-}
-alert(listCookies());
-</script>
-<form action="/public" method="post">
-<input type="text" name="_token" value="'.csrf_token().'">
-<button>fooo</button>
-</form>
-';
-});
-//Route::get('/', 'HomepageController@index');// bible index de fapt trb
-Route::get('/{book}', 'BookController@show')->name('book');
-Route::get('/{book}/{chapter}', 'ChapterController@show')->name('chapter');
+Route::get('/', 'HomepageController@index');// bible index de fapt trb
+Route::get('/bible/{book}', 'BookController@show')->name('book');
+Route::get('/bible/{book}/{chapter}', 'ChapterController@show')->name('chapter');
 // Route::resource('books', 'BookController');
-
+/*
 //Route::get('/bible-versions/search', 'BibleSearchController');
 //Route::resource('bible-versions', 'BibleVersionController');
 Route::resource('bible-versions.books', 'BookController');
@@ -123,7 +88,7 @@ Route::get('/migrate-patches', function () {
             'type' => 'nt'
         ]);
     }
-    */
+    
     Schema::create('deletion_requests', function (Blueprint $table) {
         $table->bigIncrements('id');
         $table->string('model_type');
@@ -180,3 +145,4 @@ Route::resource('comments', 'CommentController');
 
 Route::resource('subscriptions', 'SubscriptionController');
 Route::get('/subscriptions/{id}/verify', 'SubscriptionController@verify')->name('subscriptions.verify');
+*/

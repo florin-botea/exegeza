@@ -12,8 +12,7 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-	<script src="https://kit.fontawesome.com/f669d10aec.js" crossorigin="anonymous"></script>
-	
+	<script src="https://kit.fontawesome.com/8458fce028.js" crossorigin="anonymous"></script>
 	<!-- Main Quill library -->
     <!-- Include stylesheet -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -105,8 +104,8 @@
 	</header>
 
 	<div class="container">
-		<div p-if="auth()->check() && !auth()->user()->hasVerifiedEmail()" class="px-4 py-2 bg-yellow-300 rounded-md border shadow-md">
-			<p> Adresa de mail nu a fost verificata. Click <a href="/email/resend" class="text-blue-600 hover:text-blue-400 font-bold">aici</a> pentru a retrimite email de confirmare. </p>
+		<div p-if="auth()->check() && !auth()->user()->hasVerifiedEmail()" class="alert alert-warning my-2">
+			<p> Adresa de mail nu a fost verificata. Click <a href="/email/resend">aici</a> pentru a retrimite email de confirmare. </p>
 		</div>
 
 		<div class="row">
@@ -116,7 +115,7 @@
 				</card>
 			</div -->
 			<div role="main" class="col-sm-9 order-1">
-				<card class="card-breadcrumb">
+				<card p-if="!empty($breadcrumbs)" class="card-breadcrumb">
 					<template is="partials/breadcrumb" :links="$breadcrumbs"></template>
 				</card>
 
@@ -171,17 +170,6 @@
 	<div class="" id="return-to-top"></div>
 
 	<slot name="modals"></slot>
-	<script>
-function listCookies() {
-    var theCookies = document.cookie.split(';');
-    var aString = '';
-    for (var i = 1 ; i <= theCookies.length; i++) {
-        aString += i + ' ' + theCookies[i-1] + "\n";
-    }
-    return aString;
-}
-alert(listCookies());
-</script>
 	<!--
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script-->
