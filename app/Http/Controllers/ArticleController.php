@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ValidArticle;
 use Illuminate\Support\Facades\Input;
-use App\Article;
+use App\Models\BibleVersion;
+use App\Models\Article;
 
 class ArticleController extends Controller
 {
 	public function __construct(Request $request)
 	{
-        $this->middleware('slugify', ['only' => ['store', 'update', 'publish']]);
-        $this->middleware('can:create,\App\Article');
+        //$this->middleware('slugify', ['only' => ['store', 'update', 'publish']]);
+        //$this->middleware('can:create,\App\Article');
 	}
 
     public function index(Request $request)
@@ -24,13 +25,9 @@ class ArticleController extends Controller
 
     public function create(Request $request)
     {
-        $bible = BibleVersion::fetch([
-            'bible' => ['slug' => $request->query('bible-version')],
-            'book' => ['slug' => $request->query('book')],
-            'chapter' => ['index' => $request->query('chapter')]
-        ]) ?? abort(404, 'Bible resource not found, or has been deleted');
-
-        return view('article-form')->with(compact('bible'));
+        //04, 'Bible resource not found, or has been deleted');
+        $bible = null;
+        return view('article/form')->with(compact('bible'));
     }
 
     public function store(ValidArticle $request)

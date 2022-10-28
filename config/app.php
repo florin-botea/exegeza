@@ -171,7 +171,7 @@ return [
         /*
          * Application Service Providers...
          */
-        PhpTemplates\Integrations\Laravel\PhpTemplatesServiceProvider::class,
+        PhpTemplates\Illuminate\PhpTemplatesServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,

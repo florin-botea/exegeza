@@ -13,10 +13,11 @@ class HomepageController extends Controller
     {
         $bibles = BibleVersion::all();
         $books = Book::all();
+        $href['article_form'] = route('articles.create', ['book' => 0]);
         $breadcrumbs[] = [
             'name' => 'Home'
         ];
-      //return response('Hello World');
-        return view('homepage', compact('bibles', 'books', 'breadcrumbs'));
+     
+        return view('homepage', compact('bibles', 'books', 'href', 'breadcrumbs'));
     }
 }

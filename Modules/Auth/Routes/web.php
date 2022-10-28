@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes(['verify' => true]);
-Route::get('/users/{user_id}', 'UserController@show');
-Route::get('/users/{user_id}/edit', 'UserController@edit');
+Route::resource('users', 'UserController');
+Route::put('users/{id}/change-password', 'Auth\\ChangePasswordController')->name('change-password');

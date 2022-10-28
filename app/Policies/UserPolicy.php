@@ -51,8 +51,8 @@ class UserPolicy
      * @return mixed
      */
     public function update(User $user, User $model)
-    {
-        return $user->id === $model->id || $user->can('update users');
+    {dd(6);
+        return $user->id === $model->id;
     }
 
     /**

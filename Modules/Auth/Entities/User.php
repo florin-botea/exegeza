@@ -9,15 +9,12 @@ class User extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \Modules\Auth\Database\factories\UserFactory::new();
-    }
+    protected $fillable = [
+        'name', 'email', 'password', 'image', 'description',
+    ];
     
     public function getProfilePictureAttribute()
-    {
+    {//dd($this->image, asset($this->image));
         return $this->image ? asset($this->image) : '/assets/default-user-image.png';
     }
 }

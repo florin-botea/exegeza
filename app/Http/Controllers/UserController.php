@@ -84,17 +84,15 @@ class UserController extends Controller
     }
 
     public function update(ValidUser $request, $id)
-    {
+    {dd(3);
         $user = User::findOrFail($id);
-        $user->update($request->all());
-        $user->details()->updateOrCreate([], $request->all());
-        $user->details->description()->updateOrCreate([], $request->all());
+        $user->fill($request->all());
 
-        if ($request->photo && $request->file('photo')) {
-            $photo = Storage::put('public/avatars', $request->file('photo'));
-            $user->details->photo = Storage::url($photo);
-            $user->details->save();
+        if ($request->image && $request->file('image')) {
+            $photo = Storage::put('public/avatars', $request->file('image'));
+            $user->image = Storage::url($photo);
         }
+        $user->save();
 
         return redirect( route('users.show', $id) );
     }

@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "nwidart/laravel-modules": "^8.3",
+        "php-templates/illuminate": "^0.0.2",
         "spatie/laravel-activitylog": "^3.17",
         "spatie/laravel-permission": "^5.5"
     },
@@ -26,16 +27,11 @@
         "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
-        "files": [
-            "vendor/florin-botea/php-templates/autoload.php"
-        ],
         "psr-4": {
             "App\\": "app/",
             "Modules\\": "Modules/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
-            "PhpTemplates\\": "vendor/florin-botea/php-templates/src",
-            "IvoPetkov\\": "vendor/florin-botea/php-templates/html5-dom-document-php/src"
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {

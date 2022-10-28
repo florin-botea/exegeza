@@ -31,6 +31,7 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'HomepageController@index');// bible index de fapt trb
 Route::get('/bible/{book}', 'BookController@show')->name('book');
 Route::get('/bible/{book}/{chapter}', 'ChapterController@show')->name('chapter');
+Route::resource('articles', 'ArticleController');
 // Route::resource('books', 'BookController');
 /*
 //Route::get('/bible-versions/search', 'BibleSearchController');
@@ -42,7 +43,6 @@ Route::resource('bible-versions.books.chapters.verses', 'VerseController');
 // articles
 Route::put('/articles/{article}/publish', 'ArticleController@publish')->name('articles.publish');
 Route::put('/articles/{article}/unpublish', 'ArticleController@unpublish')->name('articles.unpublish');
-Route::resource('articles', 'ArticleController');
 // Route::resource('bible-versions.books.articles', 'ArticleController');
 // Route::resource('bible-versions.books.chapters.articles', 'ArticleController');
 

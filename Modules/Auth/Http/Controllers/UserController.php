@@ -56,7 +56,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        return view('auth:user@edit');
+        if (auth()->id() != $id) {
+            abort(404);
+        }
+        
+        $user = User::findOrFail($id);
+        
+        return view('auth:user@edit', compact('user'));
     }
 
     /**
@@ -67,7 +73,21 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (auth()->id() != $id) {
+            abort(404);
+        }
+        
+        $user = User::findOrFail($id);
+        $user->fill($request->all());
+
+        if ($request->image && $request->file('image')) {
+            $fileName = $id . '_' . time() . '.'. $request->file->extension();
+            $request->file->move(storage_path('avatars'), $fileName);
+            $user->image = $fileName;
+        }
+        $user->save();
+
+        return redirect( route('users.show', $id) );
     }
 
     /**

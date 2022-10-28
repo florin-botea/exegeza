@@ -1,9 +1,10 @@
 <template is="layouts/app">
     <card>
-        <tabs :tabs="['general' => 'General']" :value="request('tab', 'general')">
+        <tabs :tabs="['general' => 'General', 'account' => 'Cont']" :value="old('tab', 'general')">
             <div slot="tab-pane">
                 <section class="row">
-                    <div p-logged="$user->id" class="col-12 text-end">
+                    <div p-logged="$user->id" class="col-12 d-flex justify-content-between align-items-center">
+                        <label class="tab-pane-title">Profil</label>
                         <a :href="'/users/'.auth()->id().'/edit'" class="btn btn-sm btn-primary py-1 my-2">
                             Edit <i class="fas fa-edit"></i>
                         </a>
@@ -27,60 +28,25 @@
                                 <td> Bio: </td>
                             </tr>
                             <tr>
-                                <td colspan="2">{{ $user->bio }}</td>
+                                <td colspan="2">{{ $user->description }}</td>
                             </tr>
                         </table>
                     </div>
                 </section>
-    <!-- 
-    @if ($user->details && $user->details->description && $user->details->description->content)
-    <section class="px-4">
-        <div class="ck-content break-normal">{!! $user->details->description->content !!}</div>
-    </section>
-    @endif  
-
-    @if (isset($articles) && count($articles))
-    <section class="px-2">
-        <section role="articles-samples-list" class="bg-gray-100">
-            <h2 class="inline text-xl font-serif font-semibold text-purple-900"> Articole postate de utilizator </h2>
-            <div role="articles-list" class="p-2">
-                @foreach ($articles as $article)
-                    @include('components.article-sample', ['article' => $article])
-                    <hr class="my-4">
-                @endforeach
             </div>
-        </section>
-    </section>
-    @endif
-
-    @if (isset($unpublished) && count($unpublished) && auth()->user() && (auth()->user()->can('publish articles') || auth()->user()->id === $user->id))
-    <section class="px-2">
-        <section role="articles-samples-list" class="bg-gray-100">
-            <h2 class="inline text-xl font-serif font-semibold text-purple-900"> Articole nepublicate </h2>
-            <div role="articles-list" class="p-2">
-                @foreach ($unpublished as $article)
-                    <article class="">
-                        <header>
-                            <h2 class="font-semibold text-lg hover:underline inline text-blue-900 mb-2">
-                                <a href="{{ route('articles.show', [$article->slug]) }}">{{ $article->title }}</a>
-                            </h2>
-                        </header>
-                        <footer class="flex justify-between">
-                            <div class="hover:underline">
-                                <a href="">
-                                    {{ $article->book->name.($article->chapter_index ? ", $article->chapter_index" : '') }} ({{ $article->bible->name }})
-                                </a>
-                            </div>
-                            <div>{{ $article->created_at }}</div>
-                        </footer>
-                    </article>
-                    <hr class="my-4">
-                @endforeach
-            </div>
-        </section>
-    </section>
-    @endif
-    -->
+            <div slot="tab-pane">
+                <section>
+                    <label class="tab-pane-title">Schimbare parola</label>
+                    <l-form :action="route('change-password', $user->id)" method="put">
+                        <input name="tab" value="account" hidden>
+                        <form-group type="password" label="Parola curenta" name="password"></form-group>
+                        <form-group type="password" label="Noua parola" name="password_new"></form-group>
+                        <form-group type="password" label="Noua parola (confirmare)" name="password_new_confirmation"></form-group>
+                        <div class="text-end">
+                            <button class="btn btn-sm btn-warning">Update</button>
+                        </div>
+                    </l-form>
+                </section>
             </div>
         </tabs>
     </card>

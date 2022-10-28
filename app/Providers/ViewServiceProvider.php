@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use PhpTemplates\Config;
 use PhpTemplates\Directive;
 use PhpTemplates\DomEvent;
-use PhpTemplates\Facades\Template;
+use PhpTemplates\Illuminate\Support\Facades\Template;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -25,19 +25,45 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        /**
-         * @var Config $cfg 
-         */
+        Template::setAlias([
+            'l-form' => 'components/form/l-form',
+            'form-group' => 'components/form/form-group',
+            'csrf' => 'components/form/csrf',
+            'card' => 'components/card',
+            'modal' => 'components/modal',
+            'tabs' => 'components/tabs',
+        ]);
         
-        $cfg = view();
-        $cfg->addAlias('l-form', 'components/form/l-form');
-        $cfg->addAlias('form-group', 'components/form/form-group');
-        $cfg->addAlias('csrf', 'components/form/csrf');
-        $cfg->addAlias('card', 'components/card');
-        $cfg->addAlias('modal', 'components/modal');
-        $cfg->addAlias('tabs', 'components/tabs');
+        Template::setDirective('auth', function() {
+            return [
+                'p-if' => 'auth()->check()'
+            ];
+        });
 
-        $cfg->addDirective('checked', function($val) {
+        Template::setDirective('guest', function() {
+            return [
+                'p-if' => '!auth()->check()'
+            ];
+        });
+
+        Template::setDirective('logged', function($user_id) {
+            return [
+                'p-if' => 'auth()->check() && auth()->id() == ' . $user_id
+            ];
+        });
+        
+        Template::setDirective('can', function($permission) {
+            return [
+                'p-if' => 'auth()->check() && auth()->can(' . $permission . ')'
+            ];
+        });
+        Template::setDirective('can-create', function($permission) {
+            return [
+                'p-if' => '1 || auth()->check() && auth()->can(”create”,' . $permission . ')'
+            ];
+        });
+
+        Template::setDirective('checked', function($val) {
             return [
                 'p-raw' => "$val ? 'checked' : ''"
             ];
@@ -50,7 +76,7 @@ class ViewServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+    {return;
         /*
         DomEvent::on('rendering', 'layouts/app', function($t, &$data) {
             $common = Cache::remember('common', 30, function () {
@@ -83,6 +109,11 @@ class ViewServiceProvider extends ServiceProvider
                 ];
             });
             $view->with($uncommon);
+        });
+        
+        View::composer('article/list', function($data) {
+            // TODO: take args and do filter
+            return [];
         });
 
         Blade::if('route', function ($route = []) {
